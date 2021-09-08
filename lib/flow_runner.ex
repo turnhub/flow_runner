@@ -1,18 +1,17 @@
 defmodule FlowRunner do
-  @moduledoc """
-  Documentation for `FlowRunner`.
-  """
+
+  alias FlowRunner.Context
+  alias FlowRunner.Flow
 
   @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> FlowRunner.hello()
-      :world
-
+  Compile takes a json flow and returns a parsed and validated
+  flow.
   """
-  def hello do
-    :world
+  def compile(_json) do
+    {:error, "unimplemented :("}
+  end
+
+  def run(%Flow{} = _flow, %Context{} = _context) do
+    {:error, "unimplemented :("}
   end
 end
