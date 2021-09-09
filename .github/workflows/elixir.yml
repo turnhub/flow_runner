@@ -20,18 +20,30 @@ jobs:
           otp-version: "24.0.3"
       - name: Restore dependencies cache
         uses: actions/cache@v2
+        id: mix-cache
         with:
-          path: deps
+          path: |
+            deps
+            _build
+            priv/plts
           key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
           restore-keys: ${{ runner.os }}-mix-
-      - name: Install dependencies
-        run: mix deps.get
+      - name: Install Dependencies
+        if: steps.mix-cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p priv/plts
+          mix local.rebar --force
+          mix local.hex --force
+          mix deps.get
+          mix deps.compile
+          mix dialyzer --plt
       - name: Run tests
         run: mix test
       - name: Static code quality checks
         run: |
           mix format --check-formatted
           mix credo
+          mix dialyzer
       - name: Code Annotations Report
         if: ${{ always() }}
         uses: mikepenz/action-junit-report@v1
