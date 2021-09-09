@@ -8,8 +8,12 @@ defmodule FlowRunnerTest do
   end
 
   test "run a flow" do
-    {:ok, _result, _context, _uuid} = File.read!("test/basic.flow") 
+    {:ok, flow} = File.read!("test/basic.flow") 
       |> FlowRunner.compile()
-      |> FlowRunner.run(%FlowRunner.Context{})
+
+    context = %FlowRunner.Context{}
+    {:ok, _result, context} = FlowRunner.run(flow, context)
+    {:ok, _result, context} = FlowRunner.run(flow, context)
+    {:finished} = FlowRunner.run(flow, context)
   end
 end

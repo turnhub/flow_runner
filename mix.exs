@@ -32,7 +32,8 @@ defmodule FlowRunner.MixProject do
       {:credo, "~> 1.5"},
       {:expression, "~> 0.2.1"},
       {:junit_formatter, "~> 3.1", only: [:test]},
-      {:mix_test_watch, "~> 1.1"}
+      {:mix_test_watch, "~> 1.1"},
+      {:poison, "~> 5.0"}
     ]
   end
 end
