@@ -9,21 +9,25 @@ defmodule FlowRunner.CompileTest do
 
   test "compiles" do
     {:ok, container} = FlowRunner.compile(
-      ~s({"specification_version": "1",
+      ~s({"specification_version": "1.0.0-rc1",
+          "uuid": "3666a05d-3792-482b-8f7f-9e2472e4f027",
           "flows":[{
-            "uuid":"uuid",
+            "uuid":"3666a05d-3792-482b-8f7f-9e2472e4f027",
             "blocks":[{
+              "uuid": "3666a05d-3792-482b-8f7f-9e2472e4f027",
               "name": "test block",
               "exits": [{"name": "test exit"}]
             }]
           }]}))
     assert container == %Container{
-      specification_version: "1",
+      specification_version: "1.0.0-rc1",
+      uuid: "3666a05d-3792-482b-8f7f-9e2472e4f027",
       flows: [
         %Flow{
-          uuid: "uuid",
+          uuid: "3666a05d-3792-482b-8f7f-9e2472e4f027",
           blocks: [
             %Block{
+              uuid: "3666a05d-3792-482b-8f7f-9e2472e4f027",
               name: "test block",
               exits: [
                 %Exit{

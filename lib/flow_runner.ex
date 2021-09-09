@@ -10,7 +10,7 @@ defmodule FlowRunner do
   @spec compile(String.t()) :: 
     {:ok, Container}
     | {:error, Exception.t()}
-  def compile(json)  do
+  def compile(json) do
     FlowRunner.Compile.compile(json)
   end
 

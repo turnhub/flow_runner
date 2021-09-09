@@ -15,7 +15,13 @@ defmodule FlowRunner.Compile do
             }
         ]
     }
+
+    @spec compile(iodata()) :: {:ok, Container}
     def compile(json) do
-        Poison.decode(json, as: @schema)
+        {:ok, container} = Poison.decode(json, as: @schema)
+        case Container.validate(container) do
+            :ok -> {:ok, container}
+            {:error, reason} -> {:error, reason}
+        end
     end
 end
