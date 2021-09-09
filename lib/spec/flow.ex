@@ -12,4 +12,8 @@ defmodule FlowRunner.Spec.Flow do
         :languages,
         :blocks
     ]
+
+    def validate(flow) do
+        [FlowRunner.Spec.Validate.validate_uuid(flow)]
+    end
 end

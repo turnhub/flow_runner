@@ -3,25 +3,36 @@ defmodule FlowRunner.Compile do
     alias FlowRunner.Spec.Container
     alias FlowRunner.Spec.Exit
     alias FlowRunner.Spec.Flow
+    alias FlowRunner.Spec.Resource
 
-    @schema %Container{
-        flows: [
-            %Flow{
-                blocks: [
-                    %Block{
-                        exits: [%Exit{}]
-                    }
-                ]
-            }
-        ]
-    }
+    def schema do
+        %Container{
+            flows: [
+                %Flow{
+                    blocks: [
+                        %Block{
+                            exits: [%Exit{}]
+                        }
+                    ]
+                }
+            ],
+            resources: [
+                %Resource{
+                    values: [
+                        %FlowRunner.Spec.ResourceValue{}
+                    ]
+                }
+            ]
+        }
+    end
 
     @spec compile(iodata()) :: {:ok, Container}
     def compile(json) do
-        {:ok, container} = Poison.decode(json, as: @schema)
-        case Container.validate(container) do
+        {:ok, container} = Poison.decode(json, as: schema())
+        case FlowRunner.Spec.Validate.results(Container.validate(container)) do
             :ok -> {:ok, container}
             {:error, reason} -> {:error, reason}
+            unless -> {:error, "unexpected result #{inspect unless}"}
         end
     end
 end

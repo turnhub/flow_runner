@@ -8,4 +8,8 @@ defmodule FlowRunner.Spec.Exit do
         :default,
         :config
     ]
+
+    def validate(exit) do
+        [FlowRunner.Spec.Validate.validate_uuid(exit)]
+    end
 end
