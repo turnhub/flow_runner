@@ -43,33 +43,21 @@ defmodule FlowRunner do
     end
 
     # Identify the block we are transitioning to.
-    next_block =
-      if context.last_block_uuid == nil do
-        # If this is the first time we are executing this flow then
-        # transition to the first block.
-        {:ok, next_block} = Flow.fetch_block(flow, flow.first_block_id)
-        next_block
-      else
-        # Fetch the previous block we were at and then evaluate the
-        # exits to identify the next block.
-        {:ok, previous_block} = Flow.fetch_block(flow, context.last_block_uuid)
-        # Process any user input we have been given.
-        context =
-          if user_input != nil do
-            {:ok, context} = Block.evaluate_user_input(previous_block, context, user_input)
-            context
-          else
-            context
-          end
+    {context, next_block} = if context.last_block_uuid == nil do
+      # If this is the first time we are executing this flow then
+      # transition to the first block.
+      {:ok, next_block} = Flow.fetch_block(flow, flow.first_block_id)
+      {context, next_block}
+    else
+      # Fetch the previous block we were at and then evaluate the
+      # exits to identify the next block.
+      {:ok, previous_block} = Flow.fetch_block(flow, context.last_block_uuid)
+      Block.evaluate_outgoing(previous_block, context, flow, user_input)
+    end
 
-        {:ok, exit} = Block.evaluate_exits(previous_block, context)
-        {:ok, next_block} = Flow.fetch_block(flow, exit.destination_block)
-        next_block
-      end
-
-    # Evaluate the block we have transitioned to and return the resource if 
-    # it exits.
-    {:ok, context, output} = Block.evaluate_block(flow, next_block, context, container)
+    # Evaluate the block we have transitioned to and return updated context and output.
+    {:ok, context, output} = Block.evaluate_incoming(next_block, flow, context, container)
+    context = %Context{context | last_block_uuid: next_block.uuid}
     {:ok, context, output}
   end
 end
