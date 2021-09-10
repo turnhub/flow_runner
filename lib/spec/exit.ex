@@ -12,4 +12,8 @@ defmodule FlowRunner.Spec.Exit do
     def validate(exit) do
         [FlowRunner.Spec.Validate.validate_uuid(exit)]
     end
+
+    def evaluate(exit, context) do
+        Expression.evalute(exit.test, context.vars)
+    end
 end
