@@ -20,13 +20,17 @@ defmodule FlowRunnerTest do
   end
 
   test "select one response" do
-    {:ok, container} = File.read!("test/selectoneresponse.flow") 
-      |> FlowRunner.compile
+    {:ok, container} =
+      File.read!("test/selectoneresponse.flow")
+      |> FlowRunner.compile()
+
     flow = Enum.at(container.flows, 0)
+
     context = %FlowRunner.Context{
       language: "fra",
-      mode: "TEXT",
+      mode: "TEXT"
     }
+
     {:ok, context, output} = FlowRunner.next_block(container, flow, context)
     assert %{prompt: %{value: "اختر اسمًا"}} = output
     assert %{waiting_for_user_input: true} = context
