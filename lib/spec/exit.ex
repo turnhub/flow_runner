@@ -14,6 +14,6 @@ defmodule FlowRunner.Spec.Exit do
     end
 
     def evaluate(exit, context) do
-        Expression.evalute(exit.test, context.vars)
+        Expression.evaluate(exit.test, context.vars)
     end
 end

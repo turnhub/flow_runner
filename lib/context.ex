@@ -1,5 +1,6 @@
 defmodule FlowRunner.Context do
     defstruct [
+        # iso 639-3 language code.
         language: "eng",
         mode: "TEXT",
         contact: nil,

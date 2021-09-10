@@ -19,13 +19,13 @@ defmodule FlowRunner do
   @doc """
   next_block transitions us from one block to the next block in a flow. It requires a
   flow, a run context and optionally user input requested from the previous block.
-  It returns an updated context, optionally a resource that should be rendered on the 
+  It returns an updated context, optionally an output that should be rendered on the 
   clients device.
 
   The updated context may have context.waiting_for_user_input set to true. If so the
   next call of next_block must have user_input != nil.
   """
-  def next_block(%Flow{} = flow, %Context{} = context, user_input \\ nil) do
+  def next_block(%Container{} = container, %Flow{} = flow, %Context{} = context, user_input \\ nil) do
     # Sanity checks, are we in an expected state.
     if context.current_flow_uuid != nil && flow.uuid != context.current_flow_uuid do
       raise ArgumentError, message: "currently executing flow #{context.current_flow_uuid} does not match passed in flow #{flow.uuid}"
@@ -60,7 +60,7 @@ defmodule FlowRunner do
 
     # Evaluate the block we have transitioned to and return the resource if 
     # it exits.
-    {:ok, context, resource} = Block.evaluate_block(flow, next_block, context)
-    {:ok, context, resource}
+    {:ok, context, output} = Block.evaluate_block(flow, next_block, context, container)
+    {:ok, context, output}
   end
 end

@@ -74,7 +74,7 @@
       "values": [
         {
           "language_id": "22",
-          "value": "",
+          "value": "welcome to this block",
           "content_type": "TEXT",
           "modes": [
             "TEXT"
@@ -90,7 +90,7 @@
         },
         {
           "language_id": "22",
-          "value": "",
+          "value": "welcome to this block",
           "content_type": "TEXT",
           "modes": [
             "USSD"

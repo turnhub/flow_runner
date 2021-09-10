@@ -26,18 +26,20 @@ defmodule FlowRunner.Spec.Block do
 
     def evaluate_user_input(_block, context, _user_input) do
         # TODO set the thing that needs setting.
-        %Context{context | waiting_for_user_input: false}
+        {:ok, %Context{context | waiting_for_user_input: false}}
+        {:error, "incomplete"}
     end
 
-    def evaluate_block(flow, block, context) do
+    def evaluate_block(flow, block, context, container) do
         # TODO There has to be a better way...
-        {:ok, context, resource_id} = case block.type do
-            "MobilePrimitives.Message" -> FlowRunner.Spec.Blocks.Message.evaluate(block, context)
+        {:ok, context, output} = case block.type do
+            "MobilePrimitives.Message" -> FlowRunner.Spec.Blocks.Message.evaluate(flow, block, context, container)
             unknown -> {:error, "unknown block type #{unknown}"}
         end
     end
 
-    @spec evaluate_exits(%FlowRunner.Spec.Block{}, %FlowRunner.Context{}) :: %FlowRunner.Spec.Exit{}
+    @spec evaluate_exits(%FlowRunner.Spec.Block{}, %FlowRunner.Context{}) ::
+        {:ok, %FlowRunner.Spec.Exit{}} | {:error, any()}
     def evaluate_exits(block, %Context{} = context) do
         truthy_exits = Enum.filter(block.exits, &(&1.default || Exit.evaluate(&1, context)))
         if length(truthy_exits) > 0 do

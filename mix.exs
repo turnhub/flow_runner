@@ -10,7 +10,10 @@ defmodule FlowRunner.MixProject do
       start_permanent: Mix.env() == :prod,
       test_coverage: [tool: LcovEx, output: "cover"],
       deps: deps(),
-      dialyzer: [plt_add_apps: [:ex_unit, :mix], ignore_warnings: "config/dialyzer.ignore"]
+      dialyzer: [
+        plt_add_apps: [:ex_unit, :mix],
+        ignore_warnings: "config/dialyzer.ignore"
+      ]
     ]
   end
 

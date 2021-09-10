@@ -33,4 +33,8 @@ defmodule FlowRunner.Spec.Container do
         end
     end
 
+    def fetch_resource_by_uuid(%Container{resources: resources}, uuid) do
+        [resource | _tail] = Enum.filter(resources, &(&1.uuid == uuid))
+        resource
+    end
 end

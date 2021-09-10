@@ -9,6 +9,10 @@ defmodule FlowRunner.Spec.ResourceValue do
 
     alias FlowRunner.Spec.ResourceValue
 
+    def supports_mode(resource_value, mode) do
+        Enum.count(resource_value.modes, &(&1 == mode)) > 0
+    end
+
     def validate(resource) do
         [validate_content_type(resource)]
     end
@@ -21,4 +25,5 @@ defmodule FlowRunner.Spec.ResourceValue do
     def validate_content_type(%ResourceValue{content_type: content_type}) do
         {:error, "unknown content_type #{content_type}"}
     end
+
 end

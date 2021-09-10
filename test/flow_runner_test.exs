@@ -13,6 +13,7 @@ defmodule FlowRunnerTest do
 
     flow = Enum.at(container.flows, 0)
     context = %FlowRunner.Context{}
-    {:ok, _context, _resource} = FlowRunner.next_block(flow, context)
+    {:ok, _context, output} = FlowRunner.next_block(container, flow, context)
+    assert %{prompt: %{value: "welcome to this block"}} = output
   end
 end
