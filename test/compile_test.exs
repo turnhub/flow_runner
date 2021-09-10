@@ -8,8 +8,7 @@ defmodule FlowRunner.CompileTest do
   alias FlowRunner.Spec.Flow
 
   test "compiles" do
-    {:ok, container} = FlowRunner.compile(
-      ~s({"specification_version": "1.0.0-rc1",
+    {:ok, container} = FlowRunner.compile(~s({"specification_version": "1.0.0-rc1",
           "uuid": "3666a05d-3792-482b-8f7f-9e2472e4f027",
           "flows":[{
             "uuid":"3666a05d-3792-482b-8f7f-9e2472e4f027",
@@ -19,25 +18,26 @@ defmodule FlowRunner.CompileTest do
               "exits": [{"name": "test exit"}]
             }]
           }]}))
+
     assert container == %Container{
-      specification_version: "1.0.0-rc1",
-      uuid: "3666a05d-3792-482b-8f7f-9e2472e4f027",
-      flows: [
-        %Flow{
-          uuid: "3666a05d-3792-482b-8f7f-9e2472e4f027",
-          blocks: [
-            %Block{
-              uuid: "3666a05d-3792-482b-8f7f-9e2472e4f027",
-              name: "test block",
-              exits: [
-                %Exit{
-                  name: "test exit"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
+             specification_version: "1.0.0-rc1",
+             uuid: "3666a05d-3792-482b-8f7f-9e2472e4f027",
+             flows: [
+               %Flow{
+                 uuid: "3666a05d-3792-482b-8f7f-9e2472e4f027",
+                 blocks: [
+                   %Block{
+                     uuid: "3666a05d-3792-482b-8f7f-9e2472e4f027",
+                     name: "test block",
+                     exits: [
+                       %Exit{
+                         name: "test exit"
+                       }
+                     ]
+                   }
+                 ]
+               }
+             ]
+           }
   end
 end

@@ -1,29 +1,28 @@
 defmodule FlowRunner.Spec.ResourceValue do
-    defstruct [
-        :language_id,
-        :content_type,
-        :mime_type,
-        :modes,
-        :value
-    ]
+  defstruct [
+    :language_id,
+    :content_type,
+    :mime_type,
+    :modes,
+    :value
+  ]
 
-    alias FlowRunner.Spec.ResourceValue
+  alias FlowRunner.Spec.ResourceValue
 
-    def supports_mode(resource_value, mode) do
-        Enum.count(resource_value.modes, &(&1 == mode)) > 0
-    end
+  def supports_mode(resource_value, mode) do
+    Enum.count(resource_value.modes, &(&1 == mode)) > 0
+  end
 
-    def validate(resource) do
-        [validate_content_type(resource)]
-    end
+  def validate(resource) do
+    [validate_content_type(resource)]
+  end
 
-    def validate_content_type(%ResourceValue{content_type: "TEXT"}), do: :ok
-    def validate_content_type(%ResourceValue{content_type: "AUDIO"}), do: :ok
-    def validate_content_type(%ResourceValue{content_type: "IMAGE"}), do: :ok
-    def validate_content_type(%ResourceValue{content_type: "VIDEO"}), do: :ok
+  def validate_content_type(%ResourceValue{content_type: "TEXT"}), do: :ok
+  def validate_content_type(%ResourceValue{content_type: "AUDIO"}), do: :ok
+  def validate_content_type(%ResourceValue{content_type: "IMAGE"}), do: :ok
+  def validate_content_type(%ResourceValue{content_type: "VIDEO"}), do: :ok
 
-    def validate_content_type(%ResourceValue{content_type: content_type}) do
-        {:error, "unknown content_type #{content_type}"}
-    end
-
+  def validate_content_type(%ResourceValue{content_type: content_type}) do
+    {:error, "unknown content_type #{content_type}"}
+  end
 end
