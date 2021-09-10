@@ -1,4 +1,7 @@
 defmodule FlowRunner.Spec.Exit do
+  @moduledoc """
+  An exit is a potential branch off a FlowRunner.Spec.Block.
+  """
   defstruct [
     :uuid,
     :name,

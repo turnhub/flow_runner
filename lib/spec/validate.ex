@@ -1,4 +1,7 @@
 defmodule FlowRunner.Spec.Validate do
+  @moduledoc """
+  Provides methods to validate Flow content.
+  """
   def results(validations) do
     errors = Enum.filter(validations, &(&1 != :ok))
 

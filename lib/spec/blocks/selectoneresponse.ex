@@ -1,4 +1,8 @@
 defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
+  @moduledoc """
+  A specialisation of a block that sends users a set of options and
+  waits for the user to come back with one of them.
+  """
   alias FlowRunner.Context
   alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Resource

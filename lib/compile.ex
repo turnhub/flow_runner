@@ -1,4 +1,7 @@
 defmodule FlowRunner.Compile do
+  @moduledoc """
+  Compile converts a JSON flow into an internal representation that is able to be run.
+  """
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Exit

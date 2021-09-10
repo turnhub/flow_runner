@@ -1,4 +1,14 @@
 defmodule FlowRunner.Spec.Block do
+  @moduledoc """
+  A Block is a unit of execution within a flow. It may wait for user input
+  and provide content that should be rendered to the user.
+  """
+  alias FlowRunner.Context
+  alias FlowRunner.Spec.Block
+  alias FlowRunner.Spec.Exit
+  alias FlowRunner.Spec.Flow
+  alias FlowRunner.Spec.Validate
+
   @derive [Poison.Encoder]
   defstruct [
     :uuid,
@@ -12,12 +22,6 @@ defmodule FlowRunner.Spec.Block do
     :config,
     :exits
   ]
-
-  alias FlowRunner.Context
-  alias FlowRunner.Spec.Block
-  alias FlowRunner.Spec.Exit
-  alias FlowRunner.Spec.Flow
-  alias FlowRunner.Spec.Validate
 
   def validate(block) do
     exits =

@@ -1,4 +1,7 @@
 defmodule FlowRunner do
+  @moduledoc """
+  Provides methods to run a Flow.
+  """
   alias FlowRunner.Context
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container
@@ -18,7 +21,7 @@ defmodule FlowRunner do
   @doc """
   next_block transitions us from one block to the next block in a flow. It requires a
   flow, a run context and optionally user input requested from the previous block.
-  It returns an updated context, optionally an output that should be rendered on the 
+  It returns an updated context, optionally an output that should be rendered on the
   clients device.
 
   The updated context may have context.waiting_for_user_input set to true. If so the

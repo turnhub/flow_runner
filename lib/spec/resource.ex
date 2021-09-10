@@ -1,11 +1,14 @@
 defmodule FlowRunner.Spec.Resource do
+  @moduledoc """
+  Resource stores a piece of content in various languages and modes. Usually associated with a block.
+  """
+  alias FlowRunner.Spec.ResourceValue
+  alias FlowRunner.Spec.Flow
+
   defstruct [
     :uuid,
     :values
   ]
-
-  alias FlowRunner.Spec.ResourceValue
-  alias FlowRunner.Spec.Flow
 
   def validate(resource) do
     [FlowRunner.Spec.Validate.validate_uuid(resource)] ++

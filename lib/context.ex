@@ -1,4 +1,7 @@
 defmodule FlowRunner.Context do
+  @moduledoc """
+  A context provides information about an ongoing user flow session.
+  """
   defstruct [
     # iso 639-3 language code.
     language: "eng",

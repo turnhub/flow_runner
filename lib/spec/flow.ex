@@ -1,4 +1,7 @@
 defmodule FlowRunner.Spec.Flow do
+  @moduledoc """
+  A Flow is a set of connected blocks as defined by the Flow Spec.
+  """
   defstruct [
     :uuid,
     :name,
@@ -23,7 +26,7 @@ defmodule FlowRunner.Spec.Flow do
     else
       blocks = Enum.filter(flow.blocks, &(&1.uuid == block_uuid))
 
-      if length(blocks) == 0 do
+      if Enum.empty?(blocks) do
         {:error, "no block with uuid #{block_uuid} in flow #{flow.uuid}"}
       else
         {:ok, Enum.at(blocks, 0)}

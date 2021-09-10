@@ -1,4 +1,7 @@
 defmodule FlowRunner.Spec.Blocks.Message do
+  @moduledoc """
+  A type of block that sends a message to the user.
+  """
   alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Resource
 

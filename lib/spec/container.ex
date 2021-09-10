@@ -1,4 +1,7 @@
 defmodule FlowRunner.Spec.Container do
+  @moduledoc """
+  Container contains a set of flows and resources according to the Flow spec.
+  """
   alias FlowRunner.Spec.Container, as: Container
   alias FlowRunner.Spec.Validate, as: Validate
   alias FlowRunner.Spec.Flow

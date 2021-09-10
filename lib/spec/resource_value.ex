@@ -1,4 +1,9 @@
 defmodule FlowRunner.Spec.ResourceValue do
+  @moduledoc """
+  ResourceValue is a struct that stores a piece of content for a given language and mode.
+  """
+  alias FlowRunner.Spec.ResourceValue
+
   defstruct [
     :language_id,
     :content_type,
@@ -6,8 +11,6 @@ defmodule FlowRunner.Spec.ResourceValue do
     :modes,
     :value
   ]
-
-  alias FlowRunner.Spec.ResourceValue
 
   def supports_mode(resource_value, mode) do
     Enum.count(resource_value.modes, &(&1 == mode)) > 0
