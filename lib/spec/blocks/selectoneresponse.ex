@@ -8,14 +8,20 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
   alias FlowRunner.Spec.Resource
 
   def evaluate_incoming(flow, block, context, container) do
-    resource = Container.fetch_resource_by_uuid(container, block.config["prompt"])
-    prompt = Resource.matching_resource(resource, context.language, context.mode, flow)
+    {:ok, resource} = Container.fetch_resource_by_uuid(container, block.config["prompt"])
 
-    output = %FlowRunner.Output{
-      prompt: prompt
-    }
+    case Resource.matching_resource(resource, context.language, context.mode, flow) do
+      {:ok, prompt} ->
+        {
+          :ok,
+          %Context{context | waiting_for_user_input: true},
+          %FlowRunner.Output{
+            prompt: prompt
+          }
+        }
 
-    context = %Context{context | waiting_for_user_input: true}
-    {:ok, context, output}
+      {:error, reason} ->
+        {:error, reason}
+    end
   end
 end

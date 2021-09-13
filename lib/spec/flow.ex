@@ -20,17 +20,17 @@ defmodule FlowRunner.Spec.Flow do
     [FlowRunner.Spec.Validate.validate_uuid(flow)]
   end
 
-  def fetch_block(flow, block_uuid) do
-    if flow.blocks == nil do
-      {:error, "no blocks in flow"}
-    else
-      blocks = Enum.filter(flow.blocks, &(&1.uuid == block_uuid))
+  def fetch_block(flow, block_uuid) when is_list(flow.blocks) do
+    blocks = Enum.filter(flow.blocks, &(&1.uuid == block_uuid))
 
-      if Enum.empty?(blocks) do
-        {:error, "no block with uuid #{block_uuid} in flow #{flow.uuid}"}
-      else
-        {:ok, Enum.at(blocks, 0)}
-      end
+    if Enum.empty?(blocks) do
+      {:error, "no block with uuid #{block_uuid} in flow #{flow.uuid}"}
+    else
+      {:ok, Enum.at(blocks, 0)}
     end
+  end
+
+  def fetch_block(_flow, _block_uuid) do
+    {:error, "no blocks in flow"}
   end
 end

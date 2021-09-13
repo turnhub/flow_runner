@@ -17,6 +17,13 @@ defmodule FlowRunner.Spec.Container do
     :resources
   ]
 
+  def fetch_resource_by_uuid(%Container{resources: resources}, uuid) do
+    case Enum.filter(resources, &(&1.uuid == uuid)) do
+      [resource | _] -> {:ok, resource}
+      [] -> {:error, "no matching resource"}
+    end
+  end
+
   @spec validate(%Container{}) :: list()
   def validate(%Container{} = container) do
     flows =
@@ -47,10 +54,5 @@ defmodule FlowRunner.Spec.Container do
     else
       {:error, "invalid specification version '#{specification_version}'"}
     end
-  end
-
-  def fetch_resource_by_uuid(%Container{resources: resources}, uuid) do
-    [resource | _tail] = Enum.filter(resources, &(&1.uuid == uuid))
-    resource
   end
 end

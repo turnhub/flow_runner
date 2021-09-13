@@ -38,7 +38,8 @@ defmodule FlowRunner.Spec.Block do
 
   @spec evaluate_user_input(%Block{}, %FlowRunner.Context{}, iodata()) ::
           {:ok, %FlowRunner.Context{}}
-  def evaluate_user_input(block, context, user_input) do
+  def evaluate_user_input(block, context, user_input)
+      when context.waiting_for_user_input == true do
     vars =
       Map.merge(context.vars, %{
         "block" => %{"value" => user_input},
@@ -84,8 +85,8 @@ defmodule FlowRunner.Spec.Block do
 
   @spec evaluate_exits(%FlowRunner.Spec.Block{}, %FlowRunner.Context{}) ::
           {:ok, %FlowRunner.Spec.Exit{}} | {:error, any()}
-  def evaluate_exits(block, %Context{} = context) do
-    truthy_exits = Enum.filter(block.exits, &Exit.evaluate(&1, context))
+  def evaluate_exits(%Block{exits: exits}, %Context{} = context) do
+    truthy_exits = Enum.filter(exits, &Exit.evaluate(&1, context))
 
     if length(truthy_exits) > 0 do
       {:ok, Enum.at(truthy_exits, 0)}
