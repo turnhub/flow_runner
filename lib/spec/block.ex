@@ -39,7 +39,6 @@ defmodule FlowRunner.Spec.Block do
   @spec evaluate_user_input(%Block{}, %FlowRunner.Context{}, iodata()) ::
           {:ok, %FlowRunner.Context{}}
   def evaluate_user_input(block, context, user_input) do
-    # TODO set the thing that needs setting.
     vars =
       Map.merge(context.vars, %{
         "block" => %{"value" => user_input},
@@ -51,7 +50,6 @@ defmodule FlowRunner.Spec.Block do
   end
 
   def evaluate_incoming(block, flow, context, container) do
-    # TODO There has to be a better way to do this branch...
     case block.type do
       "MobilePrimitives.Message" ->
         FlowRunner.Spec.Blocks.Message.evaluate_incoming(flow, block, context, container)
