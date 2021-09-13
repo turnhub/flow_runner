@@ -17,6 +17,7 @@ defmodule FlowRunner.Context do
     # Uuid of the last block executed and rendered to the user. No exits have been evaluated.
     last_block_uuid: nil,
     # vars set and mutated during the flow.
-    vars: %{}
+    vars: %{},
+    finished: false
   ]
 end

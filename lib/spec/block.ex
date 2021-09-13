@@ -50,6 +50,10 @@ defmodule FlowRunner.Spec.Block do
     {:ok, context}
   end
 
+  def evaluate_user_input(_block, _context, _user_input) do
+    {:error, "unexpectedly received user input"}
+  end
+
   def evaluate_incoming(block, flow, context, container) do
     case block.type do
       "MobilePrimitives.Message" ->
@@ -79,8 +83,15 @@ defmodule FlowRunner.Spec.Block do
       end
 
     {:ok, exit} = Block.evaluate_exits(block, context)
-    {:ok, next_block} = Flow.fetch_block(flow, exit.destination_block)
-    {context, next_block}
+
+    if exit.destination_block == "" || exit.destination_block == nil do
+      {:ok, %Context{context | finished: true}, nil}
+    else
+      case Flow.fetch_block(flow, exit.destination_block) do
+        {:ok, next_block} -> {:ok, context, next_block}
+        {:error, reason} -> {:error, reason}
+      end
+    end
   end
 
   @spec evaluate_exits(%FlowRunner.Spec.Block{}, %FlowRunner.Context{}) ::

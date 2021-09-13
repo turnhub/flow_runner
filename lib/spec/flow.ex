@@ -24,7 +24,7 @@ defmodule FlowRunner.Spec.Flow do
     blocks = Enum.filter(flow.blocks, &(&1.uuid == block_uuid))
 
     if Enum.empty?(blocks) do
-      {:error, "no block with uuid #{block_uuid} in flow #{flow.uuid}"}
+      {:error, "no block with uuid '#{block_uuid}' in flow '#{flow.uuid}'"}
     else
       {:ok, Enum.at(blocks, 0)}
     end

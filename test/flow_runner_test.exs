@@ -69,5 +69,6 @@ defmodule FlowRunnerTest do
     {:ok, context, output} = FlowRunner.next_block(container, flow, context, "maalika")
     assert %{prompt: %{value: "salaam maalika"}} = output
     assert %{waiting_for_user_input: false} = context
+    {:end, _context} = FlowRunner.next_block(container, flow, context)
   end
 end

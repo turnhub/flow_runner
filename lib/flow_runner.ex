@@ -51,12 +51,20 @@ defmodule FlowRunner do
         # Fetch the previous block we were at and then evaluate the
         # exits to identify the next block.
         {:ok, previous_block} = Flow.fetch_block(flow, context.last_block_uuid)
-        Block.evaluate_outgoing(previous_block, context, flow, user_input)
+
+        {:ok, context, next_block} =
+          Block.evaluate_outgoing(previous_block, context, flow, user_input)
+
+        {context, next_block}
       end
 
-    # Evaluate the block we have transitioned to and return updated context and output.
-    {:ok, context, output} = Block.evaluate_incoming(next_block, flow, context, container)
-    context = %Context{context | last_block_uuid: next_block.uuid}
-    {:ok, context, output}
+    if next_block == nil do
+      {:end, context}
+    else
+      # Evaluate the block we have transitioned to and return updated context and output.
+      {:ok, context, output} = Block.evaluate_incoming(next_block, flow, context, container)
+      context = %Context{context | last_block_uuid: next_block.uuid}
+      {:ok, context, output}
+    end
   end
 end
