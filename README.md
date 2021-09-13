@@ -3,7 +3,7 @@
 Flow Runner implements the Flow Content Interop spec v1.0.0-rc2 as documented at 
 https://floip.gitbook.io/flow-specification/. It provides the means to Run a flow defined in the specification and interact with some user.
 
-This Flow Runnner only supports the TEXT, USSD, RICH_MESSAGING modes.
+This Flow Runnner only supports the TEXT, RICH_MESSAGING modes.
 
 ### Modules
 

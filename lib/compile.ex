@@ -29,9 +29,9 @@ defmodule FlowRunner.Compile do
     }
   end
 
-  @spec compile(iodata()) :: {:ok, Container}
-  def compile(json) do
-    {:ok, container} = Poison.decode(json, as: schema())
+  @spec compile(iodata()) :: {:ok, %Container{}}
+  def compile(json) when is_binary(json) do
+    {:ok, container} = Poison.decode(json, %{as: schema()})
 
     case FlowRunner.Spec.Validate.results(Container.validate(container)) do
       :ok -> {:ok, container}

@@ -36,6 +36,8 @@ defmodule FlowRunner.Spec.Block do
     ] ++ Enum.concat(Enum.map(exits, &Exit.validate/1))
   end
 
+  @spec evaluate_user_input(%Block{}, %FlowRunner.Context{}, iodata()) ::
+          {:ok, %FlowRunner.Context{}}
   def evaluate_user_input(block, context, user_input) do
     # TODO set the thing that needs setting.
     vars =

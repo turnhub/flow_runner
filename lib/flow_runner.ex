@@ -11,12 +11,7 @@ defmodule FlowRunner do
   Compile takes a json flow and returns a parsed and validated
   flow.
   """
-  @spec compile(String.t()) ::
-          {:ok, Container}
-          | {:error, Exception.t()}
-  def compile(json) do
-    FlowRunner.Compile.compile(json)
-  end
+  defdelegate compile(json), to: FlowRunner.Compile
 
   @doc """
   next_block transitions us from one block to the next block in a flow. It requires a
