@@ -8,6 +8,8 @@ defmodule FlowRunner.Spec.Block do
   alias FlowRunner.Spec.Exit
   alias FlowRunner.Spec.Flow
   alias FlowRunner.Spec.Validate
+  alias FlowRunner.Spec.Blocks.Message
+  alias FlowRunner.Spec.Blocks.SelectOneResponse
 
   @derive [Poison.Encoder]
   defstruct [
@@ -57,10 +59,10 @@ defmodule FlowRunner.Spec.Block do
   def evaluate_incoming(block, flow, context, container) do
     case block.type do
       "MobilePrimitives.Message" ->
-        FlowRunner.Spec.Blocks.Message.evaluate_incoming(flow, block, context, container)
+        Message.evaluate_incoming(flow, block, context, container)
 
       "MobilePrimitives.SelectOneResponse" ->
-        FlowRunner.Spec.Blocks.SelectOneResponse.evaluate_incoming(
+        SelectOneResponse.evaluate_incoming(
           flow,
           block,
           context,
@@ -82,12 +84,12 @@ defmodule FlowRunner.Spec.Block do
         context
       end
 
-    {:ok, exit} = Block.evaluate_exits(block, context)
+    {:ok, %Exit{destination_block: destination_block}} = Block.evaluate_exits(block, context)
 
-    if exit.destination_block == "" || exit.destination_block == nil do
+    if destination_block == "" || destination_block == nil do
       {:ok, %Context{context | finished: true}, nil}
     else
-      case Flow.fetch_block(flow, exit.destination_block) do
+      case Flow.fetch_block(flow, destination_block) do
         {:ok, next_block} -> {:ok, context, next_block}
         {:error, reason} -> {:error, reason}
       end

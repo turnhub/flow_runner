@@ -23,23 +23,32 @@ defmodule FlowRunner do
   next call of next_block must have user_input != nil.
   """
   def next_block(
+        %Container{},
+        %Flow{},
+        %Context{} = context,
+        user_input \\ nil
+      )
+      when context.waiting_for_user_input and user_input == nil do
+    {:error, "waiting for user input but did not receive it"}
+  end
+
+  def next_block(
+        %Container{},
+        %Flow{uuid: uuid},
+        %Context{current_flow_uuid: current_flow_uuid},
+        _user_input
+      )
+      when current_flow_uuid != nil and uuid != current_flow_uuid do
+    {:error,
+     "currently executing flow #{current_flow_uuid} does not match passed in flow #{uuid}"}
+  end
+
+  def next_block(
         %Container{} = container,
         %Flow{} = flow,
         %Context{} = context,
-        user_input \\ nil
+        user_input
       ) do
-    # Sanity checks, are we in an expected state.
-    if context.current_flow_uuid != nil && flow.uuid != context.current_flow_uuid do
-      raise ArgumentError,
-        message:
-          "currently executing flow #{context.current_flow_uuid} does not match passed in flow #{flow.uuid}"
-    end
-
-    # If we were expecting input did we get it?
-    if context.waiting_for_user_input && user_input == nil do
-      raise ArgumentError, message: "waiting for user input but did not receive it"
-    end
-
     # Identify the block we are transitioning to.
     {context, next_block} =
       if context.last_block_uuid == nil do
