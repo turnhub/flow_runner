@@ -24,7 +24,7 @@ defmodule FlowTest do
 
     assert {:error, _} = Flow.fetch_block(flow, "non-existent")
 
-    emptyFlow = %Flow{}
-    assert {:error, _} = Flow.fetch_block(emptyFlow, "anything")
+    empty_flow = %Flow{}
+    assert {:error, _} = Flow.fetch_block(empty_flow, "anything")
   end
 end

@@ -29,11 +29,11 @@ defmodule FlowRunner.Spec.Resource do
         x.language_id == language["id"] && ResourceValue.supports_mode(x, mode)
       end
 
-      resourceValues = Enum.filter(resources, matching_source?)
+      resource_values = Enum.filter(resources, matching_source?)
 
-      if length(resourceValues) > 0 do
-        [resourceValue | _] = resourceValues
-        {:ok, resourceValue}
+      if length(resource_values) > 0 do
+        [resource_value | _] = resource_values
+        {:ok, resource_value}
       else
         {:error, "no matching resource"}
       end
