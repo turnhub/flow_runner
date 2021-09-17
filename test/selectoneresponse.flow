@@ -1,0 +1,687 @@
+{
+  "specification_version": "1.0.0-rc2",
+  "uuid": "3666a05d-3792-482b-8f7f-9e2472e4f027",
+  "name": "selectoneresponse",
+  "description": "select one response flow used for testing.",
+  "vendor_metadata": {},
+  "flows": [
+    {
+      "uuid": "efaabaac-d035-43f5-a7fe-0e4e757c8095",
+      "name": "multi",
+      "label": "multi",
+      "last_modified": "2021-09-10T14:15:26.310Z",
+      "interaction_timeout": 30,
+      "vendor_metadata": {},
+      "supported_modes": [
+        "TEXT"
+      ],
+      "languages": [
+        {
+          "id": "22",
+          "label": "English",
+          "iso_639_3": "eng"
+        },
+        {
+          "id": "23",
+          "label": "French",
+          "iso_639_3": "fra"
+        }
+      ],
+      "blocks": [
+        {
+          "uuid": "f3534d39-7847-44e3-8449-6f20b13eaa54",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 186,
+              "y": 513
+            }
+          },
+          "vendor_metadata": {
+            "io_viamo": {
+              "uiData": {
+                "isSelected": false
+              },
+              "branchingType": "ADVANCED",
+              "noValidResponse": "END_CALL"
+            }
+          },
+          "type": "MobilePrimitives.SelectOneResponse",
+          "name": "choose",
+          "label": "choose",
+          "semantic_label": "",
+          "config": {
+            "prompt": "0e12ae61-15bd-4059-b0a4-f0ec583e45a5",
+            "choices": {
+              "yaseen": "d737c5f5-abc5-4e9d-a2ea-e57cf7068f8e",
+              "maalika": "d8198744-41e5-46bf-a438-87181a6b82c0"
+            }
+          },
+          "exits": [
+            {
+              "uuid": "41bb4dc8-d1b9-4233-8102-65a4a03f21e3",
+              "name": "yaseen",
+              "test": "block.value = \"yaseen\"",
+              "config": {},
+              "destination_block": "b84da5c4-7e9b-47d9-8859-74b5dc56e14a"
+            },
+            {
+              "uuid": "f017a219-ee90-44f8-83ad-16d3c70dcb47",
+              "name": "maalika",
+              "config": {},
+              "destination_block": "78b98d21-81e0-41cf-8979-33e501936bbc",
+              "test": "block.value = \"maalika\""
+            },
+            {
+              "uuid": "001a8039-11dd-42ff-b8f3-abb5028066cf",
+              "name": "Default",
+              "default": true,
+              "test": "",
+              "config": {}
+            }
+          ],
+          "tags": []
+        },
+        {
+          "uuid": "b84da5c4-7e9b-47d9-8859-74b5dc56e14a",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 141,
+              "y": 702
+            }
+          },
+          "vendor_metadata": {
+            "io_viamo": {
+              "uiData": {
+                "isSelected": false
+              },
+              "branchingType": "UNIFIED",
+              "noValidResponse": "END_CALL"
+            }
+          },
+          "type": "MobilePrimitives.Message",
+          "name": "hello_yaseen",
+          "label": "hello yaseen",
+          "semantic_label": "",
+          "exits": [
+            {
+              "uuid": "abfcced2-9e7b-4a95-a98a-c53f044c65b5",
+              "name": "1",
+              "test": "block.value > 0",
+              "config": {}
+            },
+            {
+              "uuid": "4fb8208f-b3be-4907-8d11-e9f262f0bff7",
+              "name": "Default",
+              "default": true,
+              "test": "",
+              "config": {}
+            }
+          ],
+          "config": {
+            "prompt": "47a6c20b-440d-4ea2-96e3-84bc9e9d99dc"
+          },
+          "tags": []
+        },
+        {
+          "uuid": "78b98d21-81e0-41cf-8979-33e501936bbc",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 462,
+              "y": 728
+            }
+          },
+          "vendor_metadata": {
+            "io_viamo": {
+              "uiData": {
+                "isSelected": false
+              },
+              "branchingType": "UNIFIED",
+              "noValidResponse": "END_CALL"
+            }
+          },
+          "type": "MobilePrimitives.Message",
+          "name": "hello_maalika",
+          "label": "hello maalika",
+          "semantic_label": "",
+          "exits": [
+            {
+              "uuid": "63c2fa67-ab88-467a-95ba-5c62048ec346",
+              "name": "Default",
+              "default": true,
+              "test": "",
+              "config": {}
+            }
+          ],
+          "config": {
+            "prompt": "a3fb1f26-54e1-4b0d-8ba1-f9a5288c8360"
+          },
+          "tags": []
+        }
+      ],
+      "first_block_id": "f3534d39-7847-44e3-8449-6f20b13eaa54"
+    }
+  ],
+  "resources": [
+    {
+      "uuid": "0e12ae61-15bd-4059-b0a4-f0ec583e45a5",
+      "values": [
+        {
+          "language_id": "22",
+          "value": "choose a name",
+          "content_type": "TEXT",
+          "modes": [
+            "TEXT"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "SMS"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "USSD"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "AUDIO",
+          "modes": [
+            "IVR"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "IMAGE",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "VIDEO",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "OFFLINE"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "IMAGE",
+          "modes": [
+            "OFFLINE"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "VIDEO",
+          "modes": [
+            "OFFLINE"
+          ]
+        },
+        {
+          "language_id": "23",
+          "value": "اختر اسمًا",
+          "content_type": "TEXT",
+          "modes": [
+            "TEXT"
+          ]
+        },
+        {
+          "language_id": "23",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "SMS"
+          ]
+        },
+        {
+          "language_id": "23",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "USSD"
+          ]
+        },
+        {
+          "language_id": "23",
+          "value": "",
+          "content_type": "AUDIO",
+          "modes": [
+            "IVR"
+          ]
+        },
+        {
+          "language_id": "23",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "23",
+          "value": "",
+          "content_type": "IMAGE",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "23",
+          "value": "",
+          "content_type": "VIDEO",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "23",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "OFFLINE"
+          ]
+        },
+        {
+          "language_id": "23",
+          "value": "",
+          "content_type": "IMAGE",
+          "modes": [
+            "OFFLINE"
+          ]
+        },
+        {
+          "language_id": "23",
+          "value": "",
+          "content_type": "VIDEO",
+          "modes": [
+            "OFFLINE"
+          ]
+        }
+      ]
+    },
+    {
+      "uuid": "d737c5f5-abc5-4e9d-a2ea-e57cf7068f8e",
+      "values": [
+        {
+          "language_id": "22",
+          "content_type": "TEXT",
+          "modes": [
+            "TEXT"
+          ],
+          "value": "yaseen"
+        }
+      ]
+    },
+    {
+      "uuid": "d8198744-41e5-46bf-a438-87181a6b82c0",
+      "values": [
+        {
+          "language_id": "22",
+          "content_type": "TEXT",
+          "modes": [
+            "TEXT"
+          ],
+          "value": "maalika"
+        }
+      ]
+    },
+    {
+      "uuid": "47a6c20b-440d-4ea2-96e3-84bc9e9d99dc",
+      "values": [
+        {
+          "language_id": "22",
+          "value": "hello yaseen",
+          "content_type": "TEXT",
+          "modes": [
+            "TEXT"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "SMS"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "USSD"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "AUDIO",
+          "modes": [
+            "IVR"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "IMAGE",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "VIDEO",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "OFFLINE"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "IMAGE",
+          "modes": [
+            "OFFLINE"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "VIDEO",
+          "modes": [
+            "OFFLINE"
+          ]
+        },
+        {
+          "language_id": "23",
+          "value": "bonjoir yaseen",
+          "content_type": "TEXT",
+          "modes": [
+            "TEXT"
+          ]
+        },
+        {
+          "language_id": "23",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "SMS"
+          ]
+        },
+        {
+          "language_id": "23",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "USSD"
+          ]
+        },
+        {
+          "language_id": "23",
+          "value": "",
+          "content_type": "AUDIO",
+          "modes": [
+            "IVR"
+          ]
+        },
+        {
+          "language_id": "23",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "23",
+          "value": "",
+          "content_type": "IMAGE",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "23",
+          "value": "",
+          "content_type": "VIDEO",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "23",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "OFFLINE"
+          ]
+        },
+        {
+          "language_id": "23",
+          "value": "",
+          "content_type": "IMAGE",
+          "modes": [
+            "OFFLINE"
+          ]
+        },
+        {
+          "language_id": "23",
+          "value": "",
+          "content_type": "VIDEO",
+          "modes": [
+            "OFFLINE"
+          ]
+        }
+      ]
+    },
+    {
+      "uuid": "a3fb1f26-54e1-4b0d-8ba1-f9a5288c8360",
+      "values": [
+        {
+          "language_id": "22",
+          "value": "sup maalika",
+          "content_type": "TEXT",
+          "modes": [
+            "TEXT"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "SMS"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "USSD"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "AUDIO",
+          "modes": [
+            "IVR"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "IMAGE",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "VIDEO",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "OFFLINE"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "IMAGE",
+          "modes": [
+            "OFFLINE"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "VIDEO",
+          "modes": [
+            "OFFLINE"
+          ]
+        },
+        {
+          "language_id": "23",
+          "value": "salaam maalika",
+          "content_type": "TEXT",
+          "modes": [
+            "TEXT"
+          ]
+        },
+        {
+          "language_id": "23",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "SMS"
+          ]
+        },
+        {
+          "language_id": "23",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "USSD"
+          ]
+        },
+        {
+          "language_id": "23",
+          "value": "",
+          "content_type": "AUDIO",
+          "modes": [
+            "IVR"
+          ]
+        },
+        {
+          "language_id": "23",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "23",
+          "value": "",
+          "content_type": "IMAGE",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "23",
+          "value": "",
+          "content_type": "VIDEO",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "23",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "OFFLINE"
+          ]
+        },
+        {
+          "language_id": "23",
+          "value": "",
+          "content_type": "IMAGE",
+          "modes": [
+            "OFFLINE"
+          ]
+        },
+        {
+          "language_id": "23",
+          "value": "",
+          "content_type": "VIDEO",
+          "modes": [
+            "OFFLINE"
+          ]
+        }
+      ]
+    }
+  ]
+}
