@@ -104,12 +104,6 @@
           "semantic_label": "",
           "exits": [
             {
-              "uuid": "abfcced2-9e7b-4a95-a98a-c53f044c65b5",
-              "name": "1",
-              "test": "block.value > 0",
-              "config": {}
-            },
-            {
               "uuid": "4fb8208f-b3be-4907-8d11-e9f262f0bff7",
               "name": "Default",
               "default": true,

@@ -24,6 +24,13 @@ defmodule FlowRunner.Spec.Container do
     end
   end
 
+  def fetch_flow_by_uuid(%Container{flows: flows}, uuid) do
+    case Enum.filter(flows, &(&1.uuid == uuid)) do
+      [flow | _] -> {:ok, flow}
+      [] -> {:error, "no matching flow"}
+    end
+  end
+
   @spec validate(%Container{}) :: list()
   def validate(%Container{} = container) do
     flows =
