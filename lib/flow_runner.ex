@@ -22,11 +22,13 @@ defmodule FlowRunner do
   The updated context may have context.waiting_for_user_input set to true. If so the
   next call of next_block must have user_input != nil.
   """
+  def next_block(_container, _flow, _context, user_input \\ nil)
+
   def next_block(
         %Container{},
         %Flow{},
         %Context{} = context,
-        user_input \\ nil
+        user_input
       )
       when context.waiting_for_user_input and user_input == nil do
     {:error, "waiting for user input but did not receive it"}
