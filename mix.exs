@@ -39,7 +39,7 @@ defmodule FlowRunner.MixProject do
       {:expression, "~> 0.3.1"},
       {:junit_formatter, "~> 3.1", only: [:test]},
       {:mix_test_watch, "~> 1.1", only: [:dev, :test], runtime: false},
-      {:poison, "~> 5.0"}
+      {:poison, "~> 3.0 or ~> 4.0 or ~> 5.0"}
     ]
   end
 end
