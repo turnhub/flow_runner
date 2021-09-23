@@ -49,7 +49,7 @@ defmodule FlowRunner.Spec.Container do
   end
 
   def validate_specification_version(%Container{specification_version: specification_version}) do
-    if String.match?(specification_version, ~r/1.0.0-rc[012]/) do
+    if specification_version && String.match?(specification_version, ~r/1.0.0-rc[012]/) do
       :ok
     else
       {:error, "invalid specification version '#{specification_version}'"}
