@@ -1,4 +1,6 @@
 defmodule FlowRunner.Context do
+  alias FlowRunner.Context
+
   @moduledoc """
   A context provides information about an ongoing user flow session.
   """
@@ -18,6 +20,13 @@ defmodule FlowRunner.Context do
     last_block_uuid: nil,
     # vars set and mutated during the flow.
     vars: %{},
-    finished: false
+    finished: false,
+    # If parent_context is not nil then we should return to parent context
+    # after we finish. (Part of Core.RunFlow)
+    parent_context: nil
   ]
+
+  def clone_empty(%Context{language: language, mode: mode, contact: contact}) do
+    %Context{language: language, mode: mode, contact: contact}
+  end
 end

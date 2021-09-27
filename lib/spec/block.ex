@@ -10,6 +10,7 @@ defmodule FlowRunner.Spec.Block do
   alias FlowRunner.Spec.Validate
   alias FlowRunner.Spec.Blocks.Message
   alias FlowRunner.Spec.Blocks.SelectOneResponse
+  alias FlowRunner.Spec.Blocks.RunFlow
 
   @derive [Poison.Encoder]
   defstruct [
@@ -40,6 +41,11 @@ defmodule FlowRunner.Spec.Block do
 
   @spec evaluate_user_input(%Block{}, %FlowRunner.Context{}, iodata()) ::
           {:ok, %FlowRunner.Context{}}
+  def evaluate_user_input(_block, context, nil)
+      when context.waiting_for_user_input == true do
+    {:ok, context}
+  end
+
   def evaluate_user_input(block, context, user_input)
       when context.waiting_for_user_input == true do
     vars =
@@ -56,34 +62,62 @@ defmodule FlowRunner.Spec.Block do
     {:error, "unexpectedly received user input"}
   end
 
-  def evaluate_incoming(block, flow, context, container) do
-    case block.type do
-      "MobilePrimitives.Message" ->
-        Message.evaluate_incoming(flow, block, context, container)
+  def evaluate_incoming(
+        flow,
+        %Block{type: "MobilePrimitives.Message"} = block,
+        context,
+        container
+      ),
+      do: Message.evaluate_incoming(flow, block, context, container)
 
-      "MobilePrimitives.SelectOneResponse" ->
-        SelectOneResponse.evaluate_incoming(
-          flow,
-          block,
-          context,
-          container
-        )
+  def evaluate_incoming(
+        flow,
+        %Block{type: "MobilePrimitives.SelectOneResponse"} = block,
+        context,
+        container
+      ),
+      do: SelectOneResponse.evaluate_incoming(flow, block, context, container)
 
-      unknown ->
-        {:error, "unknown block type #{unknown}"}
-    end
-  end
+  def evaluate_incoming(
+        flow,
+        %Block{type: "Core.RunFlow"} = block,
+        context,
+        container
+      ),
+      do: RunFlow.evaluate_incoming(flow, block, context, container)
+
+  def evaluate_incoming(
+        _flow,
+        %Block{type: type},
+        _context,
+        _container
+      ),
+      do: {:error, "unknown block type #{type}"}
 
   def evaluate_outgoing(block, context, flow, user_input) do
     # Process any user input we have been given.
-    context =
-      if user_input != nil do
-        {:ok, context} = Block.evaluate_user_input(block, context, user_input)
-        context
-      else
-        context
-      end
+    with {:ok, context} <-
+           Block.evaluate_user_input(
+             block,
+             context,
+             user_input
+           ),
+         {:ok, context, block} <-
+           Block.fetch_next_block(block, flow, context) do
+      {:ok, context, block}
+    else
+      err -> err
+    end
+  end
 
+  @spec fetch_next_block(
+          %Block{},
+          %Flow{},
+          %Context{}
+        ) ::
+          {:error, iodata}
+          | {:ok, %FlowRunner.Context{}, %Block{}}
+  def fetch_next_block(block, flow, context) do
     {:ok, %Exit{destination_block: destination_block}} = Block.evaluate_exits(block, context)
 
     if destination_block == "" || destination_block == nil do

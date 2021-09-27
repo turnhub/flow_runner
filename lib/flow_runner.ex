@@ -50,30 +50,43 @@ defmodule FlowRunner do
         user_input
       ) do
     # Identify the block we are transitioning to.
-    {context, next_block} =
-      if context.last_block_uuid == nil do
-        # If this is the first time we are executing this flow then
-        # transition to the first block.
-        {:ok, next_block} = Flow.fetch_block(flow, flow.first_block_id)
-        {context, next_block}
-      else
-        # Fetch the previous block we were at and then evaluate the
-        # exits to identify the next block.
-        {:ok, previous_block} = Flow.fetch_block(flow, context.last_block_uuid)
-
-        {:ok, context, next_block} =
-          Block.evaluate_outgoing(previous_block, context, flow, user_input)
-
-        {context, next_block}
-      end
+    {:ok, context, next_block} = FlowRunner.find_next_block(flow, context, user_input)
 
     if next_block == nil do
       {:end, context}
     else
       # Evaluate the block we have transitioned to and return updated context and output.
-      {:ok, context, output} = Block.evaluate_incoming(next_block, flow, context, container)
-      context = %Context{context | last_block_uuid: next_block.uuid}
-      {:ok, context, output}
+      case Block.evaluate_incoming(flow, next_block, context, container) do
+        {:ok, context, output} ->
+          context = %Context{context | last_block_uuid: next_block.uuid}
+          {:ok, context, output}
+
+        {:error, reason} ->
+          {:error, reason}
+      end
+    end
+  end
+
+  def find_next_block(%Flow{} = flow, %Context{last_block_uuid: nil} = context, _user_input) do
+    # If this is the first time we are executing this flow (last_block_uuid == nil) then
+    # transition to the first block.
+    {:ok, next_block} = Flow.fetch_block(flow, flow.first_block_id)
+    {:ok, context, next_block}
+  end
+
+  def find_next_block(
+        %Flow{} = flow,
+        %Context{last_block_uuid: last_block_uuid} = context,
+        user_input
+      ) do
+    # Fetch the previous block we were at and then evaluate the
+    # exits to identify the next block.
+    with {:ok, previous_block} <- Flow.fetch_block(flow, last_block_uuid),
+         {:ok, context, next_block} <-
+           Block.evaluate_outgoing(previous_block, context, flow, user_input) do
+      {:ok, context, next_block}
+    else
+      err -> err
     end
   end
 end
