@@ -16,19 +16,22 @@ defmodule FlowRunner.Spec.Blocks.RunFlow do
   alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Flow
 
-  def evaluate_incoming(%Flow{}, %Block{config: config}, context, %Container{}) do
+  def evaluate_incoming(%Flow{}, %Block{config: config} = block, context, %Container{}) do
     next_flow_id = config["flow_id"]
+
+    context = %Context{context | last_block_uuid: block.uuid}
 
     next_context = %Context{
       Context.clone_empty(context)
       | parent_context: context,
-        current_flow_uuid: next_flow_id
+        current_flow_uuid: next_flow_id,
+        last_block_uuid: nil
     }
 
     {:ok, next_context, nil}
   end
 
   def evaluate_outgoing(_block, context, _flow, _user_input) do
-    {:ok, context.parent_context}
+    {:ok, context}
   end
 end

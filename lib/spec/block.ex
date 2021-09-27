@@ -98,7 +98,7 @@ defmodule FlowRunner.Spec.Block do
       ),
       do: {:error, "unknown block type #{type}"}
 
-  def evaluate_outgoing(block, context, flow, user_input) do
+  def evaluate_outgoing(block, %Context{} = context, flow, user_input) do
     {:ok, context} =
       case block.type do
         "Core.RunFlow" -> RunFlow.evaluate_outgoing(block, context, flow, user_input)
@@ -127,7 +127,7 @@ defmodule FlowRunner.Spec.Block do
         ) ::
           {:error, iodata}
           | {:ok, %FlowRunner.Context{}, %Block{}}
-  def fetch_next_block(block, flow, context) do
+  def fetch_next_block(block, %Flow{} = flow, %Context{} = context) do
     {:ok, %Exit{destination_block: destination_block}} = Block.evaluate_exits(block, context)
 
     if destination_block == "" || destination_block == nil do

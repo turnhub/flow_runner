@@ -15,7 +15,7 @@ defmodule FlowRunner.Spec.Blocks.Message do
       {:ok, prompt} ->
         {
           :ok,
-          %Context{context | waiting_for_user_input: false},
+          %Context{context | waiting_for_user_input: false, last_block_uuid: block.uuid},
           %FlowRunner.Output{
             prompt: prompt
           }

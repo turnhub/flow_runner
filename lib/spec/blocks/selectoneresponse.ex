@@ -14,7 +14,7 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
       {:ok, prompt} ->
         {
           :ok,
-          %Context{context | waiting_for_user_input: true},
+          %Context{context | waiting_for_user_input: true, last_block_uuid: block.uuid},
           %FlowRunner.Output{
             prompt: prompt
           }
