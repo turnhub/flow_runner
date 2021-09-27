@@ -84,4 +84,25 @@ defmodule FlowRunnerTest do
     assert %{waiting_for_user_input: false} = context
     {:end, _context} = FlowRunner.next_block(container, flow, context)
   end
+
+  test "runflow block" do
+    {:ok, container} =
+      File.read!("test/runflow.flow")
+      |> FlowRunner.compile()
+
+    flow = Enum.at(container.flows, 0)
+
+    context = %FlowRunner.Context{
+      language: "eng",
+      mode: "TEXT"
+    }
+
+    {:ok, context, output} = FlowRunner.next_block(container, flow, context)
+    assert %{prompt: %{value: "in flow 1"}} = output
+    {:ok, context, output} = FlowRunner.next_block(container, flow, context)
+    assert %{prompt: %{value: "flow 2"}} = output
+    {:ok, context, output} = FlowRunner.next_block(container, flow, context)
+    assert %{prompt: %{value: "back to flow 1"}} = output
+    {:end, _context} = FlowRunner.next_block(container, flow, context)
+  end
 end
