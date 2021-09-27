@@ -38,7 +38,7 @@ defmodule FlowRunner.MixProject do
       {:excoveralls, "~> 0.10", only: :test},
       {:expression, "~> 0.3.1"},
       {:junit_formatter, "~> 3.1", only: [:test]},
-      {:mix_test_watch, "~> 1.1", only: :dev, runtime: false},
+      {:mix_test_watch, "~> 1.1", only: [:dev, :test], runtime: false},
       {:poison, "~> 5.0", override: true}
     ]
   end
