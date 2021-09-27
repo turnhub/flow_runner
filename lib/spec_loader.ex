@@ -31,12 +31,6 @@ defmodule FlowRunner.SpecLoader do
       def load(map) when is_map(map) do
         FlowRunner.SpecLoader.load(unquote(mod), map, unquote(manually_loaded_fields))
       end
-
-      @spec load_key(unquote(mod).t, spec_key, spec_value) :: unquote(mod).t | {:error, atom}
-      def load_key(impl, key, value),
-        do: {:error, :not_implemented}
-
-      defoverridable(load_key: 3)
     end
   end
 
@@ -60,7 +54,7 @@ defmodule FlowRunner.SpecLoader do
       |> Enum.reduce(struct(mod), fn {key, value}, impl ->
         atom_key = String.to_existing_atom(key)
         loader = Map.get(manually_loaded_fields, key)
-        %{impl | atom_key => load_value(loader, value)}
+        %{impl | atom_key => loader.load(value)}
       end)
 
     auto_fields
@@ -69,8 +63,4 @@ defmodule FlowRunner.SpecLoader do
       Map.put(impl, struct_key, value)
     end)
   end
-
-  def load_value(loader, value) when is_list(value), do: Enum.map(value, &loader.load/1)
-
-  def load_value(loader, value) when is_map(value), do: loader.load(value)
 end
