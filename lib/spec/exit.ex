@@ -2,6 +2,9 @@ defmodule FlowRunner.Spec.Exit do
   @moduledoc """
   An exit is a potential branch off a FlowRunner.Spec.Block.
   """
+  use FlowRunner.SpecLoader
+  @type t :: %__MODULE__{}
+
   defstruct [
     :uuid,
     :name,

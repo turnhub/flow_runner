@@ -2,10 +2,25 @@ defmodule FlowRunner.Spec.Container do
   @moduledoc """
   Container contains a set of flows and resources according to the Flow spec.
   """
+  use FlowRunner.SpecLoader,
+    manual: %{
+      "flows" => FlowRunner.Spec.Flow,
+      "resources" => FlowRunner.Spec.Resource
+    }
+
   alias FlowRunner.Spec.Container, as: Container
   alias FlowRunner.Spec.Validate, as: Validate
   alias FlowRunner.Spec.Flow
   alias FlowRunner.Spec.Resource
+
+  @type t :: %__MODULE__{
+          specification_version: String.t(),
+          uuid: String.t(),
+          name: String.t(),
+          description: String.t(),
+          flows: [FlowRunner.Spec.Flow.t()],
+          resources: [FlowRunner.Spec.Resource.t()]
+        }
 
   @derive [Poison.Encoder]
   defstruct specification_version: nil,

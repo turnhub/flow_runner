@@ -2,7 +2,10 @@ defmodule FlowRunner.Spec.ResourceValue do
   @moduledoc """
   ResourceValue is a struct that stores a piece of content for a given language and mode.
   """
+  use FlowRunner.SpecLoader
   alias FlowRunner.Spec.ResourceValue
+
+  @type t :: %__MODULE__{}
 
   defstruct [
     :language_id,

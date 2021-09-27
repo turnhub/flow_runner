@@ -2,9 +2,16 @@ defmodule FlowRunner.Spec.Resource do
   @moduledoc """
   Resource stores a piece of content in various languages and modes. Usually associated with a block.
   """
+  use FlowRunner.SpecLoader,
+    manual: %{
+      "values" => FlowRunner.Spec.ResourceValue
+    }
+
   alias FlowRunner.Spec.Resource
   alias FlowRunner.Spec.ResourceValue
   alias FlowRunner.Spec.Flow
+
+  @type t :: %__MODULE__{}
 
   defstruct [
     :uuid,

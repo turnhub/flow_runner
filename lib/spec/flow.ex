@@ -2,6 +2,13 @@ defmodule FlowRunner.Spec.Flow do
   @moduledoc """
   A Flow is a set of connected blocks as defined by the Flow Spec.
   """
+  use FlowRunner.SpecLoader,
+    manual: %{
+      "blocks" => FlowRunner.Spec.Block
+    }
+
+  @type t :: %__MODULE__{}
+
   defstruct [
     :uuid,
     :name,
