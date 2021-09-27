@@ -11,6 +11,7 @@ defmodule FlowRunner.Spec.Block do
   alias FlowRunner.Spec.Blocks.Message
   alias FlowRunner.Spec.Blocks.SelectOneResponse
   alias FlowRunner.Spec.Blocks.RunFlow
+  alias FlowRunner.Spec.Blocks.Log
 
   @derive [Poison.Encoder]
   defstruct [
@@ -91,6 +92,14 @@ defmodule FlowRunner.Spec.Block do
       do: RunFlow.evaluate_incoming(flow, block, context, container)
 
   def evaluate_incoming(
+        flow,
+        %Block{type: "Core.Log"} = block,
+        context,
+        container
+      ),
+      do: Log.evaluate_incoming(flow, block, context, container)
+
+  def evaluate_incoming(
         _flow,
         %Block{type: type},
         _context,
@@ -99,12 +108,6 @@ defmodule FlowRunner.Spec.Block do
       do: {:error, "unknown block type #{type}"}
 
   def evaluate_outgoing(block, %Context{} = context, flow, user_input) do
-    {:ok, context} =
-      case block.type do
-        "Core.RunFlow" -> RunFlow.evaluate_outgoing(block, context, flow, user_input)
-        _ -> {:ok, context}
-      end
-
     # Process any user input we have been given.
     with {:ok, context} <-
            Block.evaluate_user_input(

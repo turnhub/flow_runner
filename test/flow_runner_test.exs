@@ -55,11 +55,6 @@ defmodule FlowRunnerTest do
       File.read!("test/selectoneresponse.flow")
       |> FlowRunner.compile()
 
-    context = %FlowRunner.Context{
-      language: "fra",
-      mode: "TEXT"
-    }
-
     {:ok, context} =
       FlowRunner.start_flow(container, "efaabaac-d035-43f5-a7fe-0e4e757c8095", "fra", "TEXT")
 
@@ -93,11 +88,10 @@ defmodule FlowRunnerTest do
 
     {:ok, context, output} = FlowRunner.next_block(container, context)
     assert %{prompt: %{value: "flow 1"}} = output
-    {:ok, context, output} = FlowRunner.next_block(container, context)
-    inspect(context)
+    {:ok, context, _output} = FlowRunner.next_block(container, context)
     {:ok, context, output} = FlowRunner.next_block(container, context)
     assert %{prompt: %{value: "flow 2"}} = output
-    {:ok, context, output} = FlowRunner.next_block(container, context)
+    {:ok, context, _output} = FlowRunner.next_block(container, context)
     {:ok, context, output} = FlowRunner.next_block(container, context)
     assert %{prompt: %{value: "back to flow 1"}} = output
     {:end, _context} = FlowRunner.next_block(container, context)

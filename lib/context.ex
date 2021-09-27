@@ -12,6 +12,8 @@ defmodule FlowRunner.Context do
 
     # -- Current flow state
 
+    # Output of Core.Log blocks. Used for debugging.
+    log: [],
     # Whether we are blocked pending user input
     waiting_for_user_input: false,
     # Flow uuid that is currently being run.
