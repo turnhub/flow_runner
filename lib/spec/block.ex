@@ -99,6 +99,12 @@ defmodule FlowRunner.Spec.Block do
       do: {:error, "unknown block type #{type}"}
 
   def evaluate_outgoing(block, context, flow, user_input) do
+    {:ok, context} =
+      case block.type do
+        "Core.RunFlow" -> RunFlow.evaluate_outgoing(block, context, flow, user_input)
+        _ -> {:ok, context}
+      end
+
     # Process any user input we have been given.
     with {:ok, context} <-
            Block.evaluate_user_input(

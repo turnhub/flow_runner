@@ -27,4 +27,8 @@ defmodule FlowRunner.Spec.Blocks.RunFlow do
 
     {:ok, next_context, nil}
   end
+
+  def evaluate_outgoing(_block, context, _flow, _user_input) do
+    {:ok, context.parent_context}
+  end
 end
