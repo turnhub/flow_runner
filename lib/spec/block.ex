@@ -58,6 +58,10 @@ defmodule FlowRunner.Spec.Block do
     {:ok, context}
   end
 
+  def evaluate_user_input(_block, context, nil) do
+    {:ok, context}
+  end
+
   def evaluate_user_input(_block, _context, _user_input) do
     {:error, "unexpectedly received user input"}
   end

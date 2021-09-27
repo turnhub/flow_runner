@@ -49,21 +49,28 @@ defmodule FlowRunner do
         %Context{} = context,
         user_input
       ) do
-    # Identify the block we are transitioning to.
-    {:ok, context, next_block} = FlowRunner.find_next_block(flow, context, user_input)
-
-    if next_block == nil do
-      {:end, context}
+    # Identify the block we are transitioning to and then evaluate incoming block rules.
+    with {:ok, context, next_block} <- FlowRunner.find_next_block(flow, context, user_input),
+         result <- evaluate_next_block(next_block, container, flow, context) do
+      result
     else
-      # Evaluate the block we have transitioned to and return updated context and output.
-      case Block.evaluate_incoming(flow, next_block, context, container) do
-        {:ok, context, output} ->
-          context = %Context{context | last_block_uuid: next_block.uuid}
-          {:ok, context, output}
+      err -> err
+    end
+  end
 
-        {:error, reason} ->
-          {:error, reason}
-      end
+  def evaluate_next_block(nil, _container, _flow, context) do
+    {:end, context}
+  end
+
+  def evaluate_next_block(next_block, container, flow, context) do
+    # Evaluate the block we have transitioned to and return updated context and output.
+    case Block.evaluate_incoming(flow, next_block, context, container) do
+      {:ok, context, output} ->
+        context = %Context{context | last_block_uuid: next_block.uuid}
+        {:ok, context, output}
+
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 
