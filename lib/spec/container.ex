@@ -8,51 +8,35 @@ defmodule FlowRunner.Spec.Container do
   alias FlowRunner.Spec.Resource
 
   @derive [Poison.Encoder]
-  defstruct [
-    :specification_version,
-    :uuid,
-    :name,
-    :description,
-    :flows,
-    :resources
-  ]
+  defstruct specification_version: nil,
+            uuid: nil,
+            name: nil,
+            description: nil,
+            flows: [],
+            resources: []
 
   def fetch_resource_by_uuid(%Container{resources: resources}, uuid) do
-    case Enum.filter(resources, &(&1.uuid == uuid)) do
-      [resource | _] -> {:ok, resource}
-      [] -> {:error, "no matching resource"}
+    case Enum.find(resources, &(&1.uuid == uuid)) do
+      nil -> {:error, "no matching resource"}
+      resource -> {:ok, resource}
     end
   end
 
   def fetch_flow_by_uuid(%Container{flows: flows}, uuid) do
-    case Enum.filter(flows, &(&1.uuid == uuid)) do
-      [flow | _] -> {:ok, flow}
-      [] -> {:error, "no matching flow"}
+    case Enum.find(flows, &(&1.uuid == uuid)) do
+      nil -> {:error, "no matching flow"}
+      flow -> {:ok, flow}
     end
   end
 
   @spec validate(%Container{}) :: list()
   def validate(%Container{} = container) do
-    flows =
-      if container.flows == nil do
-        []
-      else
-        container.flows
-      end
-
-    resources =
-      if container.resources == nil do
-        []
-      else
-        container.resources
-      end
-
     [
       validate_specification_version(container),
       Validate.validate_uuid(container)
     ] ++
-      Enum.concat(Enum.map(flows, &Flow.validate/1)) ++
-      Enum.concat(Enum.map(resources, &Resource.validate/1))
+      Enum.concat(Enum.map(container.flows, &Flow.validate/1)) ++
+      Enum.concat(Enum.map(container.resources, &Resource.validate/1))
   end
 
   def validate_specification_version(%Container{specification_version: specification_version}) do
