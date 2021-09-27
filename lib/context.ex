@@ -1,9 +1,9 @@
 defmodule FlowRunner.Context do
-  alias FlowRunner.Context
-
   @moduledoc """
   A context provides information about an ongoing user flow session.
   """
+  alias FlowRunner.Context
+
   defstruct [
     # iso 639-3 language code.
     language: "eng",

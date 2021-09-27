@@ -17,10 +17,12 @@ defmodule FlowRunner do
 
   """
   def start_flow(container, flow_uuid, language, mode) do
-    with {:ok, _flow} <- Container.fetch_flow_by_uuid(container, flow_uuid) do
-      {:ok, %Context{current_flow_uuid: flow_uuid, language: language, mode: mode}}
-    else
-      err -> err
+    case Container.fetch_flow_by_uuid(container, flow_uuid) do
+      {:ok, _flow} ->
+        {:ok, %Context{current_flow_uuid: flow_uuid, language: language, mode: mode}}
+
+      err ->
+        err
     end
   end
 
