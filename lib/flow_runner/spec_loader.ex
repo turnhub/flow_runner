@@ -55,7 +55,7 @@ defmodule FlowRunner.SpecLoader do
       end
 
       @doc "Cast the received fields to their internal representation"
-      @spec cast!(map) :: {:ok, map} | {:error, String.t()}
+      @spec cast!(map) :: map
       def cast!(map), do: map
 
       def cast_datetime!(params, field_name) do
