@@ -46,7 +46,7 @@ defmodule FlowRunner.SpecLoader do
               | {:ok, [unquote(mod).t]}
               | {:error, String.t()}
       def load(data) do
-        validate!(load!(data))
+        {:ok, validate!(load!(data))}
       rescue
         error in KeyError -> {:error, "Key #{error.key} is not valid for #{unquote(mod)}}"}
         error in ArgumentError -> {:error, error.message}

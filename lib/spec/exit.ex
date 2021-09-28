@@ -4,6 +4,7 @@ defmodule FlowRunner.Spec.Exit do
   """
   use FlowRunner.SpecLoader
 
+  @derive Jason.Encoder
   defstruct uuid: nil,
             name: nil,
             destination_block: nil,

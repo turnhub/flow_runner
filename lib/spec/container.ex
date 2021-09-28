@@ -10,7 +10,7 @@ defmodule FlowRunner.Spec.Container do
 
   alias FlowRunner.Spec.Container
 
-  @derive [Poison.Encoder]
+  @derive Jason.Encoder
   defstruct specification_version: nil,
             uuid: nil,
             name: nil,

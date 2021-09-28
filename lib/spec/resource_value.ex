@@ -4,6 +4,7 @@ defmodule FlowRunner.Spec.ResourceValue do
   """
   use FlowRunner.SpecLoader
 
+  @derive Jason.Encoder
   defstruct language_id: nil,
             content_type: nil,
             mime_type: nil,

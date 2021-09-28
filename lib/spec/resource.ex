@@ -11,6 +11,7 @@ defmodule FlowRunner.Spec.Resource do
   alias FlowRunner.Spec.ResourceValue
   alias FlowRunner.Spec.Flow
 
+  @derive Jason.Encoder
   defstruct uuid: nil,
             values: []
 

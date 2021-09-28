@@ -31,12 +31,9 @@ defmodule FlowRunner.Compile do
 
   @spec compile(iodata()) :: {:ok, %Container{}}
   def compile(json) when is_binary(json) do
-    {:ok, container} = Poison.decode(json, %{as: schema()})
-
-    case FlowRunner.Spec.Validate.results(Container.validate(container)) do
-      :ok -> {:ok, container}
-      {:error, reason} -> {:error, reason}
-      unless -> {:error, "unexpected result #{inspect(unless)}"}
+    with {:ok, data} <- Jason.decode(json),
+         {:ok, container} <- FlowRunner.Spec.Container.load(data) do
+      {:ok, container}
     end
   end
 end

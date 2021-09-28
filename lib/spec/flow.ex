@@ -7,6 +7,7 @@ defmodule FlowRunner.Spec.Flow do
       blocks: FlowRunner.Spec.Block
     ]
 
+  @derive Jason.Encoder
   defstruct uuid: nil,
             name: nil,
             label: nil,

@@ -17,7 +17,7 @@ defmodule FlowRunner.Spec.Block do
   alias FlowRunner.Spec.Blocks.RunFlow
   alias FlowRunner.Spec.Blocks.Log
 
-  @derive [Poison.Encoder]
+  @derive Jason.Encoder
   defstruct uuid: nil,
             name: nil,
             label: nil,
