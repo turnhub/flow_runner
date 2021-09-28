@@ -3,7 +3,7 @@ defmodule FlowRunner.Spec.Flow do
   A Flow is a set of connected blocks as defined by the Flow Spec.
   """
   use FlowRunner.SpecLoader,
-    manual: [
+    using: [
       blocks: FlowRunner.Spec.Block
     ]
 
@@ -24,7 +24,7 @@ defmodule FlowRunner.Spec.Flow do
           uuid: String.t(),
           name: String.t(),
           label: String.t(),
-          last_modified: String.t(),
+          last_modified: DateTime.t(),
           interaction_timeout: pos_integer(),
           vendor_metadata: map,
           supported_modes: [String.t()],
@@ -35,6 +35,11 @@ defmodule FlowRunner.Spec.Flow do
         }
 
   validates(:uuid, presence: true, uuid: [format: :default])
+
+  def cast!(params) do
+    params
+    |> cast_datetime!("last_modified")
+  end
 
   def fetch_block(flow, block_uuid) when is_list(flow.blocks) do
     blocks = Enum.filter(flow.blocks, &(&1.uuid == block_uuid))

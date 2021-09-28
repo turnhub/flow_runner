@@ -4,7 +4,7 @@ defmodule FlowRunner.Spec.Block do
   and provide content that should be rendered to the user.
   """
   use FlowRunner.SpecLoader,
-    manual: [
+    using: [
       exits: FlowRunner.Spec.Exit
     ]
 

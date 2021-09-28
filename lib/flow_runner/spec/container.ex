@@ -3,7 +3,7 @@ defmodule FlowRunner.Spec.Container do
   Container contains a set of flows and resources according to the Flow spec.
   """
   use FlowRunner.SpecLoader,
-    manual: [
+    using: [
       flows: FlowRunner.Spec.Flow,
       resources: FlowRunner.Spec.Resource
     ]
