@@ -7,6 +7,18 @@ defmodule FlowRunner.Spec.Flow do
       blocks: FlowRunner.Spec.Block
     ]
 
+  defstruct uuid: nil,
+            name: nil,
+            label: nil,
+            last_modified: nil,
+            interaction_timeout: nil,
+            vendor_metadata: nil,
+            supported_modes: nil,
+            first_block_id: nil,
+            exit_block_id: nil,
+            languages: [],
+            blocks: []
+
   @type t :: %__MODULE__{
           uuid: String.t(),
           name: String.t(),
@@ -21,23 +33,7 @@ defmodule FlowRunner.Spec.Flow do
           blocks: [Block.t()]
         }
 
-  defstruct [
-    :uuid,
-    :name,
-    :label,
-    :last_modified,
-    :interaction_timeout,
-    :vendor_metadata,
-    :supported_modes,
-    :first_block_id,
-    :exit_block_id,
-    :languages,
-    :blocks
-  ]
-
-  def validate(flow) do
-    [FlowRunner.Spec.Validate.validate_uuid(flow)]
-  end
+  validates(:uuid, presence: true, uuid: [format: :default])
 
   def fetch_block(flow, block_uuid) when is_list(flow.blocks) do
     blocks = Enum.filter(flow.blocks, &(&1.uuid == block_uuid))

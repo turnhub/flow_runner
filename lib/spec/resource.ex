@@ -11,20 +11,15 @@ defmodule FlowRunner.Spec.Resource do
   alias FlowRunner.Spec.ResourceValue
   alias FlowRunner.Spec.Flow
 
+  defstruct uuid: nil,
+            values: []
+
   @type t :: %__MODULE__{
           uuid: String.t(),
           values: [ResourceValue.t()]
         }
 
-  defstruct [
-    :uuid,
-    :values
-  ]
-
-  def validate(resource) do
-    [FlowRunner.Spec.Validate.validate_uuid(resource)] ++
-      Enum.concat(Enum.map(resource.values, &ResourceValue.validate/1))
-  end
+  validates(:uuid, presence: true, uuid: [format: :default])
 
   @spec matching_resource(%Resource{}, iodata(), iodata(), %Flow{}) ::
           {:ok, %ResourceValue{}} | {:error, iodata()}

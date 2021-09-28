@@ -8,6 +8,27 @@ defmodule FlowRunner.Spec.Block do
       exits: FlowRunner.Spec.Exit
     ]
 
+  alias FlowRunner.Context
+  alias FlowRunner.Spec.Block
+  alias FlowRunner.Spec.Exit
+  alias FlowRunner.Spec.Flow
+  alias FlowRunner.Spec.Blocks.Message
+  alias FlowRunner.Spec.Blocks.SelectOneResponse
+  alias FlowRunner.Spec.Blocks.RunFlow
+  alias FlowRunner.Spec.Blocks.Log
+
+  @derive [Poison.Encoder]
+  defstruct uuid: nil,
+            name: nil,
+            label: nil,
+            semantic_label: nil,
+            tags: [],
+            vendor_metadata: %{},
+            ui_metadata: %{},
+            type: nil,
+            config: %{},
+            exits: []
+
   @type t :: %__MODULE__{
           uuid: String.t(),
           name: String.t(),
@@ -21,42 +42,7 @@ defmodule FlowRunner.Spec.Block do
           exits: [Exit.t()]
         }
 
-  alias FlowRunner.Context
-  alias FlowRunner.Spec.Block
-  alias FlowRunner.Spec.Exit
-  alias FlowRunner.Spec.Flow
-  alias FlowRunner.Spec.Validate
-  alias FlowRunner.Spec.Blocks.Message
-  alias FlowRunner.Spec.Blocks.SelectOneResponse
-  alias FlowRunner.Spec.Blocks.RunFlow
-  alias FlowRunner.Spec.Blocks.Log
-
-  @derive [Poison.Encoder]
-  defstruct [
-    :uuid,
-    :name,
-    :label,
-    :semantic_label,
-    :tags,
-    :vendor_metadata,
-    :ui_metadata,
-    :type,
-    :config,
-    :exits
-  ]
-
-  def validate(block) do
-    exits =
-      if block.exits != nil do
-        block.exits
-      else
-        []
-      end
-
-    [
-      Validate.validate_uuid(block)
-    ] ++ Enum.concat(Enum.map(exits, &Exit.validate/1))
-  end
+  validates(:uuid, presence: true, uuid: [format: :default])
 
   @spec evaluate_user_input(%Block{}, %FlowRunner.Context{}, iodata()) ::
           {:ok, %FlowRunner.Context{}}

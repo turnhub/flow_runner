@@ -26,10 +26,16 @@ defmodule FlowRunner.SpecLoader do
     %{module: mod} = __CALLER__
 
     quote do
+      use Vex.Struct
+
       @doc "Load the map or list of maps into #{unquote(mod)} structs."
       @spec load!(map) :: unquote(mod).t
       @spec load!([map]) :: [unquote(mod).t]
-      def load!(list) when is_list(list), do: Enum.map(list, &load!/1)
+      def load!(list) when is_list(list) do
+        list
+        |> Enum.map(&load!/1)
+        |> Enum.map(&validate!/1)
+      end
 
       def load!(map) when is_map(map) do
         FlowRunner.SpecLoader.load!(unquote(mod), map, unquote(manually_loaded_fields))
@@ -40,11 +46,39 @@ defmodule FlowRunner.SpecLoader do
               | {:ok, [unquote(mod).t]}
               | {:error, String.t()}
       def load(data) do
-        {:ok, load!(data)}
+        validate!(load!(data))
       rescue
         error in KeyError -> {:error, "Key #{error.key} is not valid for #{unquote(mod)}}"}
         error in ArgumentError -> {:error, error.message}
+        error in RuntimeError -> {:error, error.message}
       end
+
+      @doc "Validate a #{unquote(mod)} struct using Vex.validate"
+      @spec validate!(unquote(mod).t) :: {:ok, unquote(mod).t} | {:error, String.t()}
+      def validate!(impl) do
+        case Vex.validate(impl) do
+          {:ok, impl} ->
+            impl
+
+          {:error, errors} ->
+            error_string =
+              errors
+              |> Enum.map(fn {:error, key, _rule, error} ->
+                received_value = Map.get(impl, key)
+                "#{inspect(Atom.to_string(key))} #{error}, received: #{inspect(received_value)}"
+              end)
+              |> Enum.join(", ")
+
+            [module_name | _ignored] =
+              impl.__struct__
+              |> Module.split()
+              |> Enum.reverse()
+
+            raise RuntimeError, "In #{inspect(module_name)}: #{error_string}"
+        end
+      end
+
+      defoverridable(validate!: 1)
     end
   end
 
@@ -59,7 +93,7 @@ defmodule FlowRunner.SpecLoader do
       |> Enum.reduce(struct(mod), fn {key, value}, impl ->
         atom_key = atom_or_argument_error(key)
         loader = Keyword.get(manually_loaded_fields, atom_key)
-        %{impl | atom_key => loader.load(value)}
+        %{impl | atom_key => loader.load!(value)}
       end)
 
     auto_fields

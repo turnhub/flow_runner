@@ -4,6 +4,14 @@ defmodule FlowRunner.Spec.Exit do
   """
   use FlowRunner.SpecLoader
 
+  defstruct uuid: nil,
+            name: nil,
+            destination_block: nil,
+            semantic_label: nil,
+            test: nil,
+            default: nil,
+            config: %{}
+
   @type t :: %__MODULE__{
           uuid: String.t(),
           name: String.t(),
@@ -14,19 +22,7 @@ defmodule FlowRunner.Spec.Exit do
           config: map
         }
 
-  defstruct [
-    :uuid,
-    :name,
-    :destination_block,
-    :semantic_label,
-    :test,
-    :default,
-    :config
-  ]
-
-  def validate(exit) do
-    [FlowRunner.Spec.Validate.validate_uuid(exit)]
-  end
+  validates(:uuid, presence: true, uuid: [format: :default])
 
   def evaluate(exit, context) do
     if exit.test != nil && exit.test != "" do
