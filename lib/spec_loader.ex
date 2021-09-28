@@ -43,6 +43,7 @@ defmodule FlowRunner.SpecLoader do
         {:ok, load!(data)}
       rescue
         error in KeyError -> {:error, "Key #{error.key} is not valid for #{unquote(mod)}}"}
+        error in ArgumentError -> {:error, error.message}
       end
     end
   end
@@ -56,15 +57,21 @@ defmodule FlowRunner.SpecLoader do
     impl =
       manual_fields
       |> Enum.reduce(struct(mod), fn {key, value}, impl ->
-        atom_key = String.to_existing_atom(key)
+        atom_key = atom_or_argument_error(key)
         loader = Keyword.get(manually_loaded_fields, atom_key)
         %{impl | atom_key => loader.load(value)}
       end)
 
     auto_fields
     |> Enum.reduce(impl, fn {key, value}, impl ->
-      struct_key = String.to_existing_atom(key)
+      struct_key = atom_or_argument_error(key)
       %{impl | struct_key => value}
     end)
+  end
+
+  defp atom_or_argument_error(key) do
+    String.to_existing_atom(key)
+  rescue
+    ArgumentError -> raise ArgumentError, message: "Unsupported key #{inspect(key)}"
   end
 end
