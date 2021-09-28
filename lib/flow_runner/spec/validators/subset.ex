@@ -1,4 +1,8 @@
 defmodule FlowRunner.Spec.Validators.SubsetValidator do
+  @moduledoc """
+  A simple validator that checks whether the given
+  set is part of a known set.
+  """
   use Vex.Validator
 
   def validate(value, options) do
