@@ -72,6 +72,6 @@ defmodule FlowRunner.SpecLoader do
   defp atom_or_argument_error(key) do
     String.to_existing_atom(key)
   rescue
-    ArgumentError -> raise ArgumentError, message: "Unsupported key #{inspect(key)}"
+    ArgumentError -> raise ArgumentError, message: "Unknown key #{inspect(key)}"
   end
 end
