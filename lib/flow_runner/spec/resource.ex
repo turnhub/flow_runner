@@ -3,7 +3,7 @@ defmodule FlowRunner.Spec.Resource do
   Resource stores a piece of content in various languages and modes. Usually associated with a block.
   """
   use FlowRunner.SpecLoader,
-    manual: [
+    using: [
       values: FlowRunner.Spec.ResourceValue
     ]
 

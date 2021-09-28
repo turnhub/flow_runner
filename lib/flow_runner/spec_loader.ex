@@ -3,7 +3,7 @@ defmodule FlowRunner.SpecLoader do
   A macro to help loading of JSON floip specs into structs.
 
   Some keys need some extra help when loading, for when that is the
-  case list those key names under the `manual` key.
+  case list those key names under the `using` key.
 
   # Example
 
@@ -11,7 +11,7 @@ defmodule FlowRunner.SpecLoader do
       use FlowRunner.SpecLoader
     end
     defmodule FlowRunner.SomeSpecType do
-      use FlowRunner.SpecLoader, manual: %{"some_field" => FlowRunner.Spec.SomeField}
+      use FlowRunner.SpecLoader, using: %{"some_field" => FlowRunner.Spec.SomeField}
     end
 
   """
@@ -19,7 +19,7 @@ defmodule FlowRunner.SpecLoader do
     manually_loaded_fields =
       Keyword.get(
         opts,
-        :manual,
+        :using,
         quote(do: [])
       )
 
@@ -33,6 +33,7 @@ defmodule FlowRunner.SpecLoader do
       @spec load!([map]) :: [t()]
       def load!(list) when is_list(list) do
         list
+        |> Enum.map(&cast!/1)
         |> Enum.map(&load!/1)
         |> Enum.map(&validate!/1)
       end
@@ -46,11 +47,24 @@ defmodule FlowRunner.SpecLoader do
               | {:ok, [t()]}
               | {:error, String.t()}
       def load(data) do
-        {:ok, validate!(load!(data))}
+        {:ok, validate!(load!(cast!(data)))}
       rescue
         error in KeyError -> {:error, "Key #{error.key} is not valid for #{unquote(mod)}}"}
         error in ArgumentError -> {:error, error.message}
         error in RuntimeError -> {:error, error.message}
+      end
+
+      @doc "Cast the received fields to their internal representation"
+      @spec cast!(map) :: {:ok, map} | {:error, String.t()}
+      def cast!(map), do: map
+
+      def cast_datetime!(params, field_name) do
+        if value = Map.get(params, field_name) do
+          {:ok, datetime, _offset} = DateTime.from_iso8601(value)
+          Map.put(params, field_name, datetime)
+        else
+          params
+        end
       end
 
       @doc "Validate a #{unquote(mod)} struct using Vex.validate"
@@ -78,7 +92,7 @@ defmodule FlowRunner.SpecLoader do
         end
       end
 
-      defoverridable(validate!: 1)
+      defoverridable(validate!: 1, cast!: 1)
     end
   end
 
