@@ -29,8 +29,8 @@ defmodule FlowRunner.SpecLoader do
       use Vex.Struct
 
       @doc "Load the map or list of maps into #{unquote(mod)} structs."
-      @spec load!(map) :: unquote(mod).t
-      @spec load!([map]) :: [unquote(mod).t]
+      @spec load!(map) :: t()
+      @spec load!([map]) :: [t()]
       def load!(list) when is_list(list) do
         list
         |> Enum.map(&load!/1)
@@ -42,8 +42,8 @@ defmodule FlowRunner.SpecLoader do
       end
 
       @spec load(map | [map]) ::
-              {:ok, unquote(mod).t}
-              | {:ok, [unquote(mod).t]}
+              {:ok, t()}
+              | {:ok, [t()]}
               | {:error, String.t()}
       def load(data) do
         {:ok, validate!(load!(data))}
@@ -54,7 +54,7 @@ defmodule FlowRunner.SpecLoader do
       end
 
       @doc "Validate a #{unquote(mod)} struct using Vex.validate"
-      @spec validate!(unquote(mod).t) :: {:ok, unquote(mod).t} | {:error, String.t()}
+      @spec validate!(t()) :: {:ok, t()} | {:error, String.t()}
       def validate!(impl) do
         case Vex.validate(impl) do
           {:ok, impl} ->

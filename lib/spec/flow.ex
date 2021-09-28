@@ -31,7 +31,7 @@ defmodule FlowRunner.Spec.Flow do
           first_block_id: String.t(),
           exit_block_id: String.t(),
           languages: [map],
-          blocks: [Block.t()]
+          blocks: [FlowRunner.Spec.Block.t()]
         }
 
   validates(:uuid, presence: true, uuid: [format: :default])

@@ -2,38 +2,12 @@ defmodule FlowRunner.Compile do
   @moduledoc """
   Compile converts a JSON flow into an internal representation that is able to be run.
   """
-  alias FlowRunner.Spec.Block
-  alias FlowRunner.Spec.Container
-  alias FlowRunner.Spec.Exit
-  alias FlowRunner.Spec.Flow
-  alias FlowRunner.Spec.Resource
 
-  def schema do
-    %Container{
-      flows: [
-        %Flow{
-          blocks: [
-            %Block{
-              exits: [%Exit{}]
-            }
-          ]
-        }
-      ],
-      resources: [
-        %Resource{
-          values: [
-            %FlowRunner.Spec.ResourceValue{}
-          ]
-        }
-      ]
-    }
-  end
-
-  @spec compile(iodata()) :: {:ok, %Container{}}
+  @spec compile(binary) ::
+          {:ok, FlowRunner.Spec.Container.t()}
+          | {:error, String.t()}
   def compile(json) when is_binary(json) do
-    with {:ok, data} <- Jason.decode(json),
-         {:ok, container} <- FlowRunner.Spec.Container.load(data) do
-      {:ok, container}
-    end
+    {:ok, data} = Jason.decode(json)
+    FlowRunner.Spec.Container.load(data)
   end
 end
