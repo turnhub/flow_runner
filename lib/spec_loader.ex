@@ -17,13 +17,17 @@ defmodule FlowRunner.SpecLoader do
 
   """
   defmacro __using__(opts) do
-    manually_loaded_fields = Keyword.get(opts, :manual)
+    manually_loaded_fields =
+      Keyword.get(
+        opts,
+        :manual,
+        quote(do: [])
+      )
+
     %{module: mod} = __CALLER__
 
     quote do
-      @type spec_key :: binary
-      @type spec_value :: map | list | binary | number
-
+      @doc "Load the map or list of maps into #{unquote(mod)} structs."
       @spec load(map) :: unquote(mod).t
       @spec load([map]) :: [unquote(mod).t]
       def load(list) when is_list(list), do: Enum.map(list, &load/1)
@@ -44,16 +48,16 @@ defmodule FlowRunner.SpecLoader do
   end
 
   def load(mod, map, manually_loaded_fields) do
-    manually_loaded_fields = manually_loaded_fields || %{}
+    manually_loaded_keys = Enum.map(Keyword.keys(manually_loaded_fields), &to_string/1)
 
     {manual_fields, auto_fields} =
-      Enum.split_with(map, fn {key, _value} -> Map.has_key?(manually_loaded_fields, key) end)
+      Enum.split_with(map, fn {key, _value} -> Enum.member?(manually_loaded_keys, key) end)
 
     impl =
       manual_fields
       |> Enum.reduce(struct(mod), fn {key, value}, impl ->
         atom_key = String.to_existing_atom(key)
-        loader = Map.get(manually_loaded_fields, key)
+        loader = Keyword.get(manually_loaded_fields, atom_key)
         %{impl | atom_key => loader.load(value)}
       end)
 

@@ -3,11 +3,23 @@ defmodule FlowRunner.Spec.Flow do
   A Flow is a set of connected blocks as defined by the Flow Spec.
   """
   use FlowRunner.SpecLoader,
-    manual: %{
-      "blocks" => FlowRunner.Spec.Block
-    }
+    manual: [
+      blocks: FlowRunner.Spec.Block
+    ]
 
-  @type t :: %__MODULE__{}
+  @type t :: %__MODULE__{
+          uuid: String.t(),
+          name: String.t(),
+          label: String.t(),
+          last_modified: String.t(),
+          interaction_timeout: pos_integer(),
+          vendor_metadata: map,
+          supported_modes: [String.t()],
+          first_block_id: String.t(),
+          exit_block_id: String.t(),
+          languages: [map],
+          blocks: [Block.t()]
+        }
 
   defstruct [
     :uuid,

@@ -4,11 +4,22 @@ defmodule FlowRunner.Spec.Block do
   and provide content that should be rendered to the user.
   """
   use FlowRunner.SpecLoader,
-    manual: %{
-      "exits" => FlowRunner.Spec.Exit
-    }
+    manual: [
+      exits: FlowRunner.Spec.Exit
+    ]
 
-  @type t :: %__MODULE__{}
+  @type t :: %__MODULE__{
+          uuid: String.t(),
+          name: String.t(),
+          label: String.t(),
+          semantic_label: String.t(),
+          tags: [String.t()],
+          vendor_metadata: map,
+          ui_metadata: map,
+          type: String.t(),
+          config: map,
+          exits: [Exit.t()]
+        }
 
   alias FlowRunner.Context
   alias FlowRunner.Spec.Block

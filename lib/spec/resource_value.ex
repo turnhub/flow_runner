@@ -5,7 +5,13 @@ defmodule FlowRunner.Spec.ResourceValue do
   use FlowRunner.SpecLoader
   alias FlowRunner.Spec.ResourceValue
 
-  @type t :: %__MODULE__{}
+  @type t :: %__MODULE__{
+          language_id: String.t(),
+          content_type: String.t(),
+          mime_type: String.t(),
+          modes: [String.t()],
+          value: String.t()
+        }
 
   defstruct [
     :language_id,

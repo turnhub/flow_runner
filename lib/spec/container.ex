@@ -3,10 +3,10 @@ defmodule FlowRunner.Spec.Container do
   Container contains a set of flows and resources according to the Flow spec.
   """
   use FlowRunner.SpecLoader,
-    manual: %{
-      "flows" => FlowRunner.Spec.Flow,
-      "resources" => FlowRunner.Spec.Resource
-    }
+    manual: [
+      flows: FlowRunner.Spec.Flow,
+      resources: FlowRunner.Spec.Resource
+    ]
 
   alias FlowRunner.Spec.Container, as: Container
   alias FlowRunner.Spec.Validate, as: Validate

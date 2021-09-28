@@ -3,7 +3,16 @@ defmodule FlowRunner.Spec.Exit do
   An exit is a potential branch off a FlowRunner.Spec.Block.
   """
   use FlowRunner.SpecLoader
-  @type t :: %__MODULE__{}
+
+  @type t :: %__MODULE__{
+          uuid: String.t(),
+          name: String.t(),
+          destination_block: String.t(),
+          semantic_label: String.t(),
+          test: String.t(),
+          default: term,
+          config: map
+        }
 
   defstruct [
     :uuid,
