@@ -19,7 +19,8 @@ defmodule FlowRunner.Spec.Container do
           name: String.t(),
           description: String.t(),
           flows: [FlowRunner.Spec.Flow.t()],
-          resources: [FlowRunner.Spec.Resource.t()]
+          resources: [FlowRunner.Spec.Resource.t()],
+          vendor_metadata: map
         }
 
   @derive [Poison.Encoder]
@@ -28,7 +29,8 @@ defmodule FlowRunner.Spec.Container do
             name: nil,
             description: nil,
             flows: [],
-            resources: []
+            resources: [],
+            vendor_metadata: %{}
 
   def fetch_resource_by_uuid(%Container{resources: resources}, uuid) do
     case Enum.find(resources, &(&1.uuid == uuid)) do
