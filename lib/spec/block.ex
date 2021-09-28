@@ -3,42 +3,46 @@ defmodule FlowRunner.Spec.Block do
   A Block is a unit of execution within a flow. It may wait for user input
   and provide content that should be rendered to the user.
   """
+  use FlowRunner.SpecLoader,
+    manual: [
+      exits: FlowRunner.Spec.Exit
+    ]
+
   alias FlowRunner.Context
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Exit
   alias FlowRunner.Spec.Flow
-  alias FlowRunner.Spec.Validate
   alias FlowRunner.Spec.Blocks.Message
   alias FlowRunner.Spec.Blocks.SelectOneResponse
   alias FlowRunner.Spec.Blocks.RunFlow
   alias FlowRunner.Spec.Blocks.Log
 
-  @derive [Poison.Encoder]
-  defstruct [
-    :uuid,
-    :name,
-    :label,
-    :semantic_label,
-    :tags,
-    :vendor_metadata,
-    :ui_metadata,
-    :type,
-    :config,
-    :exits
-  ]
+  @derive Jason.Encoder
+  defstruct uuid: nil,
+            name: nil,
+            label: nil,
+            semantic_label: nil,
+            tags: [],
+            vendor_metadata: %{},
+            ui_metadata: %{},
+            type: nil,
+            config: %{},
+            exits: []
 
-  def validate(block) do
-    exits =
-      if block.exits != nil do
-        block.exits
-      else
-        []
-      end
+  @type t :: %__MODULE__{
+          uuid: String.t(),
+          name: String.t(),
+          label: String.t(),
+          semantic_label: String.t(),
+          tags: [String.t()],
+          vendor_metadata: map,
+          ui_metadata: map,
+          type: String.t(),
+          config: map,
+          exits: [Exit.t()]
+        }
 
-    [
-      Validate.validate_uuid(block)
-    ] ++ Enum.concat(Enum.map(exits, &Exit.validate/1))
-  end
+  validates(:uuid, presence: true, uuid: [format: :default])
 
   @spec evaluate_user_input(%Block{}, %FlowRunner.Context{}, iodata()) ::
           {:ok, %FlowRunner.Context{}}

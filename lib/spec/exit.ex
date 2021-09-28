@@ -2,19 +2,28 @@ defmodule FlowRunner.Spec.Exit do
   @moduledoc """
   An exit is a potential branch off a FlowRunner.Spec.Block.
   """
-  defstruct [
-    :uuid,
-    :name,
-    :destination_block,
-    :semantic_label,
-    :test,
-    :default,
-    :config
-  ]
+  use FlowRunner.SpecLoader
 
-  def validate(exit) do
-    [FlowRunner.Spec.Validate.validate_uuid(exit)]
-  end
+  @derive Jason.Encoder
+  defstruct uuid: nil,
+            name: nil,
+            destination_block: nil,
+            semantic_label: nil,
+            test: nil,
+            default: nil,
+            config: %{}
+
+  @type t :: %__MODULE__{
+          uuid: String.t(),
+          name: String.t(),
+          destination_block: String.t(),
+          semantic_label: String.t(),
+          test: String.t(),
+          default: term,
+          config: map
+        }
+
+  validates(:uuid, presence: true, uuid: [format: :default])
 
   def evaluate(exit, context) do
     if exit.test != nil && exit.test != "" do
