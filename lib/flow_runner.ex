@@ -26,6 +26,12 @@ defmodule FlowRunner do
     end
   end
 
+  @spec next_block(FlowRunner.Spec.Container.t(), %FlowRunner.Context{}, any) ::
+          {:end, any}
+          | {:error, any}
+          | {:ok, %FlowRunner.Context{},
+             nil
+             | %FlowRunner.Output{}}
   @doc """
   next_block transitions us from one block to the next block in a flow. It requires a
   flow, a run context and optionally user input requested from the previous block.

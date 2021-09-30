@@ -12,6 +12,7 @@ defmodule FlowRunner.Spec.Block do
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Exit
   alias FlowRunner.Spec.Flow
+  alias FlowRunner.Spec.Blocks.Case
   alias FlowRunner.Spec.Blocks.Message
   alias FlowRunner.Spec.Blocks.SelectOneResponse
   alias FlowRunner.Spec.Blocks.RunFlow
@@ -102,6 +103,14 @@ defmodule FlowRunner.Spec.Block do
         container
       ),
       do: Log.evaluate_incoming(flow, block, context, container)
+
+  def evaluate_incoming(
+        flow,
+        %Block{type: "Core.Case"} = block,
+        context,
+        container
+      ),
+      do: Case.evaluate_incoming(flow, block, context, container)
 
   def evaluate_incoming(
         _flow,

@@ -111,4 +111,31 @@ defmodule FlowRunnerTest do
 
     assert context.log == ["block2", "block1"]
   end
+
+  test "case block" do
+    {:ok, container} =
+      File.read!("test/case.flow")
+      |> FlowRunner.compile()
+
+    {:ok, context} =
+      FlowRunner.start_flow(container, "289bb197-fc9e-44dc-ada2-a769a91bf416", "eng", "TEXT")
+
+    context = %FlowRunner.Context{context | vars: %{patient_age: 19}}
+
+    {:ok, context, _output} = FlowRunner.next_block(container, context)
+    {:ok, context, _output} = FlowRunner.next_block(container, context)
+    assert context.log == ["over age"]
+
+    {:ok, context} =
+      FlowRunner.start_flow(container, "289bb197-fc9e-44dc-ada2-a769a91bf416", "eng", "TEXT")
+
+    context = %FlowRunner.Context{
+      context
+      | vars: %{patient_age: 10}
+    }
+
+    {:ok, context, _output} = FlowRunner.next_block(container, context)
+    {:ok, context, _output} = FlowRunner.next_block(container, context)
+    assert context.log == ["under age"]
+  end
 end

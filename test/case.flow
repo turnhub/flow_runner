@@ -1,0 +1,153 @@
+{
+  "specification_version": "1.0.0-rc2",
+  "uuid": "c0aa5165-7145-4de4-8d0e-2f174579953e",
+  "name": "case",
+  "description": "case flow",
+  "vendor_metadata": {},
+  "flows": [
+    {
+      "uuid": "289bb197-fc9e-44dc-ada2-a769a91bf416",
+      "name": "test",
+      "label": "test",
+      "last_modified": "2021-09-08T13:54:27.252Z",
+      "interaction_timeout": 30,
+      "vendor_metadata": {},
+      "supported_modes": [
+        "SMS"
+      ],
+      "languages": [
+        {
+          "id": "22",
+          "label": "English",
+          "iso_639_3": "eng"
+        }
+      ],
+      "blocks": [
+        {
+          "uuid": "a1a3834e-e16a-4d8a-a10e-fd5bb5925b11",
+          "type": "Core.Case",
+          "name": "patient_age_decision",
+          "label": "Patient Age Decision",
+          "exits": [
+            {
+              "uuid": "4c0dd2c8-a08f-45f7-9bf6-82bbff3fa968",
+              "name": "under_18",
+              "test": "patient_age < 18",
+              "destination_block": "5ba7b174-26f4-4222-aa6d-346e8a618cc0"
+            },
+            {
+              "uuid": "a11dac8f-b9c7-4de2-8663-c260e038c746",
+              "name": "over_18",
+              "test": "patient_age >= 18",
+              "destination_block": "a11dac8f-b9c7-4de2-8663-c260e038c746"
+            },
+            {
+              "uuid": "4cfbab2d-132e-4583-8974-85424bff2424",
+              "name": "default",
+              "default": true
+            }
+          ]
+        },
+        {
+          "uuid": "a11dac8f-b9c7-4de2-8663-c260e038c746",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 327,
+              "y": 1437
+            }
+          },
+          "vendor_metadata": {
+            "io_viamo": {
+              "uiData": {
+                "isSelected": false
+              },
+              "branchingType": "UNIFIED",
+              "noValidResponse": "END_CALL"
+            }
+          },
+          "type": "Core.Log",
+          "name": "over age",
+          "label": "over age",
+          "semantic_label": "",
+          "exits": [
+            {
+              "uuid": "51e16673-672e-402c-a306-aca2efac43c9",
+              "name": "Default",
+              "default": true,
+              "test": "",
+              "config": {}
+            }
+          ],
+          "config": {
+            "message": "903e13a9-a608-4c19-9ec6-aff24c66afe1"
+          },
+          "tags": []
+        },
+        {
+          "uuid": "5ba7b174-26f4-4222-aa6d-346e8a618cc0",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 327,
+              "y": 1437
+            }
+          },
+          "vendor_metadata": {
+            "io_viamo": {
+              "uiData": {
+                "isSelected": false
+              },
+              "branchingType": "UNIFIED",
+              "noValidResponse": "END_CALL"
+            }
+          },
+          "type": "Core.Log",
+          "name": "under age",
+          "label": "under age",
+          "semantic_label": "",
+          "exits": [
+            {
+              "uuid": "51e16673-672e-402c-a306-aca2efac43c9",
+              "name": "Default",
+              "default": true,
+              "test": "",
+              "config": {}
+            }
+          ],
+          "config": {
+            "message": "7a292416-1448-45f6-b6f9-8a96c635f375"
+          },
+          "tags": []
+        }
+      ],
+      "first_block_id": "a1a3834e-e16a-4d8a-a10e-fd5bb5925b11"
+    }
+  ],
+  "resources": [
+    {
+      "uuid": "903e13a9-a608-4c19-9ec6-aff24c66afe1",
+      "values": [
+        {
+          "language_id": "22",
+          "value": "over age",
+          "content_type": "TEXT",
+          "modes": [
+            "TEXT"
+          ]
+        }
+      ]
+    },
+    {
+      "uuid": "7a292416-1448-45f6-b6f9-8a96c635f375",
+      "values": [
+        {
+          "language_id": "22",
+          "value": "under age",
+          "content_type": "TEXT",
+          "modes": [
+            "TEXT"
+          ]
+        }
+      ]
+    }
+  ]
+}
