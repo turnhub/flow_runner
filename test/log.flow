@@ -1,0 +1,129 @@
+{
+  "specification_version": "1.0.0-rc2",
+  "uuid": "c0aa5165-7145-4de4-8d0e-2f174579953e",
+  "name": "log",
+  "description": "log flow",
+  "vendor_metadata": {},
+  "flows": [
+    {
+      "uuid": "912b53c1-de3c-4093-9d98-9bf25b9ad75a",
+      "name": "test",
+      "label": "test",
+      "last_modified": "2021-09-08T13:54:27.252Z",
+      "interaction_timeout": 30,
+      "vendor_metadata": {},
+      "supported_modes": [
+        "SMS"
+      ],
+      "languages": [
+        {
+          "id": "22",
+          "label": "English",
+          "iso_639_3": "eng"
+        }
+      ],
+      "blocks": [
+        {
+          "uuid": "4d73864d-f579-4c72-81ea-0a38f4195228",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 327,
+              "y": 1437
+            }
+          },
+          "vendor_metadata": {
+            "io_viamo": {
+              "uiData": {
+                "isSelected": false
+              },
+              "branchingType": "UNIFIED",
+              "noValidResponse": "END_CALL"
+            }
+          },
+          "type": "Core.Log",
+          "name": "welcome",
+          "label": "welcome",
+          "semantic_label": "",
+          "exits": [
+            {
+              "uuid": "51e16673-672e-402c-a306-aca2efac43c9",
+              "name": "Default",
+              "default": true,
+              "test": "",
+              "config": {},
+              "destination_block": "a11dac8f-b9c7-4de2-8663-c260e038c746"
+            }
+          ],
+          "config": {
+            "message": "903e13a9-a608-4c19-9ec6-aff24c66afe1"
+          },
+          "tags": []
+        },
+        {
+          "uuid": "a11dac8f-b9c7-4de2-8663-c260e038c746",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 327,
+              "y": 1437
+            }
+          },
+          "vendor_metadata": {
+            "io_viamo": {
+              "uiData": {
+                "isSelected": false
+              },
+              "branchingType": "UNIFIED",
+              "noValidResponse": "END_CALL"
+            }
+          },
+          "type": "Core.Log",
+          "name": "welcome",
+          "label": "welcome",
+          "semantic_label": "",
+          "exits": [
+            {
+              "uuid": "51e16673-672e-402c-a306-aca2efac43c9",
+              "name": "Default",
+              "default": true,
+              "test": "",
+              "config": {}
+            }
+          ],
+          "config": {
+            "message": "7a292416-1448-45f6-b6f9-8a96c635f375"
+          },
+          "tags": []
+        }
+      ],
+      "first_block_id": "4d73864d-f579-4c72-81ea-0a38f4195228"
+    }
+  ],
+  "resources": [
+    {
+      "uuid": "903e13a9-a608-4c19-9ec6-aff24c66afe1",
+      "values": [
+        {
+          "language_id": "22",
+          "value": "block1",
+          "content_type": "TEXT",
+          "modes": [
+            "TEXT"
+          ]
+        }
+      ]
+    },
+    {
+      "uuid": "7a292416-1448-45f6-b6f9-8a96c635f375",
+      "values": [
+        {
+          "language_id": "22",
+          "value": "block2",
+          "content_type": "TEXT",
+          "modes": [
+            "TEXT"
+          ]
+        }
+      ]
+    }
+  ]
+}

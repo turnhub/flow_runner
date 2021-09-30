@@ -96,4 +96,19 @@ defmodule FlowRunnerTest do
     assert %{prompt: %{value: "back to flow 1"}} = output
     {:end, _context} = FlowRunner.next_block(container, context)
   end
+
+  test "log block" do
+    {:ok, container} =
+      File.read!("test/log.flow")
+      |> FlowRunner.compile()
+
+    {:ok, context} =
+      FlowRunner.start_flow(container, "912b53c1-de3c-4093-9d98-9bf25b9ad75a", "eng", "TEXT")
+
+    {:ok, context, _output} = FlowRunner.next_block(container, context)
+    {:ok, context, _output} = FlowRunner.next_block(container, context)
+    {:end, context} = FlowRunner.next_block(container, context)
+
+    assert context.log == ["block2", "block1"]
+  end
 end
