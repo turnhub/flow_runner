@@ -3,9 +3,6 @@ defmodule FlowRunner.Spec.Blocks.RunFlow do
   Implements the Core.RunFlow block type. Temporarily defers execution to a
   new flow.
 
-  TODO:
-  - Trap
-
   Specification concerns:
   - Are the requirements to call the parent context 'parentFlowContext' important?
   - What is an exception exit? It's not defined anywhere I can tell. I think it's probably

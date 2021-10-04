@@ -13,10 +13,11 @@ defmodule FlowRunner.Spec.Block do
   alias FlowRunner.Spec.Exit
   alias FlowRunner.Spec.Flow
   alias FlowRunner.Spec.Blocks.Case
-  alias FlowRunner.Spec.Blocks.Message
-  alias FlowRunner.Spec.Blocks.SelectOneResponse
-  alias FlowRunner.Spec.Blocks.RunFlow
   alias FlowRunner.Spec.Blocks.Log
+  alias FlowRunner.Spec.Blocks.Message
+  alias FlowRunner.Spec.Blocks.Output
+  alias FlowRunner.Spec.Blocks.RunFlow
+  alias FlowRunner.Spec.Blocks.SelectOneResponse
 
   @derive Jason.Encoder
   defstruct uuid: nil,
@@ -111,6 +112,14 @@ defmodule FlowRunner.Spec.Block do
         container
       ),
       do: Case.evaluate_incoming(flow, block, context, container)
+
+  def evaluate_incoming(
+        flow,
+        %Block{type: "Core.Output"} = block,
+        context,
+        container
+      ),
+      do: Output.evaluate_incoming(flow, block, context, container)
 
   def evaluate_incoming(
         _flow,
