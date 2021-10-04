@@ -4,6 +4,7 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
   waits for the user to come back with one of them.
   """
   alias FlowRunner.Context
+  alias FlowRunner.Output
   alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Resource
 
@@ -15,7 +16,7 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
         {
           :ok,
           %Context{context | waiting_for_user_input: true, last_block_uuid: block.uuid},
-          %FlowRunner.Output{
+          %Output{
             prompt: prompt
           }
         }

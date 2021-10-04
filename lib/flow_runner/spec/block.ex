@@ -73,6 +73,24 @@ defmodule FlowRunner.Spec.Block do
     {:error, "unexpectedly received user input"}
   end
 
+  def evaluate_contact_properties(%Block{
+        config: %{
+          "set_contact_property" => %{
+            "property_key" => property_key,
+            "property_value" => property_value
+          }
+        }
+      }) do
+    %{
+      contact_update_key: property_key,
+      contact_update_value: property_value
+    }
+  end
+
+  def evaluate_contact_properties(_block) do
+    %{}
+  end
+
   def evaluate_incoming(
         flow,
         %Block{type: "MobilePrimitives.Message"} = block,
@@ -116,6 +134,14 @@ defmodule FlowRunner.Spec.Block do
   def evaluate_incoming(
         flow,
         %Block{type: "Core.Output"} = block,
+        context,
+        container
+      ),
+      do: Output.evaluate_incoming(flow, block, context, container)
+
+  def evaluate_incoming(
+        flow,
+        %Block{type: "Core.SetContactProperty"} = block,
         context,
         container
       ),

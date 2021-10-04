@@ -9,6 +9,7 @@ defmodule FlowRunner.Spec.Blocks.RunFlow do
     the exit_block_id on the flow.
   """
   alias FlowRunner.Context
+  alias FlowRunner.Output
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Flow
@@ -25,7 +26,7 @@ defmodule FlowRunner.Spec.Blocks.RunFlow do
         last_block_uuid: nil
     }
 
-    {:ok, next_context, nil}
+    {:ok, next_context, %Output{}}
   end
 
   def evaluate_outgoing(_block, context, _flow, _user_input) do

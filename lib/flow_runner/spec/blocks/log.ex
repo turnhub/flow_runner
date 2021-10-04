@@ -3,6 +3,7 @@ defmodule FlowRunner.Spec.Blocks.Log do
   Log things!
   """
   alias FlowRunner.Context
+  alias FlowRunner.Output
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Flow
@@ -28,6 +29,6 @@ defmodule FlowRunner.Spec.Blocks.Log do
           context
       end
 
-    {:ok, context, nil}
+    {:ok, context, %Output{}}
   end
 end

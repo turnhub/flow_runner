@@ -138,4 +138,27 @@ defmodule FlowRunnerTest do
     {:ok, context, _output} = FlowRunner.next_block(container, context)
     assert context.log == ["under age"]
   end
+
+  test "set a contact property" do
+    {:ok, container} =
+      File.read!("test/set_contact_property.flow")
+      |> FlowRunner.compile()
+
+    {:ok, context} =
+      FlowRunner.start_flow(container, "62d0084d-e88f-48c3-ac64-7a15855f0a43", "eng", "TEXT")
+
+    {:ok, context, output} = FlowRunner.next_block(container, context)
+
+    assert %{
+             contact_update_key: "name",
+             contact_update_value: "yaseen"
+           } = output
+
+    {:ok, _context, output} = FlowRunner.next_block(container, context)
+
+    assert %{
+             contact_update_key: "name",
+             contact_update_value: "aalia"
+           } = output
+  end
 end

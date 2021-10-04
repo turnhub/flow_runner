@@ -1,11 +1,12 @@
 defmodule FlowRunner.Spec.Blocks.Case do
   @moduledoc """
-  Log things!
+  Switch between various exit conditions.
   """
   alias FlowRunner.Context
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Flow
+  alias FlowRunner.Output
 
   require Logger
 
@@ -15,6 +16,6 @@ defmodule FlowRunner.Spec.Blocks.Case do
         %Context{} = context,
         %Container{}
       ) do
-    {:ok, %Context{context | last_block_uuid: block.uuid}, nil}
+    {:ok, %Context{context | last_block_uuid: block.uuid}, %Output{}}
   end
 end

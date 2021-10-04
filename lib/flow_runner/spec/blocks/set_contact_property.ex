@@ -1,6 +1,6 @@
-defmodule FlowRunner.Spec.Blocks.Output do
+defmodule FlowRunner.Spec.Blocks.SetContactProperty do
   @moduledoc """
-  Output to a Flow Result which is not yet implemented.
+  Set a contact property.
   """
   alias FlowRunner.Context
   alias FlowRunner.Spec.Block
@@ -15,7 +15,7 @@ defmodule FlowRunner.Spec.Blocks.Output do
         %Context{} = context,
         %Container{}
       ) do
-    # When Flow Results are implemented we should store the output results.
+    # This is a no-op as we check these fields for all blocks in FlowRunner module.
     {:ok, %Context{context | last_block_uuid: block.uuid}, %FlowRunner.Output{}}
   end
 end

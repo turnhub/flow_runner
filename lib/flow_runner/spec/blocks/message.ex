@@ -3,6 +3,7 @@ defmodule FlowRunner.Spec.Blocks.Message do
   A type of block that sends a message to the user.
   """
   alias FlowRunner.Context
+  alias FlowRunner.Output
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Flow
@@ -16,7 +17,7 @@ defmodule FlowRunner.Spec.Blocks.Message do
         {
           :ok,
           %Context{context | waiting_for_user_input: false, last_block_uuid: block.uuid},
-          %FlowRunner.Output{
+          %Output{
             prompt: prompt
           }
         }
