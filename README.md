@@ -14,8 +14,8 @@ This Flow Runnner only supports the TEXT, RICH_MESSAGING modes.
 | 1 | Core.RunFlow | Yes | |
 | 1 | Core.SetContactProperty | Yes | |
 | 1 | Core.SetGroupMembership | Yes | |
-| 2 | ConsoleIO.Print | No ||
-| 2 | ConsoleIO.Read | No ||
+| 2 | ConsoleIO.Print | No | This is not useful for us.|
+| 2 | ConsoleIO.Read | No |This is not useful for us.|
 | 3 | MessagePrimitives.Message | Yes
 | 3 | MessagePrimitives.SelectOneResponse | Yes 
 | 3 | MessagePrimitives.SelectManyResponses | No | WhatsApp does not support this.
@@ -24,13 +24,13 @@ This Flow Runnner only supports the TEXT, RICH_MESSAGING modes.
 | 4 | SmartDevices.LocationResponse | No | TBD
 | 4 | SmartDevices.PhotoResponse | No | TBD
 
+# How to use the API
 
 
-# How to use API
 
-# What is a context.
+# What is a Context.
 
-# What is an output.
+# What is an Output.
 
 
 
