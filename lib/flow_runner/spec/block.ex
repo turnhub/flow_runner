@@ -51,6 +51,22 @@ defmodule FlowRunner.Spec.Block do
     "MobilePrimitives.Message" => FlowRunner.Spec.Blocks.Message
   }
 
+  def cast!(%{"config" => config, "type" => type} = map) do
+    Map.put(map, "config", load_config_for_type!(type, config))
+  end
+
+  def load_config_for_type!("MobilePrimitives.Message", %{"prompt" => prompt}) do
+    config = %{prompt: prompt} |> IO.inspect(label: "config")
+
+    if Vex.valid?(config, prompt: [presence: true]) do
+      config |> IO.inspect(label: "cast config")
+    else
+      raise "invalid error"
+    end
+  end
+
+  def load_config_for_type!(_, _), do: raise("invalid config")
+
   @spec evaluate_user_input(%Block{}, %FlowRunner.Context{}, iodata()) ::
           {:ok, %FlowRunner.Context{}}
   def evaluate_user_input(_block, context, nil)
