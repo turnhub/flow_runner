@@ -18,6 +18,8 @@ defmodule FlowRunner.Spec.Block do
   alias FlowRunner.Spec.Blocks.Output
   alias FlowRunner.Spec.Blocks.RunFlow
   alias FlowRunner.Spec.Blocks.SelectOneResponse
+  alias FlowRunner.Spec.Blocks.SetContactProperty
+  alias FlowRunner.Spec.Blocks.SetGroupMembership
 
   @derive Jason.Encoder
   defstruct uuid: nil,
@@ -145,7 +147,15 @@ defmodule FlowRunner.Spec.Block do
         context,
         container
       ),
-      do: Output.evaluate_incoming(flow, block, context, container)
+      do: SetContactProperty.evaluate_incoming(flow, block, context, container)
+
+  def evaluate_incoming(
+        flow,
+        %Block{type: "Core.SetGroupMembership"} = block,
+        context,
+        container
+      ),
+      do: SetGroupMembership.evaluate_incoming(flow, block, context, container)
 
   def evaluate_incoming(
         _flow,
