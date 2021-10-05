@@ -97,8 +97,8 @@ defmodule FlowRunner.Spec.Block do
   end
 
   def evaluate_incoming(flow, %Block{type: type} = block, context, container) do
-    if(Map.has_key?(@blocks, type)) do
-      apply(@blocks[type], :evaluate_incoming, [flow, block, context, container])
+    if implementation = Map.get(@blocks, type) do
+      apply(implementation, :evaluate_incoming, [flow, block, context, container])
     else
       {:error, "unknown block type #{type}"}
     end
