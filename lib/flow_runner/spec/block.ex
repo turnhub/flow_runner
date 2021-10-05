@@ -12,14 +12,6 @@ defmodule FlowRunner.Spec.Block do
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Exit
   alias FlowRunner.Spec.Flow
-  alias FlowRunner.Spec.Blocks.Case
-  alias FlowRunner.Spec.Blocks.Log
-  alias FlowRunner.Spec.Blocks.Message
-  alias FlowRunner.Spec.Blocks.Output
-  alias FlowRunner.Spec.Blocks.RunFlow
-  alias FlowRunner.Spec.Blocks.SelectOneResponse
-  alias FlowRunner.Spec.Blocks.SetContactProperty
-  alias FlowRunner.Spec.Blocks.SetGroupMembership
 
   @derive Jason.Encoder
   defstruct uuid: nil,
@@ -47,6 +39,17 @@ defmodule FlowRunner.Spec.Block do
         }
 
   validates(:uuid, presence: true, uuid: [format: :default])
+
+  @blocks %{
+    "Core.Case" => FlowRunner.Spec.Blocks.Case,
+    "Core.Log" => FlowRunner.Spec.Blocks.Log,
+    "Core.Output" => FlowRunner.Spec.Blocks.Output,
+    "Core.RunFlow" => FlowRunner.Spec.Blocks.RunFlow,
+    "Core.SetContactProperty" => FlowRunner.Spec.Blocks.SetContactProperty,
+    "Core.SetGroupMembership" => FlowRunner.Spec.Blocks.SetGroupMembership,
+    "MobilePrimitives.SelectOneResponse" => FlowRunner.Spec.Blocks.SelectOneResponse,
+    "MobilePrimitives.Message" => FlowRunner.Spec.Blocks.Message
+  }
 
   @spec evaluate_user_input(%Block{}, %FlowRunner.Context{}, iodata()) ::
           {:ok, %FlowRunner.Context{}}
@@ -93,77 +96,13 @@ defmodule FlowRunner.Spec.Block do
     %{}
   end
 
-  def evaluate_incoming(
-        flow,
-        %Block{type: "MobilePrimitives.Message"} = block,
-        context,
-        container
-      ),
-      do: Message.evaluate_incoming(flow, block, context, container)
-
-  def evaluate_incoming(
-        flow,
-        %Block{type: "MobilePrimitives.SelectOneResponse"} = block,
-        context,
-        container
-      ),
-      do: SelectOneResponse.evaluate_incoming(flow, block, context, container)
-
-  def evaluate_incoming(
-        flow,
-        %Block{type: "Core.RunFlow"} = block,
-        context,
-        container
-      ),
-      do: RunFlow.evaluate_incoming(flow, block, context, container)
-
-  def evaluate_incoming(
-        flow,
-        %Block{type: "Core.Log"} = block,
-        context,
-        container
-      ),
-      do: Log.evaluate_incoming(flow, block, context, container)
-
-  def evaluate_incoming(
-        flow,
-        %Block{type: "Core.Case"} = block,
-        context,
-        container
-      ),
-      do: Case.evaluate_incoming(flow, block, context, container)
-
-  def evaluate_incoming(
-        flow,
-        %Block{type: "Core.Output"} = block,
-        context,
-        container
-      ),
-      do: Output.evaluate_incoming(flow, block, context, container)
-
-  def evaluate_incoming(
-        flow,
-        %Block{type: "Core.SetContactProperty"} = block,
-        context,
-        container
-      ),
-      do: SetContactProperty.evaluate_incoming(flow, block, context, container)
-
-  def evaluate_incoming(
-        flow,
-        %Block{type: "Core.SetGroupMembership"} = block,
-        context,
-        container
-      ),
-      do: SetGroupMembership.evaluate_incoming(flow, block, context, container)
-
-  def evaluate_incoming(
-        _flow,
-        %Block{type: type},
-        _context,
-        _container
-      ),
-      do: {:error, "unknown block type #{type}"}
+  def evaluate_incoming(flow, %Block{type: type} = block, context, container) do
+    if(Map.has_key?(@blocks, type)) do
+      apply(@blocks[type], :evaluate_incoming, [flow, block, context, container])
+    else
+      {:error, "unknown block type #{type}"}
+    end
+  end
 
   def evaluate_outgoing(block, %Context{} = context, flow, user_input) do
     # Process any user input we have been given.
