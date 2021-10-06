@@ -31,7 +31,8 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
           :ok,
           %Context{context | waiting_for_user_input: true, last_block_uuid: block.uuid},
           %Output{
-            prompt: prompt
+            prompt: prompt,
+            choices: block.config.choices
           }
         }
 
