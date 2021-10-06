@@ -10,7 +10,7 @@ defmodule FlowRunner.Spec.Blocks.Case do
 
   require Logger
 
-  def validate_config(config) do
+  def validate_config!(_) do
     %{}
   end
 

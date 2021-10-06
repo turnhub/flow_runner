@@ -9,7 +9,13 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
   alias FlowRunner.Spec.Resource
 
   def validate_config!(%{"prompt" => prompt, "choices" => choices}) do
-    %{prompt: prompt, choices: choices}
+    config = %{prompt: prompt, choices: choices}
+
+    if Vex.valid?(config, prompt: [presence: true, uuid: true]) do
+      config
+    else
+      raise "invalid 'config' for MobilePrimitive.SelectOneResponse block, 'prompt' field is required and needs to be a UUID."
+    end
   end
 
   def validate_config!(_) do

@@ -15,11 +15,17 @@ defmodule FlowRunner.Spec.Blocks.RunFlow do
   alias FlowRunner.Spec.Flow
 
   def validate_config!(%{"flow_id" => flow_id}) do
-    %{flow_id: flow_id}
+    config = %{flow_id: flow_id}
+
+    if Vex.valid?(config, flow_id: [presence: true, uuid: true]) do
+      config
+    else
+      raise "invalid 'config' for Core.RunFlow block, 'flow' field is required and needs to be a UUID."
+    end
   end
 
   def validate_config!(_) do
-    raise "invalid config, 'flow_id' field required"
+    raise "invalid 'config' for Core.RunFlow block, 'flow' field is required and needs to be a UUID."
   end
 
   def evaluate_incoming(%Flow{}, %Block{config: config} = block, context, %Container{}) do

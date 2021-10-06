@@ -10,11 +10,17 @@ defmodule FlowRunner.Spec.Blocks.Message do
   alias FlowRunner.Spec.Resource
 
   def validate_config!(%{"prompt" => prompt}) do
-    %{prompt: prompt}
+    config = %{prompt: prompt}
+
+    if Vex.valid?(config, prompt: [presence: true, uuid: true]) do
+      config
+    else
+      raise "invalid 'config' for MobilePrimitive.Message block, 'prompt' field is required and needs to be a UUID."
+    end
   end
 
   def validate_config!(_) do
-    raise "invalid config, 'prompt' field required"
+    raise "invalid 'config' for MobilePrimitive.Message block, 'prompt' field is required and needs to be a UUID."
   end
 
   def evaluate_incoming(%Flow{} = flow, %Block{} = block, context, container) do

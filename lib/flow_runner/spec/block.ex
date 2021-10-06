@@ -39,6 +39,7 @@ defmodule FlowRunner.Spec.Block do
         }
 
   validates(:uuid, presence: true, uuid: [format: :default])
+  validates(:type, presence: true)
 
   @blocks %{
     "Core.Case" => FlowRunner.Spec.Blocks.Case,
@@ -52,12 +53,11 @@ defmodule FlowRunner.Spec.Block do
   }
 
   def cast!(%{"type" => type} = map) do
-    if config = Map.get(map, "config", nil) do
-      Map.put(map, "config", load_config_for_type!(type, config))
-    else
-      map
-    end
+    config = Map.get(map, "config", %{})
+    Map.put(map, "config", load_config_for_type!(type, config))
   end
+
+  def cast!(map), do: map
 
   def load_config_for_set_contact_property!(%{
         "set_contact_property" => %{
@@ -83,10 +83,11 @@ defmodule FlowRunner.Spec.Block do
       if implementation = Map.get(@blocks, type) do
         apply(implementation, :validate_config!, [config])
       else
-        raise("invalid config")
+        raise("unknown block type '#{type}'")
       end
 
-    # All blocks can optionally have a set_contact_property config. Let's validate that here.
+    # All blocks can optionally have a set_contact_property config. Let's
+    # validate that now and merge it in.
     Map.merge(validated_config, load_config_for_set_contact_property!(config))
   end
 
