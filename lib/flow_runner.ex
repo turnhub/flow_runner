@@ -29,7 +29,7 @@ defmodule FlowRunner do
   @spec next_block(FlowRunner.Spec.Container.t(), %FlowRunner.Context{}, any) ::
           {:end, any}
           | {:error, any}
-          | {:ok, %FlowRunner.Context{},
+          | {:ok, %FlowRunner.Context{}, %FlowRunner.Spec.Block{},
              nil
              | %FlowRunner.Output{}}
   @doc """
@@ -60,9 +60,9 @@ defmodule FlowRunner do
     # Identify the block we are transitioning to and then evaluate incoming block rules.
     with {:ok, flow} <- Container.fetch_flow_by_uuid(container, context.current_flow_uuid),
          {:ok, context, next_block} <- FlowRunner.find_next_block(flow, context, user_input) do
-      # If we have ended a Core.RunFlow block then replace the context.
+      # If we have ended a Core.RunFlow block then replace the context with its parent.
       if next_block == nil && context.parent_context != nil do
-        {:ok, context.parent_context, nil}
+        {:ok, context.parent_context, nil, nil}
       else
         evaluate_next_block(next_block, container, flow, context)
       end
@@ -85,7 +85,7 @@ defmodule FlowRunner do
 
     case Block.evaluate_incoming(flow, next_block, context, container) do
       {:ok, context, output} ->
-        {:ok, context, Map.merge(output, contact_output)}
+        {:ok, context, next_block, Map.merge(output, contact_output)}
 
       {:error, reason} ->
         {:error, reason}
