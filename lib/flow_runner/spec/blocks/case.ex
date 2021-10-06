@@ -10,6 +10,10 @@ defmodule FlowRunner.Spec.Blocks.Case do
 
   require Logger
 
+  def validate_config(config) do
+    %{}
+  end
+
   def evaluate_incoming(
         %Flow{},
         %Block{} = block,

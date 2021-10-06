@@ -11,13 +11,21 @@ defmodule FlowRunner.Spec.Blocks.Log do
 
   require Logger
 
+  def validate_config!(%{"message" => message}) do
+    %{message: message}
+  end
+
+  def validate_config!(_) do
+    raise "invalid config, 'message' field required"
+  end
+
   def evaluate_incoming(
         %Flow{} = flow,
         %Block{} = block,
         context,
         %Container{} = container
       ) do
-    {:ok, resource} = Container.fetch_resource_by_uuid(container, block.config["message"])
+    {:ok, resource} = Container.fetch_resource_by_uuid(container, block.config.message)
 
     context =
       case Resource.matching_resource(resource, context.language, context.mode, flow) do

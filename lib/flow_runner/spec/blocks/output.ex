@@ -9,6 +9,10 @@ defmodule FlowRunner.Spec.Blocks.Output do
 
   require Logger
 
+  def validate_config!(config) do
+    %{}
+  end
+
   def evaluate_incoming(
         %Flow{},
         %Block{} = block,

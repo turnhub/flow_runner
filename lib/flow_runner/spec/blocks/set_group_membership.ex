@@ -10,14 +10,32 @@ defmodule FlowRunner.Spec.Blocks.SetGroupMembership do
 
   require Logger
 
+  def validate_config!(%{"group_key" => group_key, "is_member" => is_member} = config) do
+    name = Map.get(config, "group_name", nil)
+
+    %{
+      group_key: group_key,
+      group_name: name,
+      is_member: is_member
+    }
+  end
+
+  def validate_config!(_) do
+    raise "config block for Core.SetGroupMembership requires 'group_key' and 'is_member' fields"
+  end
+
   def evaluate_incoming(
         %Flow{},
-        %Block{config: %{"group_key" => key, "is_member" => is_member}} = block,
+        %Block{
+          config: %{
+            group_key: key,
+            is_member: is_member,
+            group_name: name
+          }
+        } = block,
         %Context{} = context,
         %Container{}
       ) do
-    name = Map.get(block.config, "group_name", nil)
-
     output = %Output{
       group_update_key: key,
       group_update_name: name,

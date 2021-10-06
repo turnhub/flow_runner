@@ -14,8 +14,16 @@ defmodule FlowRunner.Spec.Blocks.RunFlow do
   alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Flow
 
+  def validate_config!(%{"flow_id" => flow_id}) do
+    %{flow_id: flow_id}
+  end
+
+  def validate_config!(_) do
+    raise "invalid config, 'flow_id' field required"
+  end
+
   def evaluate_incoming(%Flow{}, %Block{config: config} = block, context, %Container{}) do
-    next_flow_id = config["flow_id"]
+    next_flow_id = config.flow_id
 
     context = %Context{context | last_block_uuid: block.uuid}
 

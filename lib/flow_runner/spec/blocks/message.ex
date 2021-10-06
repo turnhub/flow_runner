@@ -9,8 +9,16 @@ defmodule FlowRunner.Spec.Blocks.Message do
   alias FlowRunner.Spec.Flow
   alias FlowRunner.Spec.Resource
 
+  def validate_config!(%{"prompt" => prompt}) do
+    %{prompt: prompt}
+  end
+
+  def validate_config!(_) do
+    raise "invalid config, 'prompt' field required"
+  end
+
   def evaluate_incoming(%Flow{} = flow, %Block{} = block, context, container) do
-    {:ok, resource} = Container.fetch_resource_by_uuid(container, block.config["prompt"])
+    {:ok, resource} = Container.fetch_resource_by_uuid(container, block.config.prompt)
 
     case Resource.matching_resource(resource, context.language, context.mode, flow) do
       {:ok, prompt} ->

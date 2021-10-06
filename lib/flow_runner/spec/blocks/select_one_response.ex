@@ -8,8 +8,16 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
   alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Resource
 
+  def validate_config!(%{"prompt" => prompt, "choices" => choices}) do
+    %{prompt: prompt, choices: choices}
+  end
+
+  def validate_config!(_) do
+    raise "invalid config, 'prompt' and 'choices' fields required"
+  end
+
   def evaluate_incoming(flow, block, context, container) do
-    {:ok, resource} = Container.fetch_resource_by_uuid(container, block.config["prompt"])
+    {:ok, resource} = Container.fetch_resource_by_uuid(container, block.config.prompt)
 
     case Resource.matching_resource(resource, context.language, context.mode, flow) do
       {:ok, prompt} ->

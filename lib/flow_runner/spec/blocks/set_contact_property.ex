@@ -9,6 +9,10 @@ defmodule FlowRunner.Spec.Blocks.SetContactProperty do
 
   require Logger
 
+  def validate_config!(_) do
+    %{}
+  end
+
   def evaluate_incoming(
         %Flow{},
         %Block{} = block,

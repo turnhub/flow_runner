@@ -15,6 +15,7 @@ defmodule FlowRunner.CompileTest do
             "blocks":[{
               "uuid": "3666a05d-3792-482b-8f7f-9e2472e4f027",
               "name": "test block",
+              "type": "Core.Case",
               "exits": [{
                 "uuid": "3666a05d-3792-482b-8f7f-9e2472e4f027",
                 "name": "test exit"
@@ -32,6 +33,7 @@ defmodule FlowRunner.CompileTest do
                    %Block{
                      uuid: "3666a05d-3792-482b-8f7f-9e2472e4f027",
                      name: "test block",
+                     type: "Core.Case",
                      exits: [
                        %Exit{
                          uuid: "3666a05d-3792-482b-8f7f-9e2472e4f027",

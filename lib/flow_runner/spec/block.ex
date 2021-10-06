@@ -51,21 +51,44 @@ defmodule FlowRunner.Spec.Block do
     "MobilePrimitives.Message" => FlowRunner.Spec.Blocks.Message
   }
 
-  def cast!(%{"config" => config, "type" => type} = map) do
-    Map.put(map, "config", load_config_for_type!(type, config))
-  end
-
-  def load_config_for_type!("MobilePrimitives.Message", %{"prompt" => prompt}) do
-    config = %{prompt: prompt} |> IO.inspect(label: "config")
-
-    if Vex.valid?(config, prompt: [presence: true]) do
-      config |> IO.inspect(label: "cast config")
+  def cast!(%{"type" => type} = map) do
+    if config = Map.get(map, "config", nil) do
+      Map.put(map, "config", load_config_for_type!(type, config))
     else
-      raise "invalid error"
+      map
     end
   end
 
-  def load_config_for_type!(_, _), do: raise("invalid config")
+  def load_config_for_set_contact_property!(%{
+        "set_contact_property" => %{
+          "property_key" => property_key,
+          "property_value" => property_value
+        }
+      }) do
+    %{set_contact_property: %{property_key: property_key, property_value: property_value}}
+  end
+
+  def load_config_for_set_contact_property!(%{
+        "set_contact_property" => _
+      }) do
+    raise "set_contact_property! requires 'property_key' and 'property_value' fields."
+  end
+
+  def load_config_for_set_contact_property!(%{}) do
+    %{}
+  end
+
+  def load_config_for_type!(type, config) do
+    validated_config =
+      if implementation = Map.get(@blocks, type) do
+        apply(implementation, :validate_config!, [config])
+      else
+        raise("invalid config")
+      end
+
+    # All blocks can optionally have a set_contact_property config. Let's validate that here.
+    Map.merge(validated_config, load_config_for_set_contact_property!(config))
+  end
 
   @spec evaluate_user_input(%Block{}, %FlowRunner.Context{}, iodata()) ::
           {:ok, %FlowRunner.Context{}}
@@ -96,9 +119,9 @@ defmodule FlowRunner.Spec.Block do
 
   def evaluate_contact_properties(%Block{
         config: %{
-          "set_contact_property" => %{
-            "property_key" => property_key,
-            "property_value" => property_value
+          set_contact_property: %{
+            property_key: property_key,
+            property_value: property_value
           }
         }
       }) do
