@@ -1,0 +1,762 @@
+{
+  "specification_version": "1.0.0-rc2",
+  "uuid": "3666a05d-3792-482b-8f7f-9e2472e4f027",
+  "name": "numeric response test flow",
+  "description": "numeric response test flow",
+  "vendor_metadata": {},
+  "flows": [
+    {
+      "uuid": "cc630cda-384e-41a3-9907-5262d23a6084",
+      "name": "numericresponse",
+      "label": "numeric response",
+      "last_modified": "2021-10-07T11:45:14.635Z",
+      "interaction_timeout": 30,
+      "vendor_metadata": {},
+      "supported_modes": [
+        "TEXT"
+      ],
+      "languages": [
+        {
+          "id": "22",
+          "label": "English",
+          "iso_639_3": "eng"
+        }
+      ],
+      "blocks": [
+        {
+          "uuid": "362db8e2-0495-45f1-9793-02a3872477de",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 233,
+              "y": 286
+            }
+          },
+          "vendor_metadata": {
+            "io_viamo": {
+              "uiData": {
+                "isSelected": false
+              },
+              "branchingType": "ADVANCED",
+              "noValidResponse": "CONTINUE_THRU_EXIT"
+            }
+          },
+          "type": "MobilePrimitives.NumericResponse",
+          "name": "prompt_number",
+          "label": "prompt number",
+          "semantic_label": "",
+          "exits": [
+            {
+              "uuid": "fb71001c-f3f6-4f9f-9a23-49d4dc1a9a68",
+              "name": "over 30",
+              "test": "block.value > 30",
+              "config": {},
+              "destination_block": "9ff7ab40-278b-4bef-a7f7-d1243adfb3aa"
+            },
+            {
+              "uuid": "f5740102-acb4-423e-b43f-d9c0ff3c41af",
+              "name": "under 30",
+              "config": {},
+              "destination_block": "bc116afd-afae-4dae-a305-afc830482c8d",
+              "test": "block.value < 31"
+            },
+            {
+              "uuid": "11da209e-4721-4f3f-84c5-be173671bb47",
+              "name": "Default",
+              "default": true,
+              "test": "",
+              "config": {},
+              "destination_block": "973ae5f9-b9d6-430c-8b27-862503fba6dd"
+            }
+          ],
+          "config": {
+            "prompt": "9a916f0f-130e-498d-9558-741a6a39d9ef",
+            "validation_minimum": 5,
+            "validation_maximum": 80
+          },
+          "tags": []
+        },
+        {
+          "uuid": "9ff7ab40-278b-4bef-a7f7-d1243adfb3aa",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 266,
+              "y": 477
+            }
+          },
+          "vendor_metadata": {
+            "io_viamo": {
+              "uiData": {
+                "isSelected": false
+              },
+              "branchingType": "UNIFIED",
+              "noValidResponse": "END_CALL"
+            }
+          },
+          "type": "MobilePrimitives.NumericResponse",
+          "name": "just_right",
+          "label": "just right",
+          "semantic_label": "",
+          "exits": [
+            {
+              "uuid": "da4eba7f-cb49-4cf1-bded-2fd6d872cc93",
+              "name": "1",
+              "test": "block.value > 0",
+              "destination_block": "6e00c6a7-13fd-408e-8a03-63784ecff164",
+              "config": {}
+            },
+            {
+              "uuid": "f766f0b6-07c9-45bd-a231-b5284c36d234",
+              "name": "Default",
+              "default": true,
+              "destination_block": "973ae5f9-b9d6-430c-8b27-862503fba6dd",
+              "test": "",
+              "config": {}
+            }
+          ],
+          "config": {
+            "prompt": "d92c558d-f008-4d0c-b5f7-f0a93493a7cf"
+          },
+          "tags": []
+        },
+        {
+          "uuid": "973ae5f9-b9d6-430c-8b27-862503fba6dd",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 892,
+              "y": 516
+            }
+          },
+          "vendor_metadata": {
+            "io_viamo": {
+              "uiData": {
+                "isSelected": false
+              },
+              "branchingType": "UNIFIED",
+              "noValidResponse": "CONTINUE_THRU_EXIT"
+            }
+          },
+          "type": "MobilePrimitives.Message",
+          "name": "invalid",
+          "label": "invalid",
+          "semantic_label": "",
+          "exits": [
+            {
+              "uuid": "4c85d806-1520-455d-a225-9680e7bde0d3",
+              "name": "1",
+              "test": "block.value > 0",
+              "config": {}
+            },
+            {
+              "uuid": "a1445996-cb8d-465a-8902-a25046c8bd16",
+              "name": "Default",
+              "default": true,
+              "test": "",
+              "config": {},
+              "destination_block": "362db8e2-0495-45f1-9793-02a3872477de"
+            }
+          ],
+          "config": {
+            "prompt": "cbc181f4-4836-415a-a21b-17ae7c9c200d"
+          },
+          "tags": []
+        },
+        {
+          "uuid": "6e00c6a7-13fd-408e-8a03-63784ecff164",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 892,
+              "y": 516
+            }
+          },
+          "vendor_metadata": {
+            "io_viamo": {
+              "uiData": {
+                "isSelected": false
+              },
+              "branchingType": "UNIFIED",
+              "noValidResponse": "CONTINUE_THRU_EXIT"
+            }
+          },
+          "type": "MobilePrimitives.Message",
+          "name": "end of flow",
+          "label": "end of flow",
+          "semantic_label": "",
+          "exits": [
+            {
+              "uuid": "4c85d806-1520-455d-a225-9680e7bde0d3",
+              "name": "1",
+              "test": "block.value > 0",
+              "config": {}
+            },
+            {
+              "uuid": "a1445996-cb8d-465a-8902-a25046c8bd16",
+              "name": "Default",
+              "default": true,
+              "test": "",
+              "config": {},
+              "destination_block": "362db8e2-0495-45f1-9793-02a3872477de"
+            }
+          ],
+          "config": {
+            "prompt": "6e00c6a7-13fd-408e-8a03-63784ecff164"
+          },
+          "tags": []
+        },
+        {
+          "uuid": "bc116afd-afae-4dae-a305-afc830482c8d",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 541,
+              "y": 516
+            }
+          },
+          "vendor_metadata": {
+            "io_viamo": {
+              "uiData": {
+                "isSelected": false
+              },
+              "branchingType": "UNIFIED",
+              "noValidResponse": "END_CALL"
+            }
+          },
+          "type": "MobilePrimitives.Message",
+          "name": "not_just_right",
+          "label": "not just right",
+          "semantic_label": "",
+          "exits": [
+            {
+              "uuid": "3969ac29-87af-490e-a01c-7c70f9f19886",
+              "name": "1",
+              "test": "block.value > 0",
+              "config": {}
+            },
+            {
+              "uuid": "0f4fd7f6-167c-4ea9-bc6f-fc0f9a7e77a5",
+              "name": "Default",
+              "default": true,
+              "test": "",
+              "config": {}
+            }
+          ],
+          "config": {
+            "prompt": "23f0eff7-211e-4e08-850c-3cedf80a8de6"
+          },
+          "tags": []
+        }
+      ],
+      "first_block_id": "362db8e2-0495-45f1-9793-02a3872477de"
+    }
+  ],
+  "resources": [
+    {
+      "uuid": "9a916f0f-130e-498d-9558-741a6a39d9ef",
+      "values": [
+        {
+          "language_id": "22",
+          "value": "what is your age",
+          "content_type": "TEXT",
+          "modes": [
+            "TEXT"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "SMS"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "USSD"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "AUDIO",
+          "modes": [
+            "IVR"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "IMAGE",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "VIDEO",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "OFFLINE"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "IMAGE",
+          "modes": [
+            "OFFLINE"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "VIDEO",
+          "modes": [
+            "OFFLINE"
+          ]
+        }
+      ]
+    },
+    {
+      "uuid": "9a916f0f-130e-498d-9558-741a6a39d9ef",
+      "values": [
+        {
+          "language_id": "22",
+          "value": "what is your age",
+          "content_type": "TEXT",
+          "modes": [
+            "TEXT"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "SMS"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "USSD"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "AUDIO",
+          "modes": [
+            "IVR"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "IMAGE",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "VIDEO",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "OFFLINE"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "IMAGE",
+          "modes": [
+            "OFFLINE"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "VIDEO",
+          "modes": [
+            "OFFLINE"
+          ]
+        }
+      ]
+    },
+    {
+      "uuid": "d92c558d-f008-4d0c-b5f7-f0a93493a7cf",
+      "values": [
+        {
+          "language_id": "22",
+          "value": "your age is just right. enter any other number.",
+          "content_type": "TEXT",
+          "modes": [
+            "TEXT"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "SMS"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "USSD"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "AUDIO",
+          "modes": [
+            "IVR"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "IMAGE",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "VIDEO",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "OFFLINE"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "IMAGE",
+          "modes": [
+            "OFFLINE"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "VIDEO",
+          "modes": [
+            "OFFLINE"
+          ]
+        }
+      ]
+    },
+    {
+      "uuid": "cbc181f4-4836-415a-a21b-17ae7c9c200d",
+      "values": [
+        {
+          "language_id": "22",
+          "value": "please enter a numeric age between 5 and 80",
+          "content_type": "TEXT",
+          "modes": [
+            "TEXT"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "SMS"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "USSD"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "AUDIO",
+          "modes": [
+            "IVR"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "IMAGE",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "VIDEO",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "OFFLINE"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "IMAGE",
+          "modes": [
+            "OFFLINE"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "VIDEO",
+          "modes": [
+            "OFFLINE"
+          ]
+        }
+      ]
+    },
+    {
+      "uuid": "23f0eff7-211e-4e08-850c-3cedf80a8de6",
+      "values": [
+        {
+          "language_id": "22",
+          "value": "your age is not just right",
+          "content_type": "TEXT",
+          "modes": [
+            "TEXT"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "SMS"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "USSD"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "AUDIO",
+          "modes": [
+            "IVR"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "IMAGE",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "VIDEO",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "OFFLINE"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "IMAGE",
+          "modes": [
+            "OFFLINE"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "VIDEO",
+          "modes": [
+            "OFFLINE"
+          ]
+        }
+      ]
+    },
+    {
+      "uuid": "6e00c6a7-13fd-408e-8a03-63784ecff164",
+      "values": [
+        {
+          "language_id": "22",
+          "value": "end of flow",
+          "content_type": "TEXT",
+          "modes": [
+            "TEXT"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "SMS"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "USSD"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "AUDIO",
+          "modes": [
+            "IVR"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "IMAGE",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "VIDEO",
+          "modes": [
+            "RICH_MESSAGING"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "TEXT",
+          "modes": [
+            "OFFLINE"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "IMAGE",
+          "modes": [
+            "OFFLINE"
+          ]
+        },
+        {
+          "language_id": "22",
+          "value": "",
+          "content_type": "VIDEO",
+          "modes": [
+            "OFFLINE"
+          ]
+        }
+      ]
+    }
+  ]
+}

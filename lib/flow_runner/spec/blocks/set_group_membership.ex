@@ -44,4 +44,8 @@ defmodule FlowRunner.Spec.Blocks.SetGroupMembership do
 
     {:ok, %Context{context | last_block_uuid: block.uuid}, output}
   end
+
+  def evaluate_outgoing(_block, user_input) do
+    {:ok, user_input}
+  end
 end

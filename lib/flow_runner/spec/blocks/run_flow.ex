@@ -43,7 +43,7 @@ defmodule FlowRunner.Spec.Blocks.RunFlow do
     {:ok, next_context, %Output{}}
   end
 
-  def evaluate_outgoing(_block, context, _flow, _user_input) do
-    {:ok, context}
+  def evaluate_outgoing(_block, user_input) do
+    {:ok, user_input}
   end
 end

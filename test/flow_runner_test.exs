@@ -184,4 +184,50 @@ defmodule FlowRunnerTest do
              group_update_is_member: false
            } = output
   end
+
+  test "numeric response block invalid input" do
+    {:ok, container} =
+      File.read!("test/numeric_response.flow")
+      |> FlowRunner.compile()
+
+    {:ok, context} =
+      FlowRunner.start_flow(container, "cc630cda-384e-41a3-9907-5262d23a6084", "eng", "TEXT")
+
+    assert(
+      {:ok, context, _, %{prompt: %{value: "what is your age"}}} =
+        FlowRunner.next_block(container, context)
+    )
+
+    assert {:ok, _context, _, %{prompt: %{value: "please enter a numeric age between 5 and 80"}}} =
+             FlowRunner.next_block(container, context, "yaseen")
+  end
+
+  test "numeric response ranges" do
+    {:ok, container} =
+      File.read!("test/numeric_response.flow")
+      |> FlowRunner.compile()
+
+    {:ok, context} =
+      FlowRunner.start_flow(container, "cc630cda-384e-41a3-9907-5262d23a6084", "eng", "TEXT")
+
+    assert(
+      {:ok, context, _, %{prompt: %{value: "what is your age"}}} =
+        FlowRunner.next_block(container, context)
+    )
+
+    assert {:ok, _context, _, %{prompt: %{value: "your age is not just right"}}} =
+             FlowRunner.next_block(container, context, "5")
+
+    assert {:ok, context, _,
+            %{prompt: %{value: "your age is just right. enter any other number."}}} =
+             FlowRunner.next_block(container, context, "32")
+
+    # And now we test another NumericResponse but with no validation included.
+
+    assert {:ok, _context, _, %{prompt: %{value: "please enter a numeric age between 5 and 80"}}} =
+             FlowRunner.next_block(container, context, "jar")
+
+    assert {:ok, _context, _, %{prompt: %{value: "end of flow"}}} =
+             FlowRunner.next_block(container, context, "1")
+  end
 end

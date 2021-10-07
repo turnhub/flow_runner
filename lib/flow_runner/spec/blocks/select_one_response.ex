@@ -40,4 +40,8 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
         {:error, reason}
     end
   end
+
+  def evaluate_outgoing(_block, user_input) do
+    {:ok, user_input}
+  end
 end

@@ -49,7 +49,8 @@ defmodule FlowRunner.Spec.Block do
     "Core.SetContactProperty" => FlowRunner.Spec.Blocks.SetContactProperty,
     "Core.SetGroupMembership" => FlowRunner.Spec.Blocks.SetGroupMembership,
     "MobilePrimitives.SelectOneResponse" => FlowRunner.Spec.Blocks.SelectOneResponse,
-    "MobilePrimitives.Message" => FlowRunner.Spec.Blocks.Message
+    "MobilePrimitives.Message" => FlowRunner.Spec.Blocks.Message,
+    "MobilePrimitives.NumericResponse" => FlowRunner.Spec.Blocks.NumericResponse
   }
 
   def cast!(%{"type" => type} = map) do
@@ -145,8 +146,17 @@ defmodule FlowRunner.Spec.Block do
   end
 
   def evaluate_outgoing(block, %Context{} = context, flow, user_input) do
-    # Process any user input we have been given.
-    with {:ok, context} <-
+    # Give the block an opportunity to evaluate the input. If it returns :ok,
+    # we go ahead and store the user input, evaluate the exit and then move
+    # onto the next block.
+    # If it returns :invalid we will exit through the default block as the
+    # block has failed validations.
+    {:ok, user_input}
+
+    with {:ok, user_input} <-
+           apply(Map.get(@blocks, block.type), :evaluate_outgoing, [block, user_input]),
+         # Process any user input we have been given.
+         {:ok, context} <-
            Block.evaluate_user_input(
              block,
              context,
@@ -156,7 +166,25 @@ defmodule FlowRunner.Spec.Block do
            Block.fetch_next_block(block, flow, context) do
       {:ok, context, block}
     else
-      err -> err
+      {:invalid, _reason} ->
+        Block.fetch_default_block(block, flow, context)
+
+      err ->
+        err
+    end
+  end
+
+  def fetch_default_block(block, %Flow{} = flow, %Context{} = context) do
+    {:ok, %Exit{destination_block: destination_block}} =
+      Block.evaluate_default_exit(block, context)
+
+    if destination_block == "" || destination_block == nil do
+      {:ok, %Context{context | finished: true}, nil}
+    else
+      case Flow.fetch_block(flow, destination_block) do
+        {:ok, next_block} -> {:ok, context, next_block}
+        {:error, reason} -> {:error, reason}
+      end
     end
   end
 
@@ -184,6 +212,18 @@ defmodule FlowRunner.Spec.Block do
           {:ok, %FlowRunner.Spec.Exit{}} | {:error, any()}
   def evaluate_exits(%Block{exits: exits}, %Context{} = context) do
     truthy_exits = Enum.filter(exits, &Exit.evaluate(&1, context))
+
+    if length(truthy_exits) > 0 do
+      {:ok, Enum.at(truthy_exits, 0)}
+    else
+      {:error, "no exit evaluated to true"}
+    end
+  end
+
+  @spec evaluate_default_exit(%FlowRunner.Spec.Block{}, %FlowRunner.Context{}) ::
+          {:error, String.t()} | {:ok, %FlowRunner.Spec.Exit{}}
+  def evaluate_default_exit(%Block{exits: exits}, %Context{} = _context) do
+    truthy_exits = Enum.filter(exits, &(&1.default == true))
 
     if length(truthy_exits) > 0 do
       {:ok, Enum.at(truthy_exits, 0)}
