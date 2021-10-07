@@ -50,23 +50,25 @@ defmodule FlowRunner.Spec.Blocks.NumericResponse do
   end
 
   @spec evaluate_outgoing(%FlowRunner.Spec.Block{}, String.t()) ::
-          {:ok, Integer.t()} | {:invalid, String.t()}
-  def(evaluate_outgoing(block, user_input)) do
-    with {value, _} <- Integer.parse(user_input) do
-      cond do
-        block.config.validation_minimum && value < block.config.validation_minimum ->
-          {:invalid,
-           "user input is less than minimum #{value} < #{block.config.validation_minimum}"}
+          {:ok, integer()} | {:invalid, String.t()}
+  def evaluate_outgoing(block, user_input) do
+    case Integer.parse(user_input) do
+      {value, _} ->
+        cond do
+          block.config.validation_minimum && value < block.config.validation_minimum ->
+            {:invalid,
+             "user input is less than minimum #{value} < #{block.config.validation_minimum}"}
 
-        block.config.validation_maximum && value > block.config.validation_maximum ->
-          {:invalid,
-           "user input is less than maximum #{value} > #{block.config.validation_maximum}"}
+          block.config.validation_maximum && value > block.config.validation_maximum ->
+            {:invalid,
+             "user input is less than maximum #{value} > #{block.config.validation_maximum}"}
 
-        true ->
-          {:ok, value}
-      end
-    else
-      :error -> {:invalid, "Expected integer user input got #{user_input}"}
+          true ->
+            {:ok, value}
+        end
+
+      :error ->
+        {:invalid, "Expected integer user input got #{user_input}"}
     end
   end
 end
