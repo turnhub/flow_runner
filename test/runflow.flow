@@ -1,0 +1,162 @@
+{
+    "specification_version": "1.0.0-rc2",
+    "uuid": "3666a05d-3792-482b-8f7f-9e2472e4f027",
+    "name": "basic",
+    "description": "runflow flow",
+    "vendor_metadata": {},
+    "flows": [
+        {
+            "uuid": "f81559f9-1cf5-4125-abb0-4c88a1c4083f",
+            "name": "flow1",
+            "label": "flow1",
+            "last_modified": "2021-09-10T14:15:26.310Z",
+            "interaction_timeout": 30,
+            "vendor_metadata": {},
+            "supported_modes": [
+                "TEXT"
+            ],
+            "languages": [
+                {
+                    "id": "22",
+                    "label": "English",
+                    "iso_639_3": "eng"
+                }
+            ],
+            "blocks": [
+                {
+                    "uuid": "fbddcbe7-e553-447d-8c64-aa17ee5d07f9",
+                    "type": "MobilePrimitives.Message",
+                    "name": "intro_flow1",
+                    "label": "in flow 1",
+                    "exits": [
+                        {
+                            "uuid": "001a8039-11dd-42ff-b8f3-abb5028066cf",
+                            "name": "Default",
+                            "default": true,
+                            "destination_block": "09f8496d-931c-4bd9-8110-a03c0ed61689"
+                        }
+                    ],
+                    "config": {
+                        "prompt": "64f9a9f6-660c-4c8c-9651-44936d9cf3fb"
+                    }
+                },
+                {
+                    "uuid": "09f8496d-931c-4bd9-8110-a03c0ed61689",
+                    "type": "Core.RunFlow",
+                    "name": "runflow",
+                    "label": "runflow",
+                    "exits": [
+                        {
+                            "uuid": "001a8039-11dd-42ff-b8f3-abb5028066cf",
+                            "name": "Default",
+                            "default": true,
+                            "destination_block": "e0feeb32-67b5-43d2-87fc-eb3c2c54ca3c"
+                        }
+                    ],
+                    "config": {
+                        "flow_id": "ad12aa97-06c5-41d8-9833-f1e4c8f58949"
+                    }
+                },
+                {
+                    "uuid": "e0feeb32-67b5-43d2-87fc-eb3c2c54ca3c",
+                    "type": "MobilePrimitives.Message",
+                    "name": "end_flow1",
+                    "label": "in flow 2",
+                    "exits": [
+                        {
+                            "uuid": "001a8039-11dd-42ff-b8f3-abb5028066cf",
+                            "name": "Default",
+                            "default": true,
+                            "test": "",
+                            "config": {}
+                        }
+                    ],
+                    "config": {
+                        "prompt": "e573eb66-c5a9-4e2f-b6f0-4d07441b37d1"
+                    }
+                }
+            ],
+            "first_block_id": "fbddcbe7-e553-447d-8c64-aa17ee5d07f9"
+        },
+        {
+            "uuid": "ad12aa97-06c5-41d8-9833-f1e4c8f58949",
+            "name": "flow2",
+            "label": "flow2",
+            "last_modified": "2021-09-10T14:15:26.310Z",
+            "interaction_timeout": 30,
+            "vendor_metadata": {},
+            "supported_modes": [
+                "TEXT"
+            ],
+            "languages": [
+                {
+                    "id": "22",
+                    "label": "English",
+                    "iso_639_3": "eng"
+                }
+            ],
+            "blocks": [
+                {
+                    "uuid": "8ca4ba00-b56c-44df-b22c-151c95b50199",
+                    "type": "MobilePrimitives.Message",
+                    "name": "in_flow_2",
+                    "label": "in flow 2",
+                    "exits": [
+                        {
+                            "uuid": "001a8039-11dd-42ff-b8f3-abb5028066cf",
+                            "name": "Default",
+                            "default": true,
+                            "test": "",
+                            "config": {}
+                        }
+                    ],
+                    "config": {
+                        "prompt": "8fa86055-3259-4a8a-96ef-28ca50be8816"
+                    }
+                }
+            ],
+            "first_block_id": "8ca4ba00-b56c-44df-b22c-151c95b50199"
+        }
+    ],
+    "resources": [
+        {
+            "uuid": "64f9a9f6-660c-4c8c-9651-44936d9cf3fb",
+            "values": [
+                {
+                    "language_id": "22",
+                    "value": "flow 1",
+                    "content_type": "TEXT",
+                    "modes": [
+                        "TEXT"
+                    ]
+                }
+            ]
+        },
+        {
+            "uuid": "8fa86055-3259-4a8a-96ef-28ca50be8816",
+            "values": [
+                {
+                    "language_id": "22",
+                    "value": "flow 2",
+                    "content_type": "TEXT",
+                    "modes": [
+                        "TEXT"
+                    ]
+                }
+            ]
+        },
+        {
+            "uuid": "e573eb66-c5a9-4e2f-b6f0-4d07441b37d1",
+            "values": [
+                {
+                    "language_id": "22",
+                    "value": "back to flow 1",
+                    "content_type": "TEXT",
+                    "modes": [
+                        "TEXT"
+                    ]
+                }
+            ]
+        }
+    ]
+}

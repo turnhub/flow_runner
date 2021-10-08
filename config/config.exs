@@ -5,4 +5,7 @@
 # is restricted to this project.
 use Mix.Config
 
+config :vex,
+  sources: [[subset: FlowRunner.Spec.Validators.SubsetValidator], Vex.Validators]
+
 import_config "#{Mix.env()}.exs"

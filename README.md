@@ -5,6 +5,36 @@ https://floip.gitbook.io/flow-specification/. It provides the means to Run a flo
 
 This Flow Runnner only supports the TEXT, RICH_MESSAGING modes.
 
+# Implemented from the Spec
+
+| Layer | Block | Implemented? | Notes |
+| ------|-------|------------- |-------|
+| 1 | Core.Log | Yes | |
+| 1 | Core.Case | Yes | |
+| 1 | Core.RunFlow | Yes | |
+| 1 | Core.SetContactProperty | Yes | |
+| 1 | Core.SetGroupMembership | Yes | |
+| 2 | ConsoleIO.Print | No | This is not useful for us.|
+| 2 | ConsoleIO.Read | No |This is not useful for us.|
+| 3 | MessagePrimitives.Message | Yes
+| 3 | MessagePrimitives.SelectOneResponse | Yes 
+| 3 | MessagePrimitives.SelectManyResponses | No | WhatsApp does not support this.
+| 3 | MessagePrimitives.NumericResponse | No | TBD
+| 3 | MessagePrimitives.OpenResponse | No | TBD
+| 4 | SmartDevices.LocationResponse | No | TBD
+| 4 | SmartDevices.PhotoResponse | No | TBD
+
+# How to use the API
+
+
+
+# What is a Context.
+
+# What is an Output.
+
+
+
+
 ### Modules
 
 - *FlowRunner.Compiler* parses and compiles JSON flows according to the content spec into an internal representation that can be Run.
@@ -12,30 +42,6 @@ This Flow Runnner only supports the TEXT, RICH_MESSAGING modes.
 - *FlowRunner.Run* takes a compiled flow, a state and a context and returns new state and user IO.
 
 - *FlowRunner.Context* is a struct that contains context for a run. It contains the channel, contact and .
-
-## Design
-
-The Flow Runner is a pure module that stores no state. The Flow Runner manages the transitions between states within the flow and then yields to the caller to provide input for the next block. 
-
-The Flow Runner does not perform the following and is the responsibility of the caller:
-- Perform IO or send and receive any messages.
-- Associate a given message to any flow.
-- Manage contacts.
-- Store state of a Flow Run or Flow Results.
-
-Running a flow works in the following way:
-
-
-1. The caller receives a message, identifies the corresponding Flow, contact and looks up the contacts Flow state (last block id).
-1. The JSON flow is compiled by the FlowRunner.Compiler. This result may be cached.
-1. FlowRunner.Run is passed the flow, Context and last Block ID.
-1. The Flow Runner returns the result, last block ID and the potentially updated context.
-
-TODO figure out interaction with contacts.
-
-TODO figure out interaction with channels.
-
-TODO how can we support webhooks without doing IO in the runner?
 
 ## Installation
 

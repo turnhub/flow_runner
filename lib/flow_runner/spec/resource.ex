@@ -2,19 +2,25 @@ defmodule FlowRunner.Spec.Resource do
   @moduledoc """
   Resource stores a piece of content in various languages and modes. Usually associated with a block.
   """
+  use FlowRunner.SpecLoader,
+    using: [
+      values: FlowRunner.Spec.ResourceValue
+    ]
+
   alias FlowRunner.Spec.Resource
   alias FlowRunner.Spec.ResourceValue
   alias FlowRunner.Spec.Flow
 
-  defstruct [
-    :uuid,
-    :values
-  ]
+  @derive Jason.Encoder
+  defstruct uuid: nil,
+            values: []
 
-  def validate(resource) do
-    [FlowRunner.Spec.Validate.validate_uuid(resource)] ++
-      Enum.concat(Enum.map(resource.values, &ResourceValue.validate/1))
-  end
+  @type t :: %__MODULE__{
+          uuid: String.t(),
+          values: [ResourceValue.t()]
+        }
+
+  validates(:uuid, presence: true, uuid: [format: :default])
 
   @spec matching_resource(%Resource{}, iodata(), iodata(), %Flow{}) ::
           {:ok, %ResourceValue{}} | {:error, iodata()}
