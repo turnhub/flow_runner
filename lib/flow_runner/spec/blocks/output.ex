@@ -9,7 +9,7 @@ defmodule FlowRunner.Spec.Blocks.Output do
 
   require Logger
 
-  def validate_config!(config) do
+  def validate_config!(_config) do
     %{}
   end
 
