@@ -34,7 +34,10 @@ defmodule FlowRunner.Spec.Exit do
           truthy || exit.default
 
         {:error, reason} ->
-          Logger.info("Expression '#{exit.test}' failed with #{reason}")
+          Logger.info(
+            "Expression '#{exit.test}' failed with #{reason} last_block_uuid=#{context.last_block_uuid}"
+          )
+
           exit.default
       end
     else

@@ -13,6 +13,8 @@ defmodule FlowRunner.Spec.Block do
   alias FlowRunner.Spec.Exit
   alias FlowRunner.Spec.Flow
 
+  require Logger
+
   @derive Jason.Encoder
   defstruct uuid: nil,
             name: nil,
@@ -167,7 +169,8 @@ defmodule FlowRunner.Spec.Block do
            Block.fetch_next_block(block, flow, context) do
       {:ok, context, block}
     else
-      {:invalid, _reason} ->
+      {:invalid, reason} ->
+        Logger.info("Fetching default block because #{reason}")
         Block.fetch_default_block(block, flow, context)
 
       err ->

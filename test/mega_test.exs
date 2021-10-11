@@ -2,7 +2,7 @@ defmodule MegaTest do
   use ExUnit.Case
   doctest FlowRunner
 
-  test "compile a flow" do
+  test "Test all blocks in one flow" do
     {:ok, container} =
       File.read!("test/mega_test.flow")
       |> FlowRunner.compile()
@@ -16,6 +16,11 @@ defmodule MegaTest do
     {:ok, context, _, output} = FlowRunner.next_block(container, context)
     assert %{prompt: %{value: "welcome to the MEGA test"}} = output
 
+    # Test Core.Log
+    {:ok, context, _, _output} = FlowRunner.next_block(container, context)
+    assert %{log: ["we are logging the mega test"]} = context
+
+    # Test MobilePrimitive.SelectOneResponse
     {:ok, context, _, output} = FlowRunner.next_block(container, context)
 
     assert %{
@@ -44,9 +49,21 @@ defmodule MegaTest do
     assert %{prompt: %{value: "your name or age is either too long or not a number or something"}} =
              output
 
-    # And then a valid response
+    # And then a valid response. Test MobilePrimitive.NumericResponse
     {:ok, context, _, output} = FlowRunner.next_block(container, context, "yaseen")
-
     assert %{prompt: %{value: "yaseen what is your age?"}} = output
+
+    # What happens if we give NumericResponse a non-numeric input?
+    {:ok, _context, _, output} = FlowRunner.next_block(container, context, "not a number")
+
+    assert %{prompt: %{value: "your name or age is either too long or not a number or something"}} =
+             output
+
+    # Ok let's give it real input again
+    {:ok, context, _, output} = FlowRunner.next_block(container, context, "11")
+
+    assert %{prompt: %{value: "i think we're done here"}} = output
+
+    {:end, %{log: ["we are logging the mega test"]}} = FlowRunner.next_block(container, context)
   end
 end

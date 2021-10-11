@@ -46,19 +46,12 @@
           "semantic_label": "",
           "exits": [
             {
-              "uuid": "fb607358-3aa1-43ff-a0f2-fd32d1b3c835",
-              "name": "1",
-              "test": "block.value > 0",
-              "config": {},
-              "destination_block": "bc5bb818-ac4a-48f6-bf9d-46164f50dfbe"
-            },
-            {
               "uuid": "1d9ee850-b4e4-4e89-b7cc-73cf4adfa000",
               "name": "Default",
               "default": true,
               "test": "",
               "config": {},
-              "destination_block": "c9d86631-cf66-4e94-bf54-aec7cda06794"
+              "destination_block": "bc5bb818-ac4a-48f6-bf9d-46164f50dfbe"
             }
           ],
           "config": {
@@ -165,8 +158,8 @@
           "uuid": "56617c19-c088-430a-8483-863a2e30b4b5",
           "ui_metadata": {
             "canvas_coordinates": {
-              "x": 302,
-              "y": 724
+              "x": 299,
+              "y": 763
             }
           },
           "vendor_metadata": {
@@ -234,7 +227,7 @@
             {
               "uuid": "6821b904-6226-461f-9423-294835649752",
               "name": "1",
-              "test": "AND(is_number(block.value, block.value >= 10, block.value <= 100)",
+              "test": "AND(block.value >= 10, block.value < 101)",
               "config": {},
               "destination_block": "8a55ef6b-65d2-4357-9005-d3220334b15f"
             },
@@ -243,7 +236,8 @@
               "name": "Default",
               "default": true,
               "test": "",
-              "config": {}
+              "config": {},
+              "destination_block": "790785bf-6bb5-496b-922a-90979a66470e"
             }
           ],
           "config": {
@@ -362,16 +356,10 @@
           "semantic_label": "",
           "exits": [
             {
-              "uuid": "d0b1b3b2-6c2e-4dd3-831c-a796b715db9b",
-              "name": "1",
-              "test": "block.value = true",
-              "config": {},
-              "destination_block": "c9d86631-cf66-4e94-bf54-aec7cda06794"
-            },
-            {
               "uuid": "e227fb3a-c26e-4060-b526-e88fa91e0fe2",
               "name": "Default",
               "default": true,
+              "destination_block": "c9d86631-cf66-4e94-bf54-aec7cda06794",
               "test": "",
               "config": {}
             }
