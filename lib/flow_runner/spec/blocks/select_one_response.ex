@@ -14,8 +14,13 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
            Vex.validate(%{prompt: prompt}, prompt: [presence: true, uuid: true]) do
       %{prompt: prompt, choices: choices}
     else
-      {:error, key, _rule, reason} ->
-        raise "In #{Atom.to_string(key)}: #{reason}"
+      {:error, reasons} ->
+        reasons =
+          Enum.map(reasons, fn {:error, key, _rule, reason} ->
+            "In #{Atom.to_string(key)}: #{reason}"
+          end)
+
+        raise reasons
     end
   end
 
@@ -46,7 +51,7 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
     if Enum.empty?(invalid_choices_flattened) do
       {:ok, valid_choices_flatted}
     else
-      {:error, :choices, nil, Enum.join(invalid_choices_flattened, "\n")}
+      {:error, [{:error, :choices, nil, Enum.join(invalid_choices_flattened, "\n")}]}
     end
   end
 
