@@ -31,7 +31,7 @@ defmodule FlowRunner.Spec.Container do
 
   validates(:specification_version,
     presence: true,
-    format: ~r/1.0.0-rc[012]/
+    format: ~r/1.0.0-rc[0123]/
   )
 
   validates(:uuid, presence: true, uuid: [format: :default])

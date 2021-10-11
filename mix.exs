@@ -36,7 +36,7 @@ defmodule FlowRunner.MixProject do
       {:credo, "~> 1.5", only: [:dev], runtime: false},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:excoveralls, "~> 0.10", only: :test},
-      {:expression, "~> 0.3.2"},
+      {:expression, "~> 0.3.4"},
       {:jason, "~> 1.2"},
       {:junit_formatter, "~> 3.1", only: [:test]},
       {:mix_test_watch, "~> 1.1", only: [:dev, :test], runtime: false},
