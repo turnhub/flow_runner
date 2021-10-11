@@ -1,7 +1,6 @@
 defmodule FlowRunner.Spec.Blocks.NumericResponse do
   @moduledoc """
-  A specialisation of a block that sends users a set of options and
-  waits for the user to come back with one of them.
+  A specialisation of a block that allows users to send numeric input.
   """
   alias FlowRunner.Context
   alias FlowRunner.Output
