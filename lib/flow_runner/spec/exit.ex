@@ -11,7 +11,9 @@ defmodule FlowRunner.Spec.Exit do
             semantic_label: nil,
             test: nil,
             default: nil,
-            config: %{}
+            # deprecated in rc2
+            config: %{},
+            vendor_metadata: %{}
 
   @type t :: %__MODULE__{
           uuid: String.t(),
@@ -20,7 +22,9 @@ defmodule FlowRunner.Spec.Exit do
           semantic_label: String.t(),
           test: String.t(),
           default: term,
-          config: map
+          # deprecated in rc2
+          config: map,
+          vendor_metadata: map
         }
 
   validates(:uuid, presence: true, uuid: [format: :default])

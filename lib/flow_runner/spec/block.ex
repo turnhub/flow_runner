@@ -154,7 +154,7 @@ defmodule FlowRunner.Spec.Block do
     {:ok, user_input}
 
     with {:ok, user_input} <-
-           apply(Map.get(@blocks, block.type), :evaluate_outgoing, [block, user_input]),
+           apply(Map.get(@blocks, block.type), :evaluate_outgoing, [flow, block, user_input]),
          # Process any user input we have been given.
          {:ok, context} <-
            Block.evaluate_user_input(

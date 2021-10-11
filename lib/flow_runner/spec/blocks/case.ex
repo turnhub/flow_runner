@@ -23,7 +23,7 @@ defmodule FlowRunner.Spec.Blocks.Case do
     {:ok, %Context{context | last_block_uuid: block.uuid}, %Output{}}
   end
 
-  def evaluate_outgoing(_block, user_input) do
+  def evaluate_outgoing(_flow, _block, user_input) do
     {:ok, user_input}
   end
 end
