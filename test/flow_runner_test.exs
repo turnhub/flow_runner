@@ -230,4 +230,25 @@ defmodule FlowRunnerTest do
     assert {:ok, _context, _, %{prompt: %{value: "end of flow"}}} =
              FlowRunner.next_block(container, context, "1")
   end
+
+  test "open response block" do
+    {:ok, container} =
+      File.read!("test/open_response.flow")
+      |> FlowRunner.compile()
+
+    {:ok, context} =
+      FlowRunner.start_flow(container, "6040838d-d16a-4f9d-9c3a-b611f078ae44", "eng", "SMS")
+
+    assert {:ok, context, _, %{prompt: %{value: "say anything up to 10 characters long."}}} =
+             FlowRunner.next_block(container, context)
+
+    assert {:ok, context, _,
+            %{prompt: %{value: "wow, ok! is so interesting. say even more things"}}} =
+             FlowRunner.next_block(container, context, "ok!")
+
+    assert {:ok, context, _, %{prompt: %{value: "done"}}} =
+             FlowRunner.next_block(container, context, "even more things")
+
+    assert {:end, _context} = FlowRunner.next_block(container, context)
+  end
 end

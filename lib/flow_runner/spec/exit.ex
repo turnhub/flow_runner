@@ -4,6 +4,8 @@ defmodule FlowRunner.Spec.Exit do
   """
   use FlowRunner.SpecLoader
 
+  require Logger
+
   @derive Jason.Encoder
   defstruct uuid: nil,
             name: nil,
@@ -27,9 +29,17 @@ defmodule FlowRunner.Spec.Exit do
 
   def evaluate(exit, context) do
     if exit.test != nil && exit.test != "" do
-      {:ok, truthy} = Expression.evaluate_block(exit.test, context.vars)
+      case Expression.evaluate_block(exit.test, context.vars) do
+        {:ok, truthy} ->
+          truthy || exit.default
 
-      truthy || exit.default
+        {:error, reason} ->
+          Logger.info(
+            "Expression '#{exit.test}' failed with #{reason} last_block_uuid=#{context.last_block_uuid}"
+          )
+
+          exit.default
+      end
     else
       exit.default
     end
