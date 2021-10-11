@@ -8,7 +8,22 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
   alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Resource
 
-  def validate_config!(%{"prompt" => prompt, "choices" => choices}) do
+  def validate_config!(%{"prompt" => prompt, "choices" => choices}) when is_map(choices) do
+    # Rewrite RC2 format to RC3 format
+    validate_config!(%{
+      "prompt" => prompt,
+      "choices" =>
+        Enum.map(choices, fn {label, resource_uuid} ->
+          %{
+            "name" => label,
+            "test" => "block.response = #{inspect(label)}",
+            "prompt" => resource_uuid
+          }
+        end)
+    })
+  end
+
+  def validate_config!(%{"prompt" => prompt, "choices" => choices}) when is_list(choices) do
     with {:ok, choices} <- validate_choices(choices),
          {:ok, %{prompt: prompt}} <-
            Vex.validate(%{prompt: prompt}, prompt: [presence: true, uuid: true]) do
@@ -16,9 +31,11 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
     else
       {:error, reasons} ->
         reasons =
-          Enum.map(reasons, fn {:error, key, _rule, reason} ->
+          reasons
+          |> Enum.map(fn {:error, key, _rule, reason} ->
             "In #{Atom.to_string(key)}: #{reason}"
           end)
+          |> Enum.join(", ")
 
         raise reasons
     end
@@ -69,7 +86,8 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
       )
 
   defp validate_choice(_),
-    do: {:error, :choices, nil, "\"name\", \"test\", and \"prompt\" are all required."}
+    do:
+      {:error, [{:error, :choices, nil, "\"name\", \"test\", and \"prompt\" are all required."}]}
 
   def evaluate_incoming(flow, block, context, container) do
     {:ok, resource} = Container.fetch_resource_by_uuid(container, block.config.prompt)

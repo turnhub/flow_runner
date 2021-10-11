@@ -30,8 +30,35 @@ defmodule FlowRunnerTest do
     assert %{prompt: %{value: "welcome to this block"}} = output
   end
 
+  @tag flow: "test/selectoneresponse.flow"
+  test "language selection with rc2", %{container: container} do
+    {:ok, _context, _, output} =
+      FlowRunner.next_block(
+        container,
+        %FlowRunner.Context{
+          current_flow_uuid: "efaabaac-d035-43f5-a7fe-0e4e757c8095",
+          language: "fra",
+          mode: "TEXT"
+        }
+      )
+
+    assert %{prompt: %{value: "اختر اسمًا"}} = output
+
+    {:ok, _context, _, output} =
+      FlowRunner.next_block(
+        container,
+        %FlowRunner.Context{
+          current_flow_uuid: "efaabaac-d035-43f5-a7fe-0e4e757c8095",
+          language: "eng",
+          mode: "TEXT"
+        }
+      )
+
+    assert %{prompt: %{value: "choose a name"}} = output
+  end
+
   @tag flow: "test/selectoneresponse.rc3.flow"
-  test "language selection", %{container: container} do
+  test "language selection with rc3", %{container: container} do
     {:ok, _context, _, output} =
       FlowRunner.next_block(
         container,
@@ -59,6 +86,56 @@ defmodule FlowRunnerTest do
 
   @tag flow: "test/selectoneresponse.rc3.flow"
   test "select one response", %{container: container} do
+    {:ok, context} =
+      FlowRunner.start_flow(container, "efaabaac-d035-43f5-a7fe-0e4e757c8095", "fra", "TEXT")
+
+    {:ok, context, _, output} = FlowRunner.next_block(container, context)
+    assert %{prompt: %{value: "اختر اسمًا"}} = output
+    assert %{waiting_for_user_input: true} = context
+    {:ok, context, _, output} = FlowRunner.next_block(container, context, "maalika")
+    assert %{prompt: %{value: "salaam maalika"}} = output
+    assert %{waiting_for_user_input: false} = context
+    {:end, _context} = FlowRunner.next_block(container, context)
+
+    {:ok, context} =
+      FlowRunner.start_flow(container, "efaabaac-d035-43f5-a7fe-0e4e757c8095", "eng", "TEXT")
+
+    {:ok, context, _, output} = FlowRunner.next_block(container, context)
+    assert %{prompt: %{value: "choose a name"}} = output
+    assert %{waiting_for_user_input: true} = context
+    {:ok, context, _, output} = FlowRunner.next_block(container, context, "yaseen")
+    assert %{prompt: %{value: "hello yaseen"}} = output
+    assert %{waiting_for_user_input: false} = context
+    {:end, _context} = FlowRunner.next_block(container, context)
+  end
+
+  @tag flow: "test/selectoneresponse.flow"
+  test "select one response with rc2", %{container: container} do
+    {:ok, context} =
+      FlowRunner.start_flow(container, "efaabaac-d035-43f5-a7fe-0e4e757c8095", "fra", "TEXT")
+
+    {:ok, context, _, output} = FlowRunner.next_block(container, context)
+    assert %{prompt: %{value: "اختر اسمًا"}} = output
+    assert %{waiting_for_user_input: true} = context
+    {:ok, context, _, output} = FlowRunner.next_block(container, context, "maalika")
+    assert %{prompt: %{value: "salaam maalika"}} = output
+    assert %{waiting_for_user_input: false} = context
+    {:end, _context} = FlowRunner.next_block(container, context)
+
+    {:ok, context} =
+      FlowRunner.start_flow(container, "efaabaac-d035-43f5-a7fe-0e4e757c8095", "eng", "TEXT")
+
+    {:ok, context, _, output} = FlowRunner.next_block(container, context)
+    assert %{prompt: %{value: "choose a name"}} = output
+    assert %{waiting_for_user_input: true} = context
+    {:ok, context, _, output} = FlowRunner.next_block(container, context, "yaseen")
+    assert %{prompt: %{value: "hello yaseen"}} = output
+    assert %{waiting_for_user_input: false} = context
+    {:end, _context} = FlowRunner.next_block(container, context)
+  end
+
+  @tag flow: "test/selectoneresponse.rc3.flow"
+  test "select one response with rc3", %{container: container} do
     {:ok, context} =
       FlowRunner.start_flow(container, "efaabaac-d035-43f5-a7fe-0e4e757c8095", "fra", "TEXT")
 
