@@ -249,7 +249,6 @@ defmodule FlowRunnerTest do
     assert {:ok, context, _, %{prompt: %{value: "done"}}} =
              FlowRunner.next_block(container, context, "even more things")
 
-    assert {:ok, context, _, %{prompt: %{value: "done"}}} =
-             FlowRunner.next_block(container, context)
+    assert {:end, _context} = FlowRunner.next_block(container, context)
   end
 end
