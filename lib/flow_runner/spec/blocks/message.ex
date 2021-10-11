@@ -43,7 +43,7 @@ defmodule FlowRunner.Spec.Blocks.Message do
     end
   end
 
-  def evaluate_outgoing(_block, user_input) do
+  def evaluate_outgoing(_flow, _block, user_input) do
     {:ok, user_input}
   end
 end
