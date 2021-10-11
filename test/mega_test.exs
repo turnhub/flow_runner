@@ -27,7 +27,7 @@ defmodule MegaTest do
              prompt: %{
                value: "do you want to CONTINUE or START AGAIN"
              },
-             choices: %{"continue" => _, "start_again" => _}
+             choices: [%{name: "continue"}, %{name: "start_again"}]
            } = output
 
     # Choose start_again
