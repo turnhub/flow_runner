@@ -169,7 +169,7 @@
       "values": [
         {
           "language_id": "22",
-          "value": "choose a name",
+          "value": "hi *@contact.whatsapp_profile_name*! Choose a name:",
           "content_type": "TEXT",
           "modes": [
             "TEXT"
