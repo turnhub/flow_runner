@@ -1,0 +1,254 @@
+{
+  "specification_version": "1.0.0-rc2",
+  "uuid": "3666a05d-3792-482b-8f7f-9e2472e4f027",
+  "name": "TODO",
+  "description": "TODO",
+  "vendor_metadata": {},
+  "flows": [
+    {
+      "uuid": "b212be98-8e0f-4d6f-86e6-128a23c75db6",
+      "name": "changinglanguage",
+      "label": "changing-language",
+      "last_modified": "2021-10-12T10:16:56.324Z",
+      "interaction_timeout": 30,
+      "vendor_metadata": {},
+      "supported_modes": [
+        "TEXT"
+      ],
+      "languages": [
+        {
+          "id": "22",
+          "label": "English",
+          "iso_639_3": "eng"
+        },
+        {
+          "id": "23",
+          "label": "French",
+          "iso_639_3": "fra"
+        }
+      ],
+      "blocks": [
+        {
+          "uuid": "192a3b72-a335-4cd7-96cb-24091c793775",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 477,
+              "y": 165
+            }
+          },
+          "vendor_metadata": {},
+          "type": "MobilePrimitives.SelectOneResponse",
+          "name": "language",
+          "label": "language",
+          "semantic_label": "",
+          "config": {
+            "prompt": "eccc968c-d2d8-49fb-bce0-3fe21e3ee9c4",
+            "choices": [
+              {
+                "name": "eng",
+                "test": "block.response = \"eng\"",
+                "prompt": "36d1c880-a3e7-4e63-87f2-ae6ba10f0153"
+              },
+              {
+                "name": "fra",
+                "test": "block.response = \"fra\"",
+                "prompt": "97d5a3ee-3e40-4356-9990-462fa1b5c2aa"
+              }
+            ]
+          },
+          "exits": [
+            {
+              "uuid": "1314bc6c-fddc-402e-8e67-330212d52c41",
+              "name": "eng",
+              "test": "block.value = \"eng\"",
+              "config": {},
+              "destination_block": "694a0910-6305-41ac-87b0-f3fddc9e12a6"
+            },
+            {
+              "uuid": "5cdbbbca-2493-4111-9dd0-153f3069bc15",
+              "name": "fra",
+              "config": {},
+              "destination_block": "694a0910-6305-41ac-87b0-f3fddc9e12a6",
+              "test": "block.value = \"fra\""
+            },
+            {
+              "uuid": "c6d2804d-144b-4d00-a976-5b7907b39023",
+              "name": "Default",
+              "default": true,
+              "test": "",
+              "config": {}
+            }
+          ],
+          "tags": []
+        },
+        {
+          "uuid": "694a0910-6305-41ac-87b0-f3fddc9e12a6",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 506,
+              "y": 355
+            }
+          },
+          "vendor_metadata": {},
+          "type": "MobilePrimitives.Message",
+          "name": "applied",
+          "label": "applied",
+          "semantic_label": "",
+          "exits": [
+            {
+              "uuid": "4e1fb2c8-26cd-45af-993f-1d371d6a37df",
+              "name": "Default",
+              "default": true,
+              "test": "",
+              "config": {},
+              "destination_block": "7decd665-485a-4ecb-8401-3ef21dcc82d3"
+            }
+          ],
+          "config": {
+            "prompt": "0c2daecc-dbd8-4a4c-acf8-6755632bad23",
+            "set_contact_property": {
+              "property_key": "language",
+              "property_value": "@language"
+            }
+          },
+          "tags": []
+        },
+        {
+          "uuid": "7decd665-485a-4ecb-8401-3ef21dcc82d3",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 507,
+              "y": 551
+            }
+          },
+          "vendor_metadata": {},
+          "type": "MobilePrimitives.Message",
+          "name": "done",
+          "label": "done",
+          "semantic_label": "",
+          "exits": [
+            {
+              "uuid": "0072a743-9bdb-4989-9a81-f463e49e205d",
+              "name": "Default",
+              "default": true,
+              "test": "",
+              "config": {}
+            }
+          ],
+          "config": {
+            "prompt": "23886deb-f3b3-4fba-80fc-fdcc815050ad"
+          },
+          "tags": []
+        }
+      ],
+      "first_block_id": "192a3b72-a335-4cd7-96cb-24091c793775"
+    }
+  ],
+  "resources": [
+    {
+      "uuid": "eccc968c-d2d8-49fb-bce0-3fe21e3ee9c4",
+      "values": [
+        {
+          "language_id": "22",
+          "value": "What's your language of preference?",
+          "content_type": "TEXT",
+          "modes": [
+            "TEXT"
+          ]
+        },
+        {
+          "language_id": "23",
+          "value": "Quelle est votre langue de préférence ?",
+          "content_type": "TEXT",
+          "modes": [
+            "TEXT"
+          ]
+        }
+      ]
+    },
+    {
+      "uuid": "36d1c880-a3e7-4e63-87f2-ae6ba10f0153",
+      "values": [
+        {
+          "language_id": "22",
+          "content_type": "TEXT",
+          "modes": [
+            "TEXT"
+          ],
+          "value": "English"
+        },
+        {
+          "language_id": "23",
+          "content_type": "TEXT",
+          "modes": [
+            "TEXT"
+          ],
+          "value": "Anglais"
+        }
+      ]
+    },
+    {
+      "uuid": "97d5a3ee-3e40-4356-9990-462fa1b5c2aa",
+      "values": [
+        {
+          "language_id": "22",
+          "content_type": "TEXT",
+          "modes": [
+            "TEXT"
+          ],
+          "value": "French"
+        },
+        {
+          "language_id": "23",
+          "content_type": "TEXT",
+          "modes": [
+            "TEXT"
+          ],
+          "value": "Francais"
+        }
+      ]
+    },
+    {
+      "uuid": "0c2daecc-dbd8-4a4c-acf8-6755632bad23",
+      "values": [
+        {
+          "language_id": "22",
+          "value": "Your language preference has been applied.",
+          "content_type": "TEXT",
+          "modes": [
+            "TEXT"
+          ]
+        },
+        {
+          "language_id": "23",
+          "value": "Votre préférence linguistique a été appliquée.",
+          "content_type": "TEXT",
+          "modes": [
+            "TEXT"
+          ]
+        }
+      ]
+    },
+    {
+      "uuid": "23886deb-f3b3-4fba-80fc-fdcc815050ad",
+      "values": [
+        {
+          "language_id": "22",
+          "value": "done",
+          "content_type": "TEXT",
+          "modes": [
+            "TEXT"
+          ]
+        },
+        {
+          "language_id": "23",
+          "value": "done",
+          "content_type": "TEXT",
+          "modes": [
+            "TEXT"
+          ]
+        }
+      ]
+    }
+  ]
+}
