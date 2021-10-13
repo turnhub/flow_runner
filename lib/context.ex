@@ -8,7 +8,6 @@ defmodule FlowRunner.Context do
     # iso 639-3 language code.
     language: "eng",
     mode: "TEXT",
-    contact: nil,
 
     # -- Current flow state
 
@@ -28,7 +27,7 @@ defmodule FlowRunner.Context do
     parent_context: nil
   ]
 
-  def clone_empty(%Context{language: language, mode: mode, contact: contact}) do
-    %Context{language: language, mode: mode, contact: contact}
+  def clone_empty(%Context{language: language, mode: mode}) do
+    %Context{language: language, mode: mode}
   end
 end
