@@ -5,8 +5,9 @@ defmodule FlowRunnerTest do
   setup context do
     if flow_file = Map.get(context, :flow) do
       {:ok, container} =
-        flow_file
-        |> Path.expand("priv/fixtures/")
+        "priv/fixtures/"
+        |> Path.join(flow_file)
+        |> Path.expand()
         |> File.read!()
         |> FlowRunner.compile()
 
