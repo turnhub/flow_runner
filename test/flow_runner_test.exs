@@ -1,21 +1,9 @@
 defmodule FlowRunnerTest do
   use ExUnit.Case, async: true
+  import FlowRunner.Test.Utils
   doctest FlowRunner
 
-  setup context do
-    if flow_file = Map.get(context, :flow) do
-      {:ok, container} =
-        "priv/fixtures/"
-        |> Path.join(flow_file)
-        |> Path.expand()
-        |> File.read!()
-        |> FlowRunner.compile()
-
-      Map.put(context, :container, container)
-    else
-      context
-    end
-  end
+  setup :with_flow_loader!
 
   @tag flow: "test/basic.flow"
   test "compile a flow", %{container: container} do

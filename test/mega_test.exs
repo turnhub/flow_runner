@@ -1,20 +1,8 @@
 defmodule MegaTest do
   use ExUnit.Case
+  import FlowRunner.Test.Utils
 
-  setup context do
-    if flow_file = Map.get(context, :flow) do
-      {:ok, container} =
-        "priv/fixtures/"
-        |> Path.join(flow_file)
-        |> Path.expand()
-        |> File.read!()
-        |> FlowRunner.compile()
-
-      Map.put(context, :container, container)
-    else
-      context
-    end
-  end
+  setup :with_flow_loader!
 
   @tag flow: "test/mega_test.flow"
   test "Test all blocks in one flow", %{container: container} do
