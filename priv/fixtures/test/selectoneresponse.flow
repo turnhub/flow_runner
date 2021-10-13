@@ -331,6 +331,14 @@
             "TEXT"
           ],
           "value": "yaseen"
+        },
+        {
+          "language_id": "23",
+          "content_type": "TEXT",
+          "modes": [
+            "TEXT"
+          ],
+          "value": "yaseen"
         }
       ]
     },
@@ -339,6 +347,14 @@
       "values": [
         {
           "language_id": "22",
+          "content_type": "TEXT",
+          "modes": [
+            "TEXT"
+          ],
+          "value": "maalika"
+        },
+        {
+          "language_id": "23",
           "content_type": "TEXT",
           "modes": [
             "TEXT"

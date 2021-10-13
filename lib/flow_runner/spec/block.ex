@@ -13,6 +13,8 @@ defmodule FlowRunner.Spec.Block do
   alias FlowRunner.Spec.Exit
   alias FlowRunner.Spec.Flow
 
+  require Logger
+
   @derive Jason.Encoder
   defstruct uuid: nil,
             name: nil,
@@ -50,7 +52,8 @@ defmodule FlowRunner.Spec.Block do
     "Core.SetGroupMembership" => FlowRunner.Spec.Blocks.SetGroupMembership,
     "MobilePrimitives.SelectOneResponse" => FlowRunner.Spec.Blocks.SelectOneResponse,
     "MobilePrimitives.Message" => FlowRunner.Spec.Blocks.Message,
-    "MobilePrimitives.NumericResponse" => FlowRunner.Spec.Blocks.NumericResponse
+    "MobilePrimitives.NumericResponse" => FlowRunner.Spec.Blocks.NumericResponse,
+    "MobilePrimitives.OpenResponse" => FlowRunner.Spec.Blocks.OpenResponse
   }
 
   def cast!(%{"type" => type} = map) do
@@ -108,6 +111,7 @@ defmodule FlowRunner.Spec.Block do
       })
 
     context = %Context{context | vars: vars, waiting_for_user_input: false}
+
     {:ok, context}
   end
 
@@ -151,7 +155,6 @@ defmodule FlowRunner.Spec.Block do
     # onto the next block.
     # If it returns :invalid we will exit through the default block as the
     # block has failed validations.
-    {:ok, user_input}
 
     with {:ok, user_input} <-
            apply(Map.get(@blocks, block.type), :evaluate_outgoing, [flow, block, user_input]),
@@ -166,7 +169,8 @@ defmodule FlowRunner.Spec.Block do
            Block.fetch_next_block(block, flow, context) do
       {:ok, context, block}
     else
-      {:invalid, _reason} ->
+      {:invalid, reason} ->
+        Logger.info("Fetching default block because #{reason}")
         Block.fetch_default_block(block, flow, context)
 
       err ->

@@ -19,8 +19,8 @@ This Flow Runnner only supports the TEXT, RICH_MESSAGING modes.
 | 3 | MessagePrimitives.Message | Yes
 | 3 | MessagePrimitives.SelectOneResponse | Yes 
 | 3 | MessagePrimitives.SelectManyResponses | No | WhatsApp does not support this.
-| 3 | MessagePrimitives.NumericResponse | No | TBD
-| 3 | MessagePrimitives.OpenResponse | No | TBD
+| 3 | MessagePrimitives.NumericResponse | Yes | 
+| 3 | MessagePrimitives.OpenResponse | Yes |
 | 4 | SmartDevices.LocationResponse | No | TBD
 | 4 | SmartDevices.PhotoResponse | No | TBD
 

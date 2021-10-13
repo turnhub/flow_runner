@@ -94,12 +94,31 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
 
     case Resource.matching_resource(resource, context.language, context.mode, flow) do
       {:ok, prompt} ->
+        {:ok, value} = Expression.evaluate(prompt.value, context.vars)
+
         {
           :ok,
           %Context{context | waiting_for_user_input: true, last_block_uuid: block.uuid},
           %Output{
-            prompt: prompt,
-            choices: block.config.choices
+            prompt: %{value: value},
+            choices:
+              block.config.choices
+              |> Enum.map(fn %{name: name, test: _test, prompt: prompt_resource} ->
+                {:ok, resource} = Container.fetch_resource_by_uuid(container, prompt_resource)
+
+                {:ok, resource_value} =
+                  Resource.matching_resource(
+                    resource,
+                    context.language,
+                    context.mode,
+                    flow
+                  )
+
+                {:ok, rendered_resource_value} =
+                  Expression.evaluate(resource_value.value, context.vars)
+
+                {name, rendered_resource_value}
+              end)
           }
         }
 
@@ -121,7 +140,7 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
     if matched_option do
       {:ok, matched_option.name}
     else
-      {:ok, user_input}
+      {:invalid, "No choice tests evaluated to true."}
     end
   end
 end

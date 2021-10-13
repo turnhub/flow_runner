@@ -1,7 +1,6 @@
 defmodule FlowRunner.Spec.Blocks.NumericResponse do
   @moduledoc """
-  A specialisation of a block that sends users a set of options and
-  waits for the user to come back with one of them.
+  A specialisation of a block that allows users to send numeric input.
   """
   alias FlowRunner.Context
   alias FlowRunner.Output
@@ -36,11 +35,13 @@ defmodule FlowRunner.Spec.Blocks.NumericResponse do
 
     case Resource.matching_resource(resource, context.language, context.mode, flow) do
       {:ok, prompt} ->
+        {:ok, value} = Expression.evaluate(prompt.value, context.vars)
+
         {
           :ok,
           %Context{context | waiting_for_user_input: true, last_block_uuid: block.uuid},
           %Output{
-            prompt: prompt
+            prompt: %{value: value}
           }
         }
 

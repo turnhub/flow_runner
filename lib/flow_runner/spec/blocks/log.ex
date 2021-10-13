@@ -25,16 +25,25 @@ defmodule FlowRunner.Spec.Blocks.Log do
         context,
         %Container{} = container
       ) do
-    {:ok, resource} = Container.fetch_resource_by_uuid(container, block.config.message)
-
     context =
-      case Resource.matching_resource(resource, context.language, context.mode, flow) do
-        {:ok, log} ->
-          %Context{context | log: [log.value | context.log], last_block_uuid: block.uuid}
+      case Container.fetch_resource_by_uuid(container, block.config.message) do
+        {:ok, resource} ->
+          case Resource.matching_resource(resource, context.language, context.mode, flow) do
+            {:ok, log} ->
+              %Context{context | log: [log.value | context.log], last_block_uuid: block.uuid}
 
-        {:error, reason} ->
-          Logger.error("Could not fetch log message for #{block.config["message"]} #{reason}")
-          context
+            {:error, reason} ->
+              Logger.error("Could not fetch log message for #{block.config["message"]} #{reason}")
+
+              context
+          end
+
+        {:error, _reason} ->
+          %Context{
+            context
+            | log: [block.config.message | context.log],
+              last_block_uuid: block.uuid
+          }
       end
 
     {:ok, context, %Output{}}
