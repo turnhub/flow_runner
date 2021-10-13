@@ -66,7 +66,10 @@ defmodule FlowRunnerTest do
         %FlowRunner.Context{
           current_flow_uuid: "efaabaac-d035-43f5-a7fe-0e4e757c8095",
           language: "fra",
-          mode: "TEXT"
+          mode: "TEXT",
+          vars: %{
+            "contact" => %{"name" => "Jühn Døë"}
+          }
         }
       )
 
@@ -78,17 +81,23 @@ defmodule FlowRunnerTest do
         %FlowRunner.Context{
           current_flow_uuid: "efaabaac-d035-43f5-a7fe-0e4e757c8095",
           language: "eng",
-          mode: "TEXT"
+          mode: "TEXT",
+          vars: %{
+            "contact" => %{"name" => "ÿühn ∂øë"}
+          }
         }
       )
 
-    assert %{prompt: %{value: "choose a name"}} = output
+    # Note the correct capitalisation of Unicode characters
+    assert %{prompt: %{value: "hi *Ÿühn ∂øë*! Choose a name:"}} = output
   end
 
   @tag flow: "test/selectoneresponse.rc3.flow"
   test "select one response", %{container: container} do
     {:ok, context} =
-      FlowRunner.start_flow(container, "efaabaac-d035-43f5-a7fe-0e4e757c8095", "fra", "TEXT")
+      FlowRunner.start_flow(container, "efaabaac-d035-43f5-a7fe-0e4e757c8095", "fra", "TEXT", %{
+        "contact" => %{"name" => "foo bar"}
+      })
 
     {:ok, context, _, output} = FlowRunner.next_block(container, context)
     assert %{prompt: %{value: "اختر اسمًا"}} = output
@@ -99,10 +108,12 @@ defmodule FlowRunnerTest do
     {:end, _context} = FlowRunner.next_block(container, context)
 
     {:ok, context} =
-      FlowRunner.start_flow(container, "efaabaac-d035-43f5-a7fe-0e4e757c8095", "eng", "TEXT")
+      FlowRunner.start_flow(container, "efaabaac-d035-43f5-a7fe-0e4e757c8095", "eng", "TEXT", %{
+        "contact" => %{"name" => "foo bar"}
+      })
 
     {:ok, context, _, output} = FlowRunner.next_block(container, context)
-    assert %{prompt: %{value: "choose a name"}} = output
+    assert %{prompt: %{value: "hi *Foo Bar*! Choose a name:"}} = output
     assert %{waiting_for_user_input: true} = context
     {:ok, context, _, output} = FlowRunner.next_block(container, context, "yaseen")
     assert %{prompt: %{value: "hello yaseen"}} = output
@@ -138,7 +149,9 @@ defmodule FlowRunnerTest do
   @tag flow: "test/selectoneresponse.rc3.flow"
   test "select one response with rc3", %{container: container} do
     {:ok, context} =
-      FlowRunner.start_flow(container, "efaabaac-d035-43f5-a7fe-0e4e757c8095", "fra", "TEXT")
+      FlowRunner.start_flow(container, "efaabaac-d035-43f5-a7fe-0e4e757c8095", "fra", "TEXT", %{
+        "contact" => %{"name" => "foo bar"}
+      })
 
     {:ok, context, _, output} = FlowRunner.next_block(container, context)
     assert %{prompt: %{value: "اختر اسمًا"}} = output
@@ -149,10 +162,12 @@ defmodule FlowRunnerTest do
     {:end, _context} = FlowRunner.next_block(container, context)
 
     {:ok, context} =
-      FlowRunner.start_flow(container, "efaabaac-d035-43f5-a7fe-0e4e757c8095", "eng", "TEXT")
+      FlowRunner.start_flow(container, "efaabaac-d035-43f5-a7fe-0e4e757c8095", "eng", "TEXT", %{
+        "contact" => %{"name" => "foo bar"}
+      })
 
     {:ok, context, _, output} = FlowRunner.next_block(container, context)
-    assert %{prompt: %{value: "choose a name"}} = output
+    assert %{prompt: %{value: "hi *Foo Bar*! Choose a name:"}} = output
     assert %{waiting_for_user_input: true} = context
     {:ok, context, _, output} = FlowRunner.next_block(container, context, "yaseen")
     assert %{prompt: %{value: "hello yaseen"}} = output
@@ -292,11 +307,8 @@ defmodule FlowRunnerTest do
              FlowRunner.next_block(container, context, "1")
   end
 
-  test "open response block" do
-    {:ok, container} =
-      File.read!("test/open_response.flow")
-      |> FlowRunner.compile()
-
+  @tag flow: "test/open_response.flow"
+  test "open response block", %{container: container} do
     {:ok, context} =
       FlowRunner.start_flow(container, "6040838d-d16a-4f9d-9c3a-b611f078ae44", "eng", "SMS")
 

@@ -169,7 +169,7 @@
       "values": [
         {
           "language_id": "22",
-          "value": "hi *@contact.whatsapp_profile_name*! Choose a name:",
+          "value": "hi *@PROPER(contact.name)*! Choose a name:",
           "content_type": "TEXT",
           "modes": [
             "TEXT"
@@ -195,6 +195,14 @@
             "TEXT"
           ],
           "value": "Yaseen!"
+        },
+        {
+          "language_id": "23",
+          "content_type": "TEXT",
+          "modes": [
+            "TEXT"
+          ],
+          "value": "Yaseen!"
         }
       ]
     },
@@ -203,6 +211,14 @@
       "values": [
         {
           "language_id": "22",
+          "content_type": "TEXT",
+          "modes": [
+            "TEXT"
+          ],
+          "value": "Maalika!"
+        },
+        {
+          "language_id": "23",
           "content_type": "TEXT",
           "modes": [
             "TEXT"

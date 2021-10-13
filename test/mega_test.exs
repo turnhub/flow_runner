@@ -1,12 +1,23 @@
 defmodule MegaTest do
   use ExUnit.Case
-  doctest FlowRunner
 
-  test "Test all blocks in one flow" do
-    {:ok, container} =
-      File.read!("test/mega_test.flow")
-      |> FlowRunner.compile()
+  setup context do
+    if flow_file = Map.get(context, :flow) do
+      {:ok, container} =
+        "priv/fixtures/"
+        |> Path.join(flow_file)
+        |> Path.expand()
+        |> File.read!()
+        |> FlowRunner.compile()
 
+      Map.put(context, :container, container)
+    else
+      context
+    end
+  end
+
+  @tag flow: "test/mega_test.flow"
+  test "Test all blocks in one flow", %{container: container} do
     {:error, "no matching flow"} =
       FlowRunner.start_flow(container, "62d0084d-e88f-48c3-ac64-7a15855f0a43", "eng", "TEXT")
 
@@ -27,7 +38,7 @@ defmodule MegaTest do
              prompt: %{
                value: "do you want to CONTINUE or START AGAIN"
              },
-             choices: [%{name: "continue"}, %{name: "start_again"}]
+             choices: [{"continue", "continue"}, {"start_again", "start again"}]
            } = output
 
     # Choose start_again
