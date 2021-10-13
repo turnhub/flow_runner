@@ -31,15 +31,32 @@ defmodule FlowRunner.Spec.ResourceValue do
 
   validates(:modes,
     presence: true,
-    subset: [
-      "TEXT",
-      "SMS",
-      "USSD",
-      "IVR",
-      "RICH_MESSAGING",
-      "OFFLINE"
+    by: [
+      function: &__MODULE__.subset/1,
+      message: "must be a known set of modes"
     ]
   )
+
+  def subset(value),
+    do:
+      subset(
+        [
+          "TEXT",
+          "SMS",
+          "USSD",
+          "IVR",
+          "RICH_MESSAGING",
+          "OFFLINE"
+        ],
+        value
+      )
+
+  def subset(options, value) do
+    value_set = MapSet.new(value)
+    options_set = MapSet.new(options)
+
+    MapSet.subset?(value_set, options_set)
+  end
 
   def supports_mode(resource_value, mode) do
     Enum.count(resource_value.modes, &(&1 == mode)) > 0
