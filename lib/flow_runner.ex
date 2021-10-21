@@ -9,9 +9,15 @@ defmodule FlowRunner do
 
   @doc """
   Compile takes a json flow and returns a parsed and validated
-  flow.
+  flow as a tuple.
   """
   defdelegate compile(json), to: FlowRunner.Compile
+
+  @doc """
+  Compile takes a json flow and returns a parsed and validated
+  flow.
+  """
+  defdelegate compile!(json), to: FlowRunner.Compile
 
   @doc """
 

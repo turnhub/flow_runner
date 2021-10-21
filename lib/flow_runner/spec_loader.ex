@@ -117,7 +117,9 @@ defmodule FlowRunner.SpecLoader do
     end)
   end
 
-  defp atom_or_argument_error(key) do
+  defp atom_or_argument_error(key) when is_atom(key), do: key
+
+  defp atom_or_argument_error(key) when is_binary(key) do
     String.to_existing_atom(key)
   rescue
     _error -> reraise "Unknown key #{inspect(key)}", __STACKTRACE__
