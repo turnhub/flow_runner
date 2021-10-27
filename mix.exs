@@ -1,7 +1,7 @@
 defmodule FlowRunner.MixProject do
   use Mix.Project
 
-  @version "0.1.2"
+  @version "0.1.3"
 
   def project do
     [
@@ -61,7 +61,7 @@ defmodule FlowRunner.MixProject do
       {:jason, "~> 1.2"},
       {:junit_formatter, "~> 3.1", only: [:test]},
       {:mix_test_watch, "~> 1.1", only: [:dev, :test], runtime: false},
-      {:version_tasks, "~> 0.12.0"},
+      {:version_tasks, "~> 0.12.0", only: [:dev]},
       {:vex, "~> 0.9.0"}
     ]
   end
