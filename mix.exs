@@ -33,7 +33,11 @@ defmodule FlowRunner.MixProject do
   def package() do
     [
       name: "flow_runner",
-      organization: "turnio"
+      organization: "turnio",
+      licenses: ["PROPRIETARY"],
+      links: %{
+        "Github" => "https://github.com/turnhub/flowrunner"
+      }
     ]
   end
 
