@@ -7,6 +7,8 @@ defmodule FlowRunner.MixProject do
       version: String.trim(File.read!("VERSION")),
       elixir: "~> 1.12",
       elixirc_paths: elixirc_paths(Mix.env()),
+      description: description(),
+      package: package(),
       start_permanent: Mix.env() == :prod,
       test_coverage: [tool: ExCoveralls],
       deps: deps(),
@@ -21,6 +23,17 @@ defmodule FlowRunner.MixProject do
   def application do
     [
       extra_applications: [:logger]
+    ]
+  end
+
+  def description() do
+    "A FLOIP spec compatible flow runner"
+  end
+
+  def package() do
+    [
+      name: "flow_runner",
+      organization: "turnio"
     ]
   end
 
