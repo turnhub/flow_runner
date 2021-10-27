@@ -1,10 +1,12 @@
 defmodule FlowRunner.MixProject do
   use Mix.Project
 
+  @version "0.1.0"
+
   def project do
     [
       app: :flow_runner,
-      version: String.trim(File.read!("VERSION")),
+      version: @version,
       elixir: "~> 1.12",
       elixirc_paths: elixirc_paths(Mix.env()),
       description: description(),
@@ -58,6 +60,7 @@ defmodule FlowRunner.MixProject do
       {:jason, "~> 1.2"},
       {:junit_formatter, "~> 3.1", only: [:test]},
       {:mix_test_watch, "~> 1.1", only: [:dev, :test], runtime: false},
+      {:version_tasks, "~> 0.12.0"},
       {:vex, "~> 0.9.0"}
     ]
   end
