@@ -6,6 +6,7 @@ defmodule FlowRunner.MixProject do
   def project do
     [
       app: :flow_runner,
+      aliases: aliases(),
       version: @version,
       elixir: "~> 1.12",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -62,6 +63,14 @@ defmodule FlowRunner.MixProject do
       {:mix_test_watch, "~> 1.1", only: [:dev, :test], runtime: false},
       {:version_tasks, "~> 0.12.0"},
       {:vex, "~> 0.9.0"}
+    ]
+  end
+
+  defp aliases do
+    [
+      "release.major": ["version.up major", "version.tag"],
+      "release.minor": ["version.up minor", "version.tag"],
+      "release.patch": ["version.up patch", "version.tag"]
     ]
   end
 end
