@@ -54,6 +54,7 @@ defmodule FlowRunner.MixProject do
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:excoveralls, "~> 0.10", only: :test},
       {:expression, "~> 0.3.4"},
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:jason, "~> 1.2"},
       {:junit_formatter, "~> 3.1", only: [:test]},
       {:mix_test_watch, "~> 1.1", only: [:dev, :test], runtime: false},
