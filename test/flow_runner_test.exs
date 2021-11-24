@@ -13,7 +13,7 @@ defmodule FlowRunnerTest do
   @tag flow: "test/basic.flow"
   test "run a flow", %{container: container} do
     {:ok, context} =
-      FlowRunner.start_flow(container, "62d0084d-e88f-48c3-ac64-7a15855f0a43", "eng", "TEXT")
+      FlowRunner.create_context(container, "62d0084d-e88f-48c3-ac64-7a15855f0a43", "eng", "TEXT")
 
     {:ok, _context, _, output} = FlowRunner.next_block(container, context)
     assert %{prompt: %{value: "welcome to this block"}} = output
@@ -83,9 +83,15 @@ defmodule FlowRunnerTest do
   @tag flow: "test/selectoneresponse.rc3.flow"
   test "select one response", %{container: container} do
     {:ok, context} =
-      FlowRunner.start_flow(container, "efaabaac-d035-43f5-a7fe-0e4e757c8095", "fra", "TEXT", %{
-        "contact" => %{"name" => "foo bar"}
-      })
+      FlowRunner.create_context(
+        container,
+        "efaabaac-d035-43f5-a7fe-0e4e757c8095",
+        "fra",
+        "TEXT",
+        %{
+          "contact" => %{"name" => "foo bar"}
+        }
+      )
 
     {:ok, context, _, output} = FlowRunner.next_block(container, context)
     assert %{prompt: %{value: "اختر اسمًا"}} = output
@@ -96,9 +102,15 @@ defmodule FlowRunnerTest do
     {:end, _context} = FlowRunner.next_block(container, context)
 
     {:ok, context} =
-      FlowRunner.start_flow(container, "efaabaac-d035-43f5-a7fe-0e4e757c8095", "eng", "TEXT", %{
-        "contact" => %{"name" => "foo bar"}
-      })
+      FlowRunner.create_context(
+        container,
+        "efaabaac-d035-43f5-a7fe-0e4e757c8095",
+        "eng",
+        "TEXT",
+        %{
+          "contact" => %{"name" => "foo bar"}
+        }
+      )
 
     {:ok, context, _, output} = FlowRunner.next_block(container, context)
     assert %{prompt: %{value: "hi *Foo Bar*! Choose a name:"}} = output
@@ -112,7 +124,7 @@ defmodule FlowRunnerTest do
   @tag flow: "test/selectoneresponse.flow"
   test "select one response with rc2", %{container: container} do
     {:ok, context} =
-      FlowRunner.start_flow(container, "efaabaac-d035-43f5-a7fe-0e4e757c8095", "fra", "TEXT")
+      FlowRunner.create_context(container, "efaabaac-d035-43f5-a7fe-0e4e757c8095", "fra", "TEXT")
 
     {:ok, context, _, output} = FlowRunner.next_block(container, context)
     assert %{prompt: %{value: "اختر اسمًا"}} = output
@@ -123,7 +135,7 @@ defmodule FlowRunnerTest do
     {:end, _context} = FlowRunner.next_block(container, context)
 
     {:ok, context} =
-      FlowRunner.start_flow(container, "efaabaac-d035-43f5-a7fe-0e4e757c8095", "eng", "TEXT")
+      FlowRunner.create_context(container, "efaabaac-d035-43f5-a7fe-0e4e757c8095", "eng", "TEXT")
 
     {:ok, context, _, output} = FlowRunner.next_block(container, context)
     assert %{prompt: %{value: "choose a name"}} = output
@@ -137,9 +149,15 @@ defmodule FlowRunnerTest do
   @tag flow: "test/selectoneresponse.rc3.flow"
   test "select one response with rc3", %{container: container} do
     {:ok, context} =
-      FlowRunner.start_flow(container, "efaabaac-d035-43f5-a7fe-0e4e757c8095", "fra", "TEXT", %{
-        "contact" => %{"name" => "foo bar"}
-      })
+      FlowRunner.create_context(
+        container,
+        "efaabaac-d035-43f5-a7fe-0e4e757c8095",
+        "fra",
+        "TEXT",
+        %{
+          "contact" => %{"name" => "foo bar"}
+        }
+      )
 
     {:ok, context, _, output} = FlowRunner.next_block(container, context)
     assert %{prompt: %{value: "اختر اسمًا"}} = output
@@ -150,9 +168,15 @@ defmodule FlowRunnerTest do
     {:end, _context} = FlowRunner.next_block(container, context)
 
     {:ok, context} =
-      FlowRunner.start_flow(container, "efaabaac-d035-43f5-a7fe-0e4e757c8095", "eng", "TEXT", %{
-        "contact" => %{"name" => "foo bar"}
-      })
+      FlowRunner.create_context(
+        container,
+        "efaabaac-d035-43f5-a7fe-0e4e757c8095",
+        "eng",
+        "TEXT",
+        %{
+          "contact" => %{"name" => "foo bar"}
+        }
+      )
 
     {:ok, context, _, output} = FlowRunner.next_block(container, context)
     assert %{prompt: %{value: "hi *Foo Bar*! Choose a name:"}} = output
@@ -166,7 +190,7 @@ defmodule FlowRunnerTest do
   @tag flow: "test/runflow.flow"
   test "runflow block", %{container: container} do
     {:ok, context} =
-      FlowRunner.start_flow(container, "f81559f9-1cf5-4125-abb0-4c88a1c4083f", "eng", "TEXT")
+      FlowRunner.create_context(container, "f81559f9-1cf5-4125-abb0-4c88a1c4083f", "eng", "TEXT")
 
     {:ok, context, _, output} = FlowRunner.next_block(container, context)
     assert %{prompt: %{value: "flow 1"}} = output
@@ -182,7 +206,7 @@ defmodule FlowRunnerTest do
   @tag flow: "test/log.flow"
   test "log block", %{container: container} do
     {:ok, context} =
-      FlowRunner.start_flow(container, "912b53c1-de3c-4093-9d98-9bf25b9ad75a", "eng", "TEXT")
+      FlowRunner.create_context(container, "912b53c1-de3c-4093-9d98-9bf25b9ad75a", "eng", "TEXT")
 
     {:ok, context, _, _output} = FlowRunner.next_block(container, context)
     {:ok, context, _, _output} = FlowRunner.next_block(container, context)
@@ -194,7 +218,7 @@ defmodule FlowRunnerTest do
   @tag flow: "test/case.flow"
   test "case block", %{container: container} do
     {:ok, context} =
-      FlowRunner.start_flow(container, "289bb197-fc9e-44dc-ada2-a769a91bf416", "eng", "TEXT")
+      FlowRunner.create_context(container, "289bb197-fc9e-44dc-ada2-a769a91bf416", "eng", "TEXT")
 
     context = %FlowRunner.Context{context | vars: %{patient_age: 19}}
 
@@ -203,7 +227,7 @@ defmodule FlowRunnerTest do
     assert context.log == ["over age"]
 
     {:ok, context} =
-      FlowRunner.start_flow(container, "289bb197-fc9e-44dc-ada2-a769a91bf416", "eng", "TEXT")
+      FlowRunner.create_context(container, "289bb197-fc9e-44dc-ada2-a769a91bf416", "eng", "TEXT")
 
     context = %FlowRunner.Context{
       context
@@ -218,7 +242,7 @@ defmodule FlowRunnerTest do
   @tag flow: "test/set_contact_property.flow"
   test "set a contact property", %{container: container} do
     {:ok, context} =
-      FlowRunner.start_flow(container, "62d0084d-e88f-48c3-ac64-7a15855f0a43", "eng", "TEXT")
+      FlowRunner.create_context(container, "62d0084d-e88f-48c3-ac64-7a15855f0a43", "eng", "TEXT")
 
     {:ok, context, _, output} = FlowRunner.next_block(container, context)
 
@@ -238,7 +262,7 @@ defmodule FlowRunnerTest do
   @tag flow: "test/set_group_membership.flow"
   test "set group membership", %{container: container} do
     {:ok, context} =
-      FlowRunner.start_flow(container, "62d0084d-e88f-48c3-ac64-7a15855f0a43", "eng", "TEXT")
+      FlowRunner.create_context(container, "62d0084d-e88f-48c3-ac64-7a15855f0a43", "eng", "TEXT")
 
     {:ok, context, _, output} = FlowRunner.next_block(container, context)
 
@@ -258,7 +282,7 @@ defmodule FlowRunnerTest do
   @tag flow: "test/numeric_response.flow"
   test "numeric response block invalid input", %{container: container} do
     {:ok, context} =
-      FlowRunner.start_flow(container, "cc630cda-384e-41a3-9907-5262d23a6084", "eng", "TEXT")
+      FlowRunner.create_context(container, "cc630cda-384e-41a3-9907-5262d23a6084", "eng", "TEXT")
 
     assert(
       {:ok, context, _, %{prompt: %{value: "what is your age"}}} =
@@ -272,7 +296,7 @@ defmodule FlowRunnerTest do
   @tag flow: "test/numeric_response.flow"
   test "numeric response ranges", %{container: container} do
     {:ok, context} =
-      FlowRunner.start_flow(container, "cc630cda-384e-41a3-9907-5262d23a6084", "eng", "TEXT")
+      FlowRunner.create_context(container, "cc630cda-384e-41a3-9907-5262d23a6084", "eng", "TEXT")
 
     assert(
       {:ok, context, _, %{prompt: %{value: "what is your age"}}} =
@@ -298,7 +322,7 @@ defmodule FlowRunnerTest do
   @tag flow: "test/open_response.flow"
   test "open response block", %{container: container} do
     {:ok, context} =
-      FlowRunner.start_flow(container, "6040838d-d16a-4f9d-9c3a-b611f078ae44", "eng", "SMS")
+      FlowRunner.create_context(container, "6040838d-d16a-4f9d-9c3a-b611f078ae44", "eng", "SMS")
 
     assert {:ok, context, _, %{prompt: %{value: "say anything up to 10 characters long."}}} =
              FlowRunner.next_block(container, context)

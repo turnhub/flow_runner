@@ -49,9 +49,15 @@ defmodule FlowRunner.SpecLoader do
       def load(data) do
         {:ok, validate!(load!(cast!(data)))}
       rescue
-        error in KeyError -> {:error, "Key #{error.key} is not valid for #{unquote(mod)}}"}
-        error in ArgumentError -> {:error, error.message}
-        error in RuntimeError -> {:error, error.message}
+        error in KeyError ->
+          {:error,
+           "Key #{error.key} is not valid for #{unquote(mod)}} while trying to load #{inspect(data)}"}
+
+        error in ArgumentError ->
+          {:error, error.message}
+
+        error in RuntimeError ->
+          {:error, error.message}
       end
 
       @doc "Cast the received fields to their internal representation"
@@ -95,6 +101,9 @@ defmodule FlowRunner.SpecLoader do
       defoverridable(validate!: 1, cast!: 1)
     end
   end
+
+  def load!(mod, struct, manually_loaded_fields) when is_struct(struct),
+    do: load!(mod, Map.from_struct(struct), manually_loaded_fields)
 
   def load!(mod, map, manually_loaded_fields) do
     manually_loaded_keys = Enum.map(Keyword.keys(manually_loaded_fields), &to_string/1)

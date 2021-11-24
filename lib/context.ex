@@ -4,6 +4,18 @@ defmodule FlowRunner.Context do
   """
   alias FlowRunner.Context
 
+  @type t :: %__MODULE__{
+          language: String.t(),
+          mode: String.t(),
+          log: [String.t()],
+          waiting_for_user_input: boolean,
+          current_flow_uuid: nil | String.t(),
+          last_block_uuid: nil | String.t(),
+          vars: map,
+          finished: boolean,
+          parent_context: nil | t
+        }
+
   defstruct [
     # iso 639-3 language code.
     language: "eng",

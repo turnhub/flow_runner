@@ -7,10 +7,10 @@ defmodule MegaTest do
   @tag flow: "test/mega_test.flow"
   test "Test all blocks in one flow", %{container: container} do
     {:error, "no matching flow"} =
-      FlowRunner.start_flow(container, "62d0084d-e88f-48c3-ac64-7a15855f0a43", "eng", "TEXT")
+      FlowRunner.create_context(container, "62d0084d-e88f-48c3-ac64-7a15855f0a43", "eng", "TEXT")
 
     {:ok, context} =
-      FlowRunner.start_flow(container, "ee84b2b7-ca0f-4492-a964-fdc5eb83dd47", "eng", "TEXT")
+      FlowRunner.create_context(container, "ee84b2b7-ca0f-4492-a964-fdc5eb83dd47", "eng", "TEXT")
 
     {:ok, context, _, output} = FlowRunner.next_block(container, context)
     assert %{prompt: %{value: "welcome to the MEGA test"}} = output

@@ -20,9 +20,21 @@ defmodule FlowRunner do
   defdelegate compile!(json), to: FlowRunner.Compile
 
   @doc """
-
   """
-  def start_flow(container, flow_uuid, language, mode, vars \\ %{}) do
+  defdelegate fetch_flow_by_uuid(container, uuid), to: FlowRunner.Spec.Container
+
+  @doc """
+  Create a fresh context for a flow
+  """
+  @spec create_context(
+          Container.t(),
+          flow_uuid :: String.t(),
+          language :: String.t(),
+          mode :: String.t(),
+          vars :: map
+        ) ::
+          {:ok, Context.t()} | {:error, reason :: String.t()}
+  def create_context(container, flow_uuid, language, mode, vars \\ %{}) do
     case Container.fetch_flow_by_uuid(container, flow_uuid) do
       {:ok, _flow} ->
         {:ok,
