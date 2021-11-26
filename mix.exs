@@ -61,7 +61,7 @@ defmodule FlowRunner.MixProject do
       {:jason, "~> 1.2"},
       {:junit_formatter, "~> 3.1", only: [:test]},
       {:mix_test_watch, "~> 1.1", only: [:dev, :test], runtime: false},
-      {:version_tasks, "~> 0.12.0", only: [:dev]},
+      {:version_tasks, "~> 0.12.0", only: [:dev], runtime: false},
       {:vex, "~> 0.9.0"}
     ]
   end
