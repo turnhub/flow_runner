@@ -63,6 +63,17 @@ defmodule FlowRunner.Spec.Block do
 
   def cast!(map), do: map
 
+  def validate!(impl) do
+    impl = FlowRunner.SpecLoader.validate!(impl)
+    default_exits = Enum.filter(impl.exits, & &1.default)
+
+    if Enum.count(default_exits) > 1 do
+      raise RuntimeError, "Blocks can only have 1 default exit"
+    end
+
+    impl
+  end
+
   def load_config_for_set_contact_property!(%{
         "set_contact_property" => %{
           "property_key" => property_key,
