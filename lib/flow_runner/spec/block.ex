@@ -63,6 +63,22 @@ defmodule FlowRunner.Spec.Block do
 
   def cast!(map), do: map
 
+  def validate!(impl) do
+    impl = FlowRunner.SpecLoader.validate!(impl)
+
+    default_exits =
+      impl.exits
+      |> Enum.filter(&(&1.default == true))
+      |> Enum.map(&"#{inspect(&1.name)}")
+
+    if Enum.count(default_exits) > 1 do
+      raise RuntimeError,
+            "Blocks can only have 1 default exit, found: #{Enum.join(default_exits, ", ")}"
+    end
+
+    impl
+  end
+
   def load_config_for_set_contact_property!(%{
         "set_contact_property" => %{
           "property_key" => property_key,
@@ -214,25 +230,25 @@ defmodule FlowRunner.Spec.Block do
 
   @spec evaluate_exits(%FlowRunner.Spec.Block{}, %FlowRunner.Context{}) ::
           {:ok, %FlowRunner.Spec.Exit{}} | {:error, any()}
-  def evaluate_exits(%Block{exits: exits}, %Context{} = context) do
-    truthy_exits = Enum.filter(exits, &Exit.evaluate(&1, context))
+  def evaluate_exits(%Block{exits: exits} = block, %Context{} = context) do
+    truthy_exits =
+      exits
+      |> Enum.reject(&(&1.default == true))
+      |> Enum.filter(&Exit.evaluate(&1, context))
 
     if length(truthy_exits) > 0 do
       {:ok, Enum.at(truthy_exits, 0)}
     else
-      {:error, "no exit evaluated to true"}
+      evaluate_default_exit(block, context)
     end
   end
 
   @spec evaluate_default_exit(%FlowRunner.Spec.Block{}, %FlowRunner.Context{}) ::
           {:error, String.t()} | {:ok, %FlowRunner.Spec.Exit{}}
   def evaluate_default_exit(%Block{exits: exits}, %Context{} = _context) do
-    truthy_exits = Enum.filter(exits, &(&1.default == true))
-
-    if length(truthy_exits) > 0 do
-      {:ok, Enum.at(truthy_exits, 0)}
-    else
-      {:error, "no exit evaluated to true"}
+    case Enum.filter(exits, &(&1.default == true)) do
+      [first_default_exit | _] -> {:ok, first_default_exit}
+      _ -> {:error, "No default exit available"}
     end
   end
 end

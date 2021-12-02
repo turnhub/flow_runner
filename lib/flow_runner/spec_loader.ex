@@ -74,31 +74,34 @@ defmodule FlowRunner.SpecLoader do
       end
 
       @doc "Validate a #{unquote(mod)} struct using Vex.validate"
-      @spec validate!(t()) :: {:ok, t()} | {:error, String.t()}
-      def validate!(impl) do
-        case Vex.validate(impl) do
-          {:ok, impl} ->
-            impl
-
-          {:error, errors} ->
-            error_string =
-              errors
-              |> Enum.map(fn {:error, key, _rule, error} ->
-                received_value = Map.get(impl, key)
-                "#{inspect(Atom.to_string(key))} #{error}, received: #{inspect(received_value)}"
-              end)
-              |> Enum.join(", ")
-
-            [module_name | _ignored] =
-              impl.__struct__
-              |> Module.split()
-              |> Enum.reverse()
-
-            raise RuntimeError, "In #{inspect(module_name)}: #{error_string}"
-        end
-      end
+      @spec validate!(t()) :: t()
+      defdelegate validate!(impl), to: FlowRunner.SpecLoader
 
       defoverridable(validate!: 1, cast!: 1)
+    end
+  end
+
+  @doc "Validate a struct using Vex.validate"
+  def validate!(impl) do
+    case Vex.validate(impl) do
+      {:ok, impl} ->
+        impl
+
+      {:error, errors} ->
+        error_string =
+          errors
+          |> Enum.map(fn {:error, key, _rule, error} ->
+            received_value = Map.get(impl, key)
+            "#{inspect(Atom.to_string(key))} #{error}, received: #{inspect(received_value)}"
+          end)
+          |> Enum.join(", ")
+
+        [module_name | _ignored] =
+          impl.__struct__
+          |> Module.split()
+          |> Enum.reverse()
+
+        raise RuntimeError, "In #{inspect(module_name)}: #{error_string}"
     end
   end
 
