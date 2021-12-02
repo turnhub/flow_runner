@@ -53,19 +53,20 @@ defmodule BlockTest do
       ]
     }
 
-    # The one block evaluates to true.
+    # The one block evaluates to true and is selected even though
+    # the default exit block is defined first in the list of exits
     assert {:ok, %Exit{uuid: "b586afa7-0097-4805-9951-f6d3156c08db"}} =
              Block.evaluate_exits(block, context)
 
     block = %Block{
       exits: [
         %Exit{
-          uuid: "b586afa7-0097-4805-9951-f6d3156c08db",
-          test: "block.value = 5"
-        },
-        %Exit{
           uuid: "cbf4382f-0ce0-426b-9a3c-40cbe84dd081",
           default: true
+        },
+        %Exit{
+          uuid: "b586afa7-0097-4805-9951-f6d3156c08db",
+          test: "block.value = 5"
         }
       ]
     }
