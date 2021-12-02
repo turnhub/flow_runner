@@ -65,10 +65,15 @@ defmodule FlowRunner.Spec.Block do
 
   def validate!(impl) do
     impl = FlowRunner.SpecLoader.validate!(impl)
-    default_exits = Enum.filter(impl.exits, & &1.default)
+
+    default_exits =
+      impl.exits
+      |> Enum.filter(& &1.default)
+      |> Enum.map(&"#{inspect(&1.name)}")
 
     if Enum.count(default_exits) > 1 do
-      raise RuntimeError, "Blocks can only have 1 default exit"
+      raise RuntimeError,
+            "Blocks can only have 1 default exit, found: #{Enum.join(default_exits, ", ")}"
     end
 
     impl

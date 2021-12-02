@@ -48,7 +48,7 @@ defmodule FlowRunner.CompileTest do
   end
 
   test "validates for single default exits" do
-    {:error, "Blocks can only have 1 default exit"} =
+    {:error, "Blocks can only have 1 default exit, found: \"default exit 1\", \"default exit 2\""} =
       FlowRunner.compile(%{
         "specification_version" => "1.0.0-rc1",
         "uuid" => "3666a05d-3792-482b-8f7f-9e2472e4f027",
