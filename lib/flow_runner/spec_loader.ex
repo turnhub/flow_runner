@@ -74,7 +74,7 @@ defmodule FlowRunner.SpecLoader do
       end
 
       @doc "Validate a #{unquote(mod)} struct using Vex.validate"
-      @spec validate!(t()) :: {:ok, t()} | {:error, String.t()}
+      @spec validate!(t()) :: t()
       defdelegate validate!(impl), to: FlowRunner.SpecLoader
 
       defoverridable(validate!: 1, cast!: 1)
