@@ -78,7 +78,7 @@ defmodule FlowRunner.FlowBuilder do
       flow = %{
         "name" => to_string(unquote(name)),
         "uuid" => UUID.uuid4(),
-        "last_modified" => DateTime.utc_now(),
+        "last_modified" => DateTime.to_iso8601(DateTime.utc_now()),
         "first_block_id" => first_block["uuid"],
         "interaction_timeout" => interaction_timeout,
         "supported_modes" => ["RICH_MESSAGING"],
