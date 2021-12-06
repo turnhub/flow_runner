@@ -3,7 +3,13 @@ defmodule FlowRunner.FlowBuilder do
     quote do
       import FlowRunner.FlowBuilder
 
-      @default_language :eng
+      @default_language %{
+        "id" => UUID.uuid4(),
+        "label" => "English",
+        "iso_639_3" => "eng",
+        "variant" => nil,
+        "bcp_47" => nil
+      }
       @current_flow nil
       @flows []
       @blocks []
