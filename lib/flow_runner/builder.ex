@@ -6,11 +6,7 @@ defmodule FlowRunner.FlowBuilder do
     quote do
       import FlowRunner.FlowBuilder
 
-      @default_language %{
-        "id" => UUID.uuid4(),
-        "label" => "English",
-        "iso_639_3" => "eng"
-      }
+      @default_language nil
       @flows []
       @blocks []
       @resources []
@@ -31,7 +27,7 @@ defmodule FlowRunner.FlowBuilder do
     end
   end
 
-  defmacro default_language(code, display, opts \\ quote(do: [])) do
+  defmacro default_language(code, label, opts \\ quote(do: [])) do
     quote do
       opts = unquote(opts)
 
@@ -40,11 +36,13 @@ defmodule FlowRunner.FlowBuilder do
 
       @default_language variant
                         |> Map.merge(bcp_47)
-                        |> Map.merge(%{
-                          "id" => UUID.uuid4(),
-                          "label" => unquote(display),
-                          "iso_639_3" => to_string(unquote(code))
-                        })
+                        |> Map.merge(
+                          %{
+                            # "id" => UUID.uuid4(),
+                            # "label" => unquote(label),
+                            # "iso_639_3" => to_string(unquote(code))
+                          }
+                        )
     end
   end
 
@@ -260,24 +258,11 @@ defmodule FlowRunner.FlowBuilder do
         [master | translations]
       end
 
-      def translate(code, text) do
-        {_language, translation} =
-          Enum.find(@translations, fn {language, _translation} ->
-            language["iso_639_3"] == to_string(code)
-          end)
-
-        translation[text]
-      end
-
       def languages() do
         @translations
         |> Enum.map(fn {language, _translation} -> language end)
         |> then(fn translations ->
-          if @default_language do
-            [@default_language] ++ translations
-          else
-            translations
-          end
+          [@default_language] ++ translations
         end)
       end
     end
