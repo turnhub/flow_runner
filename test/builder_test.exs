@@ -4,6 +4,7 @@ defmodule FlowRunner.FlowBuilderTest do
 
   test "as_floip" do
     one_minute = :timer.minutes(1)
+    five_minutes = :timer.minutes(5)
 
     assert %{
              "specification_version" => "1.0.0-rc3",
@@ -70,6 +71,26 @@ defmodule FlowRunner.FlowBuilderTest do
                      "uuid" => reply_2_uuid
                    }
                  ]
+               },
+               %{
+                 "blocks" => [
+                   %{
+                     "config" => %{"prompt" => second_prompt_uuid},
+                     "exits" => [],
+                     "label" => "this is the second flow",
+                     "name" => "second_prompt",
+                     "type" => "MobilePrimitives.Message",
+                     "ui_metadata" => %{"canvas_coordinates" => %{"x" => 0, "y" => 0}},
+                     "uuid" => second_prompt_block_uuid
+                   }
+                 ],
+                 "first_block_id" => second_prompt_block_uuid,
+                 "interaction_timeout" => ^five_minutes,
+                 "languages" => languages,
+                 "last_modified" => _last_modified,
+                 "name" => "second_flow",
+                 "supported_modes" => ["RICH_MESSAGING"],
+                 "uuid" => _second_flow_uuid
                }
              ],
              "resources" => resources
@@ -107,5 +128,8 @@ defmodule FlowRunner.FlowBuilderTest do
     assert "Stuur vir my antwoord 2" == resource_value.(reply_2_choice_prompt, "afr")
     assert "Dit is antwoord 1" == resource_value.(reply_1_prompt_uuid, "afr")
     assert "Dit is antwoord 2" == resource_value.(reply_2_prompt_uuid, "afr")
+
+    assert "This is the second flow" == resource_value.(second_prompt_uuid, "eng")
+    assert "Dit is die tweede vloei" == resource_value.(second_prompt_uuid, "afr")
   end
 end

@@ -6,11 +6,8 @@ defmodule FlowRunner.FlowBuilder do
       @default_language %{
         "id" => UUID.uuid4(),
         "label" => "English",
-        "iso_639_3" => "eng",
-        "variant" => nil,
-        "bcp_47" => nil
+        "iso_639_3" => "eng"
       }
-      @current_flow nil
       @flows []
       @blocks []
       @resources []
@@ -35,13 +32,16 @@ defmodule FlowRunner.FlowBuilder do
     quote do
       opts = unquote(opts)
 
-      @default_language %{
-        "id" => UUID.uuid4(),
-        "label" => unquote(display),
-        "iso_639_3" => to_string(unquote(code)),
-        "variant" => opts[:variant],
-        "bcp_47" => opts[:bcp_47]
-      }
+      variant = if(variant = opts[:variant], do: %{"variant" => variant}, else: %{})
+      bcp_47 = if(bcp_47 = opts[:bcp_47], do: %{"bcp_47" => bcp_47}, else: %{})
+
+      @default_language variant
+                        |> Map.merge(bcp_47)
+                        |> Map.merge(%{
+                          "id" => UUID.uuid4(),
+                          "label" => unquote(display),
+                          "iso_639_3" => to_string(unquote(code))
+                        })
     end
   end
 
@@ -50,13 +50,17 @@ defmodule FlowRunner.FlowBuilder do
       translation = unquote(block)
       opts = unquote(opts)
 
-      language = %{
-        "id" => UUID.uuid4(),
-        "label" => unquote(display),
-        "iso_639_3" => to_string(unquote(code)),
-        "variant" => opts[:variant],
-        "bcp_47" => opts[:bcp_47]
-      }
+      variant = if(variant = opts[:variant], do: %{"variant" => variant}, else: %{})
+      bcp_47 = if(bcp_47 = opts[:bcp_47], do: %{"bcp_47" => bcp_47}, else: %{})
+
+      language =
+        variant
+        |> Map.merge(bcp_47)
+        |> Map.merge(%{
+          "id" => UUID.uuid4(),
+          "label" => unquote(display),
+          "iso_639_3" => to_string(unquote(code))
+        })
 
       @translations [{language, translation} | @translations]
     end
@@ -75,8 +79,10 @@ defmodule FlowRunner.FlowBuilder do
       flow = %{
         "name" => to_string(unquote(name)),
         "uuid" => UUID.uuid4(),
+        "last_modified" => DateTime.utc_now(),
         "first_block_id" => first_block["uuid"],
         "interaction_timeout" => interaction_timeout,
+        "supported_modes" => ["RICH_MESSAGING"],
         "blocks" => ordered_blocks
       }
 
@@ -85,10 +91,18 @@ defmodule FlowRunner.FlowBuilder do
     end
   end
 
-  defmacro block(name, do: code_block) do
+  defmacro block(name, opts \\ quote(do: []), do: code_block) do
     quote do
       {resources, block} = unquote(code_block)
-      block = Map.merge(block, %{"uuid" => UUID.uuid4(), "name" => to_string(unquote(name))})
+      opts = unquote(opts)
+      ui_metadata = opts[:ui_metadata] || %{"canvas_coordinates" => %{"x" => 0, "y" => 0}}
+
+      block =
+        Map.merge(block, %{
+          "uuid" => UUID.uuid4(),
+          "name" => to_string(unquote(name)),
+          "ui_metadata" => ui_metadata
+        })
 
       @blocks [block | @blocks]
       @resources resources ++ @resources
@@ -143,7 +157,8 @@ defmodule FlowRunner.FlowBuilder do
              "uuid" => UUID.uuid4(),
              "name" => "#{to_string(key)}_exit",
              "test" => "block.value = \"#{to_string(key)}\"",
-             "destination_block" => {:block, key}
+             "destination_block" => {:block, key},
+             "config" => %{}
            }
          end)
      }}
@@ -200,18 +215,18 @@ defmodule FlowRunner.FlowBuilder do
       end
 
       defp resolve_exit_destination_blocks(%{"blocks" => blocks} = flow) do
-        blocks =
-          Enum.map(blocks, fn %{"exits" => exits} = block ->
-            exits =
-              Enum.map(exits, fn %{"destination_block" => {:block, key}} = defined_exit ->
-                block = Enum.find(blocks, fn block -> block["name"] == to_string(key) end)
-                Map.put(defined_exit, "destination_block", block["uuid"])
-              end)
+        blocks = Enum.map(blocks, &resolve_exit_destination_block_exits(blocks, &1))
+        Map.put(flow, "blocks", blocks)
+      end
 
-            Map.put(block, "exits", exits)
+      defp resolve_exit_destination_block_exits(all_blocks, %{"exits" => exits} = block) do
+        exits =
+          Enum.map(exits, fn %{"destination_block" => {:block, key}} = defined_exit ->
+            block = Enum.find(all_blocks, fn block -> block["name"] == to_string(key) end)
+            Map.put(defined_exit, "destination_block", block["uuid"])
           end)
 
-        Map.put(flow, "blocks", blocks)
+        Map.put(block, "exits", exits)
       end
 
       defp resource_values_for(%{

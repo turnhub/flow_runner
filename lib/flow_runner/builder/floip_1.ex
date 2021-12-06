@@ -26,9 +26,9 @@ defmodule FlowRunner.Builder.Floip1 do
     end
   end
 
-  # flow :second_flow do
-  #   block(:second_prompt, do: text("This is the second flow"))
-  # end
+  flow :second_flow do
+    block(:second_prompt, do: text("This is the second flow"))
+  end
 
   translation :afr, "Afrikaans" do
     %{
