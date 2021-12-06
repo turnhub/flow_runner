@@ -5,7 +5,7 @@ defmodule FlowRunner.Builder.Floip1 do
   """
   use FlowRunner.FlowBuilder
 
-  default_language(:eng, "English")
+  language(:eng, "English")
   name("My flow")
   description("The description")
 
