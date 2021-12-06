@@ -1,4 +1,7 @@
 defmodule FlowRunner.FlowBuilder do
+  @moduledoc """
+  A Flow Builder DSL
+  """
   defmacro __using__(_opts) do
     quote do
       import FlowRunner.FlowBuilder
