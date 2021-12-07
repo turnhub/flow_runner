@@ -160,6 +160,7 @@ defmodule FlowRunner.FlowBuilder do
              "config" => %{}
            }
          end)
+         |> ensure_has_default_exit()
      }}
   end
 
@@ -174,8 +175,24 @@ defmodule FlowRunner.FlowBuilder do
        "config" => %{
          "prompt" => text_resource["uuid"]
        },
-       "exits" => []
+       "exits" => ensure_has_default_exit([])
      }}
+  end
+
+  defp ensure_has_default_exit(exits) do
+    if Enum.find(exits, &(&1["default"] == true)) do
+      exits
+    else
+      exits ++
+        [
+          %{
+            "uuid" => UUID.uuid4(),
+            "name" => "Default",
+            "default" => true,
+            "config" => %{}
+          }
+        ]
+    end
   end
 
   def minutes(minutes), do: :timer.minutes(minutes)
@@ -220,9 +237,13 @@ defmodule FlowRunner.FlowBuilder do
 
       defp resolve_exit_destination_block_exits(all_blocks, %{"exits" => exits} = block) do
         exits =
-          Enum.map(exits, fn %{"destination_block" => {:block, key}} = defined_exit ->
-            block = Enum.find(all_blocks, fn block -> block["name"] == to_string(key) end)
-            Map.put(defined_exit, "destination_block", block["uuid"])
+          Enum.map(exits, fn
+            %{"destination_block" => {:block, key}} = defined_exit ->
+              block = Enum.find(all_blocks, fn block -> block["name"] == to_string(key) end)
+              Map.put(defined_exit, "destination_block", block["uuid"])
+
+            %{} = defined_exit ->
+              defined_exit
           end)
 
         Map.put(block, "exits", exits)

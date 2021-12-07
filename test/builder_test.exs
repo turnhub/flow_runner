@@ -47,6 +47,12 @@ defmodule FlowRunner.FlowBuilderTest do
                          "name" => "reply_2_exit",
                          "test" => "block.value = \"reply_2\"",
                          "uuid" => _reply_2_exit_uuid
+                       },
+                       %{
+                         "name" => "Default",
+                         "default" => true,
+                         "config" => %{},
+                         "uuid" => _
                        }
                      ],
                      "label" => "hello world",
@@ -56,7 +62,14 @@ defmodule FlowRunner.FlowBuilderTest do
                    },
                    %{
                      "config" => %{"prompt" => reply_1_prompt_uuid},
-                     "exits" => [],
+                     "exits" => [
+                       %{
+                         "name" => "Default",
+                         "default" => true,
+                         "config" => %{},
+                         "uuid" => _
+                       }
+                     ],
                      "label" => "this is reply 1",
                      "name" => "reply_1",
                      "type" => "MobilePrimitives.Message",
@@ -64,7 +77,14 @@ defmodule FlowRunner.FlowBuilderTest do
                    },
                    %{
                      "config" => %{"prompt" => reply_2_prompt_uuid},
-                     "exits" => [],
+                     "exits" => [
+                       %{
+                         "name" => "Default",
+                         "default" => true,
+                         "config" => %{},
+                         "uuid" => _
+                       }
+                     ],
                      "label" => "this is reply 2",
                      "name" => "reply_2",
                      "type" => "MobilePrimitives.Message",
@@ -76,7 +96,14 @@ defmodule FlowRunner.FlowBuilderTest do
                  "blocks" => [
                    %{
                      "config" => %{"prompt" => second_prompt_uuid},
-                     "exits" => [],
+                     "exits" => [
+                       %{
+                         "name" => "Default",
+                         "default" => true,
+                         "config" => %{},
+                         "uuid" => _
+                       }
+                     ],
                      "label" => "this is the second flow",
                      "name" => "second_prompt",
                      "type" => "MobilePrimitives.Message",
