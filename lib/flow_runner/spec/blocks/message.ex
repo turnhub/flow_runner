@@ -34,7 +34,7 @@ defmodule FlowRunner.Spec.Blocks.Message do
           :ok,
           %Context{context | waiting_for_user_input: false, last_block_uuid: block.uuid},
           %Output{
-            prompt: %{value: value}
+            prompt: %{prompt | value: value}
           }
         }
 
