@@ -20,7 +20,7 @@ defmodule FlowRunner.Spec.Blocks.Output do
         %Container{}
       ) do
     # When Flow Results are implemented we should store the output results.
-    {:ok, %Context{context | last_block_uuid: block.uuid}, %FlowRunner.Output{}}
+    {:ok, %Context{context | last_block_uuid: block.uuid}, %FlowRunner.Output{block: block}}
   end
 
   def evaluate_outgoing(_flow, _block, user_input) do

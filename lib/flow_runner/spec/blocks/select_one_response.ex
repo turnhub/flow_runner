@@ -100,6 +100,7 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
           :ok,
           %Context{context | waiting_for_user_input: true, last_block_uuid: block.uuid},
           %Output{
+            block: block,
             prompt: %{prompt | value: value},
             choices:
               block.config.choices

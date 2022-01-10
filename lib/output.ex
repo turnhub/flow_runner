@@ -9,6 +9,7 @@ defmodule FlowRunner.Output do
     :contact_update_value,
     :group_update_key,
     :group_update_name,
-    :group_update_is_member
+    :group_update_is_member,
+    :block
   ]
 end

@@ -46,7 +46,7 @@ defmodule FlowRunner.Spec.Blocks.Log do
           }
       end
 
-    {:ok, context, %Output{}}
+    {:ok, context, %Output{block: block}}
   end
 
   def evaluate_outgoing(_flow, _block, user_input) do
