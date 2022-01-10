@@ -20,7 +20,7 @@ defmodule FlowRunner.Spec.Blocks.SetContactProperty do
         %Container{}
       ) do
     # This is a no-op as we check these fields for all blocks in FlowRunner module.
-    {:ok, %Context{context | last_block_uuid: block.uuid}, %FlowRunner.Output{}}
+    {:ok, %Context{context | last_block_uuid: block.uuid}, %FlowRunner.Output{block: block}}
   end
 
   def evaluate_outgoing(_flow, _block, user_input) do

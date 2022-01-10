@@ -16,7 +16,9 @@ defmodule FlowRunnerTest do
       FlowRunner.create_context(container, "62d0084d-e88f-48c3-ac64-7a15855f0a43", "eng", "TEXT")
 
     {:ok, _context, _, output} = FlowRunner.next_block(container, context)
-    assert %{prompt: %{value: "welcome to this block"}} = output
+    assert output.prompt.value == "welcome to this block"
+    assert output.prompt.modes == ["TEXT"]
+    assert output.prompt.content_type == "TEXT"
   end
 
   @tag flow: "test/selectoneresponse.flow"

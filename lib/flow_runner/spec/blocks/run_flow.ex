@@ -40,7 +40,7 @@ defmodule FlowRunner.Spec.Blocks.RunFlow do
         last_block_uuid: nil
     }
 
-    {:ok, next_context, %Output{}}
+    {:ok, next_context, %Output{block: block}}
   end
 
   def evaluate_outgoing(_flow, _block, user_input) do

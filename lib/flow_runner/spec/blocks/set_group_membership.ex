@@ -39,7 +39,8 @@ defmodule FlowRunner.Spec.Blocks.SetGroupMembership do
     output = %Output{
       group_update_key: key,
       group_update_name: name,
-      group_update_is_member: is_member
+      group_update_is_member: is_member,
+      block: block
     }
 
     {:ok, %Context{context | last_block_uuid: block.uuid}, output}

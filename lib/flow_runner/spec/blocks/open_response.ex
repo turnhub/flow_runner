@@ -40,7 +40,8 @@ defmodule FlowRunner.Spec.Blocks.OpenResponse do
           :ok,
           %Context{context | waiting_for_user_input: true, last_block_uuid: block.uuid},
           %Output{
-            prompt: %{value: value}
+            block: block,
+            prompt: %{prompt | value: value}
           }
         }
 
