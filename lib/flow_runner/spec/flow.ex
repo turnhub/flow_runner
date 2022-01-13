@@ -4,7 +4,8 @@ defmodule FlowRunner.Spec.Flow do
   """
   use FlowRunner.SpecLoader,
     using: [
-      blocks: FlowRunner.Spec.Block
+      blocks: FlowRunner.Spec.Block,
+      languages: FlowRunner.Spec.Language
     ]
 
   @derive Jason.Encoder
