@@ -26,13 +26,13 @@ defmodule FlowRunner.Spec.Resource do
           {:ok, %ResourceValue{}} | {:error, iodata()}
   def matching_resource(%Resource{values: resources}, language, mode, %Flow{languages: languages}) do
     # Identify the language object that corresponds to our iso-639-3 code.
-    languages = Enum.filter(languages, &(&1["iso_639_3"] == language))
+    languages = Enum.filter(languages, &(&1.iso_639_3 == language))
 
     if length(languages) > 0 do
       [language | _] = languages
       # Filter resources by language and mode.
       matching_source? = fn x ->
-        x.language_id == language["id"] && ResourceValue.supports_mode(x, mode)
+        x.language_id == language.id && ResourceValue.supports_mode(x, mode)
       end
 
       resource_values = Enum.filter(resources, matching_source?)

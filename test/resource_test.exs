@@ -7,8 +7,8 @@ defmodule ResourceTest do
 
   @flow %Flow{
     languages: [
-      %{"id" => "22", "iso_639_3" => "eng", "label" => "English"},
-      %{"id" => "23", "iso_639_3" => "fra", "label" => "French"}
+      %{id: "22", iso_639_3: "eng", label: "English"},
+      %{id: "23", iso_639_3: "fra", label: "French"}
     ]
   }
 
