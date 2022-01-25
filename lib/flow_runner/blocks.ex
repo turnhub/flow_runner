@@ -3,8 +3,12 @@ defmodule FlowRunner.Blocks do
   The default blocks as per the FLOIP spec 1.0.0-rc3
   """
 
-  @callback blocks() :: %{String.t() => module}
+  @callback blocks() :: %{(type :: String.t()) => implementation :: module}
 
+  @doc """
+  Returns the default blocks as per the FLOIP spec
+  """
+  @spec blocks() :: %{(type :: String.t()) => implementation :: module}
   def blocks() do
     %{
       "Core.Case" => FlowRunner.Spec.Blocks.Case,
