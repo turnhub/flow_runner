@@ -18,7 +18,7 @@ defmodule FlowRunner.SpecLoader do
 
   @callback cast!(blocks_module :: module, map | [map]) :: any | [any]
   @callback load!(blocks_module :: module, map | [map]) :: any | [any]
-  @callback validate!(any) :: any
+  @callback validate!(blocks_module :: module, any) :: any
 
   defmacro __using__(opts) do
     manually_loaded_fields =
@@ -47,13 +47,15 @@ defmodule FlowRunner.SpecLoader do
       def load!(blocks_module, map) when is_map(map) do
         casted_map = cast!(blocks_module, map)
 
-        FlowRunner.SpecLoader.load!(
-          blocks_module,
-          unquote(mod),
-          casted_map,
-          unquote(manually_loaded_fields)
-        )
-        |> validate!()
+        implementation =
+          FlowRunner.SpecLoader.load!(
+            blocks_module,
+            unquote(mod),
+            casted_map,
+            unquote(manually_loaded_fields)
+          )
+
+        validate!(blocks_module, implementation)
       end
 
       # @spec load(module, map | [map]) ::
@@ -90,15 +92,15 @@ defmodule FlowRunner.SpecLoader do
 
       @doc "Validate a #{unquote(mod)} struct using Vex.validate"
       @impl true
-      @spec validate!(t()) :: t()
-      defdelegate validate!(impl), to: FlowRunner.SpecLoader
+      @spec validate!(blocks_module :: module, t()) :: t()
+      defdelegate validate!(blocks_module, impl), to: FlowRunner.SpecLoader
 
-      defoverridable(validate!: 1, cast!: 2)
+      defoverridable(load!: 2, validate!: 2, cast!: 2)
     end
   end
 
   @doc "Validate a struct using Vex.validate"
-  def validate!(impl) do
+  def validate!(_blocks_module, impl) do
     case Vex.validate(impl) do
       {:ok, impl} ->
         impl

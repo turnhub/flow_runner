@@ -9,11 +9,21 @@ defmodule FlowRunner.Spec.Block do
     ]
 
   alias FlowRunner.Context
+  alias FlowRunner.Output
   alias FlowRunner.Spec.Block
+  alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Exit
   alias FlowRunner.Spec.Flow
 
   require Logger
+
+  @callback evaluate_incoming(Container.t(), Flow.t(), Block.t(), Context.t()) ::
+              {:ok, Context.t(), Output.t()}
+              | {:error, String.t()}
+
+  @callback evaluate_outgoing(Flow.t(), Block.t(), user_input :: any) ::
+              {:ok, user_input :: any}
+              | {:invalid, reason :: String.t()}
 
   @derive Jason.Encoder
   defstruct uuid: nil,
@@ -55,8 +65,8 @@ defmodule FlowRunner.Spec.Block do
   def cast!(_blocks_module, map), do: map
 
   @impl true
-  def validate!(impl) do
-    impl = FlowRunner.SpecLoader.validate!(impl)
+  def validate!(blocks_module, impl) do
+    impl = super(blocks_module, impl)
 
     default_exits =
       impl.exits
@@ -151,7 +161,7 @@ defmodule FlowRunner.Spec.Block do
 
   def evaluate_incoming(container, flow, %Block{type: type} = block, context) do
     if implementation = get_block(container.blocks_module, type) do
-      apply(implementation, :evaluate_incoming, [flow, block, context, container])
+      implementation.evaluate_incoming(container, flow, block, context)
     else
       {:error, "unknown block type #{type}"}
     end

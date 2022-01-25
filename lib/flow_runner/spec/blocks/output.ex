@@ -2,6 +2,7 @@ defmodule FlowRunner.Spec.Blocks.Output do
   @moduledoc """
   Output to a Flow Result which is not yet implemented.
   """
+  @behaviour FlowRunner.Spec.Block
   alias FlowRunner.Context
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container
@@ -13,16 +14,18 @@ defmodule FlowRunner.Spec.Blocks.Output do
     %{}
   end
 
+  @impl true
   def evaluate_incoming(
+        %Container{},
         %Flow{},
         %Block{} = block,
-        %Context{} = context,
-        %Container{}
+        %Context{} = context
       ) do
     # When Flow Results are implemented we should store the output results.
     {:ok, %Context{context | last_block_uuid: block.uuid}, %FlowRunner.Output{block: block}}
   end
 
+  @impl true
   def evaluate_outgoing(_flow, _block, user_input) do
     {:ok, user_input}
   end

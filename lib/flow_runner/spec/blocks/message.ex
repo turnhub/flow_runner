@@ -2,6 +2,8 @@ defmodule FlowRunner.Spec.Blocks.Message do
   @moduledoc """
   A type of block that sends a message to the user.
   """
+  @behaviour FlowRunner.Spec.Block
+
   alias FlowRunner.Context
   alias FlowRunner.Output
   alias FlowRunner.Spec.Block
@@ -23,7 +25,8 @@ defmodule FlowRunner.Spec.Blocks.Message do
     raise "invalid 'config' for MobilePrimitive.Message block, 'prompt' field is required and needs to be a UUID."
   end
 
-  def evaluate_incoming(%Flow{} = flow, %Block{} = block, context, container) do
+  @impl true
+  def evaluate_incoming(container, %Flow{} = flow, %Block{} = block, context) do
     {:ok, resource} = Container.fetch_resource_by_uuid(container, block.config.prompt)
 
     case Resource.matching_resource(resource, context.language, context.mode, flow) do
@@ -44,6 +47,7 @@ defmodule FlowRunner.Spec.Blocks.Message do
     end
   end
 
+  @impl true
   def evaluate_outgoing(_flow, _block, user_input) do
     {:ok, user_input}
   end

@@ -11,10 +11,9 @@ defmodule FlowRunner.Compile do
     compile(data)
   end
 
-  @spec compile(map) :: {:ok, FlowRunner.Spec.Container.t()}
   def compile(data), do: compile(FlowRunner.DefaultBlocks, data)
 
-  @spec compile(module, map) :: {:ok, FlowRunner.Spec.Container.t()}
+  @spec compile(module, map) :: {:ok, FlowRunner.Spec.Container.t()} | {:error, String.t()}
   def compile(module, data) when is_map(data) do
     {:ok, compile!(module, data)}
   rescue

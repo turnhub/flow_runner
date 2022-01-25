@@ -12,4 +12,15 @@ defmodule FlowRunner.Output do
     :group_update_is_member,
     :block
   ]
+
+  @type t :: %__MODULE__{
+          prompt: String.t() | nil,
+          choices: [{String.t(), String.t()}] | nil,
+          contact_update_key: String.t() | nil,
+          contact_update_value: any,
+          group_update_key: String.t() | nil,
+          group_update_name: String.t() | nil,
+          group_update_is_member: boolean | nil,
+          block: FlowRunner.Spec.Block.t() | nil
+        }
 end
