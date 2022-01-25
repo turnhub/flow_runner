@@ -154,6 +154,10 @@ defmodule FlowRunner.Spec.Block do
     {:error, "unexpectedly received user input"}
   end
 
+  @doc """
+  Evaluate any contact updates that a block may specify
+  """
+  @spec evaluate_contact_properties(Block.t()) :: Output.t()
   def evaluate_contact_properties(%Block{
         config: %{
           set_contact_property: %{
@@ -162,14 +166,14 @@ defmodule FlowRunner.Spec.Block do
           }
         }
       }) do
-    %{
+    %Output{
       contact_update_key: property_key,
       contact_update_value: property_value
     }
   end
 
   def evaluate_contact_properties(_block) do
-    %{}
+    %Output{}
   end
 
   def evaluate_incoming(container, flow, %Block{type: type} = block, context) do

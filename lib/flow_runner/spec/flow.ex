@@ -38,8 +38,16 @@ defmodule FlowRunner.Spec.Flow do
   validates(:uuid, presence: true, uuid: [format: :default])
 
   def cast!(params) do
-    params
-    |> cast_datetime!("last_modified")
+    cast_datetime!(params, "last_modified")
+  end
+
+  def cast_datetime!(params, field_name) do
+    if value = Map.get(params, field_name) do
+      {:ok, datetime, _offset} = DateTime.from_iso8601(value)
+      Map.put(params, field_name, datetime)
+    else
+      params
+    end
   end
 
   def fetch_block(flow, block_uuid) when is_list(flow.blocks) do

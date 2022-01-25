@@ -63,15 +63,6 @@ defmodule FlowRunner.SpecLoader do
       @spec cast!(module, map) :: map
       def cast!(_module, map), do: map
 
-      def cast_datetime!(params, field_name) do
-        if value = Map.get(params, field_name) do
-          {:ok, datetime, _offset} = DateTime.from_iso8601(value)
-          Map.put(params, field_name, datetime)
-        else
-          params
-        end
-      end
-
       @doc "Validate a #{unquote(mod)} struct using Vex.validate"
       @impl true
       @spec validate!(blocks_module :: module, t()) :: t()

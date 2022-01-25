@@ -150,7 +150,7 @@ defmodule FlowRunner do
 
     case Block.evaluate_incoming(container, flow, next_block, context) do
       {:ok, context, output} ->
-        {:ok, context, next_block, Map.merge(output, contact_output)}
+        {:ok, context, next_block, Output.merge(output, contact_output)}
 
       {:error, reason} ->
         {:error, reason}
