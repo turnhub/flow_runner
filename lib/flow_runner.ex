@@ -42,6 +42,8 @@ defmodule FlowRunner do
   @doc """
   If the current block is not waiting on user input then FlowRunner proceeds automatically to
   the next block with the the context of the previous block by calling this callback.
+
+  This is where we evaluate the block we have transitioned to and return updated context and output.
   """
   @callback evaluate_next_block(Container.t(), Flow.t(), Block.t(), Context.t()) ::
               {:ok, Context.t(), Block.t(), Output.t()}

@@ -58,24 +58,6 @@ defmodule FlowRunner.SpecLoader do
         validate!(blocks_module, implementation)
       end
 
-      # @spec load(module, map | [map]) ::
-      #         {:ok, t()}
-      #         | {:ok, [t()]}
-      #         | {:error, String.t()}
-      # def load(blocks_module, data) do
-      #   {:ok, validate!(load!(blocks_module, cast!(blocks_module, data)))}
-      # rescue
-      #   error in KeyError ->
-      #     {:error,
-      #      "Key #{error.key} is not valid for #{unquote(mod)}} while trying to load #{inspect(data)}"}
-
-      #   error in ArgumentError ->
-      #     {:error, error.message}
-
-      #   error in RuntimeError ->
-      #     {:error, error.message}
-      # end
-
       @doc "Cast the received fields to their internal representation"
       @impl true
       @spec cast!(module, map) :: map

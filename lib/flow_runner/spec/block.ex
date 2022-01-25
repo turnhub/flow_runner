@@ -17,10 +17,23 @@ defmodule FlowRunner.Spec.Block do
 
   require Logger
 
+  @doc """
+  # Evaluate the block we have transitioned to and return updated context and output.
+  """
   @callback evaluate_incoming(Container.t(), Flow.t(), Block.t(), Context.t()) ::
               {:ok, Context.t(), Output.t()}
               | {:error, String.t()}
 
+  @doc """
+  On leaving a block give the block an opportunity to evaluate the inputs received.
+  This allows the block to fulfill tasks such as validation.
+
+  If the block returns an `{:ok, user_input}` tuple, use the validated input for
+  further processing and inclusion in the context vars for next blocks.
+
+  If the block returns and `{:invalid, reason}` tuple the flow runner will exit through
+  the default response.
+  """
   @callback evaluate_outgoing(Flow.t(), Block.t(), user_input :: any) ::
               {:ok, user_input :: any}
               | {:invalid, reason :: String.t()}
@@ -182,8 +195,7 @@ defmodule FlowRunner.Spec.Block do
 
     block_module = get_block(container.blocks_module, type)
 
-    with {:ok, user_input} <-
-           apply(block_module, :evaluate_outgoing, [flow, block, user_input]),
+    with {:ok, user_input} <- block_module.evaluate_outgoing(flow, block, user_input),
          # Process any user input we have been given.
          {:ok, context} <-
            Block.evaluate_user_input(
