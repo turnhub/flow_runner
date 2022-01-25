@@ -13,7 +13,12 @@ defmodule FlowRunnerTest do
   @tag flow: "test/basic.flow"
   test "run a flow", %{container: container} do
     {:ok, context} =
-      FlowRunner.create_context(container, "62d0084d-e88f-48c3-ac64-7a15855f0a43", "eng", "TEXT")
+      FlowRunner.create_context(
+        container,
+        "62d0084d-e88f-48c3-ac64-7a15855f0a43",
+        "eng",
+        "TEXT"
+      )
 
     {:ok, _context, _, output} = FlowRunner.next_block(container, context)
     assert output.prompt.value == "welcome to this block"

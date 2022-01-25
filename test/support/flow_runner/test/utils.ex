@@ -24,12 +24,16 @@ defmodule FlowRunner.Test.Utils do
   """
   def with_flow_loader!(context) do
     if flow_file = Map.get(context, :flow) do
-      {:ok, container} =
+      blocks_module = Map.get(context, :blocks_module, FlowRunner.DefaultBlocks)
+
+      json =
         "priv/fixtures/"
         |> Path.join(flow_file)
         |> Path.expand()
         |> File.read!()
-        |> FlowRunner.compile()
+        |> Jason.decode!()
+
+      container = FlowRunner.compile!(blocks_module, json)
 
       {:ok, container: container}
     else

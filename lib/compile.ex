@@ -11,12 +11,21 @@ defmodule FlowRunner.Compile do
     compile(data)
   end
 
-  def compile(data) when is_map(data) do
-    FlowRunner.Spec.Container.load(data)
+  @spec compile(map) :: {:ok, FlowRunner.Spec.Container.t()}
+  def compile(data), do: compile(FlowRunner.DefaultBlocks, data)
+
+  @spec compile(module, map) :: {:ok, FlowRunner.Spec.Container.t()}
+  def compile(module, data) when is_map(data) do
+    {:ok, compile!(module, data)}
+  rescue
+    error in RuntimeError -> {:error, error.message}
   end
 
   @spec compile!(binary | map) :: FlowRunner.Spec.Container.t()
-  def compile!(data) do
-    FlowRunner.Spec.Container.load!(data)
+  def compile!(data), do: compile!(FlowRunner.DefaultBlocks, data)
+
+  @spec compile!(module, binary | map) :: FlowRunner.Spec.Container.t()
+  def compile!(module, data) do
+    FlowRunner.Spec.Container.load!(module, data)
   end
 end

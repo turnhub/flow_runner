@@ -7,17 +7,33 @@ defmodule FlowRunner do
   alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Flow
 
+  @callback create_context(
+              Container.t(),
+              flow_uuid :: String.t(),
+              language :: String.t(),
+              mode :: String.t(),
+              var :: map
+            ) :: {:ok, FlowRunner.Context.t()}
+
+  @callback next_block(Container.t(), Context.t(), user_input :: nil | String.t()) ::
+              {:ok, %FlowRunner.Context{}, %FlowRunner.Spec.Block{},
+               nil
+               | %FlowRunner.Output{}}
+  @callback blocks() :: %{String.t() => module}
+
   @doc """
   Compile takes a json flow and returns a parsed and validated
   flow as a tuple.
   """
   defdelegate compile(json), to: FlowRunner.Compile
+  defdelegate compile(blocks_module, json), to: FlowRunner.Compile
 
   @doc """
   Compile takes a json flow and returns a parsed and validated
   flow.
   """
   defdelegate compile!(json), to: FlowRunner.Compile
+  defdelegate compile!(blocks_module, json), to: FlowRunner.Compile
 
   @doc """
   """
@@ -50,7 +66,11 @@ defmodule FlowRunner do
     end
   end
 
-  @spec next_block(FlowRunner.Spec.Container.t(), %FlowRunner.Context{}, any) ::
+  @spec next_block(
+          FlowRunner.Spec.Container.t(),
+          %FlowRunner.Context{},
+          any
+        ) ::
           {:end, any}
           | {:error, any}
           | {:ok, %FlowRunner.Context{}, %FlowRunner.Spec.Block{},
@@ -83,7 +103,7 @@ defmodule FlowRunner do
       ) do
     # Identify the block we are transitioning to and then evaluate incoming block rules.
     with {:ok, flow} <- Container.fetch_flow_by_uuid(container, context.current_flow_uuid),
-         {:ok, context, next_block} <- FlowRunner.find_next_block(flow, context, user_input) do
+         {:ok, context, next_block} <- find_next_block(container, flow, context, user_input) do
       # If we have ended a Core.RunFlow block then replace the context with its parent.
       if next_block == nil && context.parent_context != nil do
         {:ok, context.parent_context, nil, nil}
@@ -107,7 +127,7 @@ defmodule FlowRunner do
     # Evaluate the block we have transitioned to and return updated context and output.
     contact_output = Block.evaluate_contact_properties(next_block)
 
-    case Block.evaluate_incoming(flow, next_block, context, container) do
+    case Block.evaluate_incoming(container, flow, next_block, context) do
       {:ok, context, output} ->
         {:ok, context, next_block, Map.merge(output, contact_output)}
 
@@ -116,7 +136,12 @@ defmodule FlowRunner do
     end
   end
 
-  def find_next_block(%Flow{} = flow, %Context{last_block_uuid: nil} = context, _user_input) do
+  def find_next_block(
+        _container,
+        %Flow{} = flow,
+        %Context{last_block_uuid: nil} = context,
+        _user_input
+      ) do
     # If this is the first time we are executing this flow (last_block_uuid == nil) then
     # transition to the first block.
     {:ok, next_block} = Flow.fetch_block(flow, flow.first_block_id)
@@ -124,6 +149,7 @@ defmodule FlowRunner do
   end
 
   def find_next_block(
+        container,
         %Flow{} = flow,
         %Context{last_block_uuid: last_block_uuid} = context,
         user_input
@@ -132,7 +158,7 @@ defmodule FlowRunner do
     # exits to identify the next block.
     with {:ok, previous_block} <- Flow.fetch_block(flow, last_block_uuid),
          {:ok, context, next_block} <-
-           Block.evaluate_outgoing(previous_block, context, flow, user_input) do
+           Block.evaluate_outgoing(container, flow, previous_block, context, user_input) do
       {:ok, context, next_block}
     else
       err -> err

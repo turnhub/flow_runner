@@ -43,26 +43,18 @@ defmodule FlowRunner.Spec.Block do
   validates(:uuid, presence: true, uuid: [format: :default])
   validates(:type, presence: true)
 
-  @blocks %{
-    "Core.Case" => FlowRunner.Spec.Blocks.Case,
-    "Core.Log" => FlowRunner.Spec.Blocks.Log,
-    "Core.Output" => FlowRunner.Spec.Blocks.Output,
-    "Core.RunFlow" => FlowRunner.Spec.Blocks.RunFlow,
-    "Core.SetContactProperty" => FlowRunner.Spec.Blocks.SetContactProperty,
-    "Core.SetGroupMembership" => FlowRunner.Spec.Blocks.SetGroupMembership,
-    "MobilePrimitives.SelectOneResponse" => FlowRunner.Spec.Blocks.SelectOneResponse,
-    "MobilePrimitives.Message" => FlowRunner.Spec.Blocks.Message,
-    "MobilePrimitives.NumericResponse" => FlowRunner.Spec.Blocks.NumericResponse,
-    "MobilePrimitives.OpenResponse" => FlowRunner.Spec.Blocks.OpenResponse
-  }
+  def get_block(blocks_module, type), do: Map.get(blocks_module.blocks, type)
 
-  def cast!(%{"type" => type} = map) do
+  @impl true
+  def cast!(blocks_module, %{"type" => type} = map) do
     config = Map.get(map, "config", %{})
-    Map.put(map, "config", load_config_for_type!(type, config))
+    Map.put(map, "config", load_config_for_type!(blocks_module, type, config))
   end
 
-  def cast!(map), do: map
+  @impl true
+  def cast!(_blocks_module, map), do: map
 
+  @impl true
   def validate!(impl) do
     impl = FlowRunner.SpecLoader.validate!(impl)
 
@@ -98,9 +90,9 @@ defmodule FlowRunner.Spec.Block do
     %{}
   end
 
-  def load_config_for_type!(type, config) do
+  def load_config_for_type!(blocks_module, type, config) do
     validated_config =
-      if implementation = Map.get(@blocks, type) do
+      if implementation = get_block(blocks_module, type) do
         apply(implementation, :validate_config!, [config])
       else
         raise("unknown block type '#{type}'")
@@ -157,23 +149,31 @@ defmodule FlowRunner.Spec.Block do
     %{}
   end
 
-  def evaluate_incoming(flow, %Block{type: type} = block, context, container) do
-    if implementation = Map.get(@blocks, type) do
+  def evaluate_incoming(container, flow, %Block{type: type} = block, context) do
+    if implementation = get_block(container.blocks_module, type) do
       apply(implementation, :evaluate_incoming, [flow, block, context, container])
     else
       {:error, "unknown block type #{type}"}
     end
   end
 
-  def evaluate_outgoing(block, %Context{} = context, flow, user_input) do
+  def evaluate_outgoing(
+        container,
+        flow,
+        %Block{type: type} = block,
+        %Context{} = context,
+        user_input
+      ) do
     # Give the block an opportunity to evaluate the input. If it returns :ok,
     # we go ahead and store the user input, evaluate the exit and then move
     # onto the next block.
     # If it returns :invalid we will exit through the default block as the
     # block has failed validations.
 
+    block_module = get_block(container.blocks_module, type)
+
     with {:ok, user_input} <-
-           apply(Map.get(@blocks, block.type), :evaluate_outgoing, [flow, block, user_input]),
+           apply(block_module, :evaluate_outgoing, [flow, block, user_input]),
          # Process any user input we have been given.
          {:ok, context} <-
            Block.evaluate_user_input(
