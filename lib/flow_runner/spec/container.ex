@@ -18,7 +18,7 @@ defmodule FlowRunner.Spec.Container do
             flows: [],
             resources: [],
             vendor_metadata: %{},
-            blocks_module: FlowRunner.DefaultBlocks
+            blocks_module: FlowRunner.Blocks
 
   @type t :: %__MODULE__{
           specification_version: String.t(),

@@ -2,8 +2,11 @@ defmodule RunnerTest do
   use ExUnit.Case, async: true
 
   defmodule CustomBlocks do
+    @behaviour FlowRunner.Blocks
+
+    @impl true
     def blocks do
-      Map.merge(FlowRunner.DefaultBlocks.blocks(), %{
+      Map.merge(FlowRunner.Blocks.blocks(), %{
         "Io.Turn.Custom" => FlowRunner.Spec.Blocks.Message
       })
     end

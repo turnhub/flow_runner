@@ -1,4 +1,4 @@
-defmodule FlowRunner.DefaultBlocks do
+defmodule FlowRunner.Blocks do
   @moduledoc """
   The default blocks as per the FLOIP spec 1.0.0-rc3
   """

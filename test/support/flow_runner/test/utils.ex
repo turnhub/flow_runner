@@ -24,7 +24,7 @@ defmodule FlowRunner.Test.Utils do
   """
   def with_flow_loader!(context) do
     if flow_file = Map.get(context, :flow) do
-      blocks_module = Map.get(context, :blocks_module, FlowRunner.DefaultBlocks)
+      blocks_module = Map.get(context, :blocks_module, FlowRunner.Blocks)
 
       json =
         "priv/fixtures/"

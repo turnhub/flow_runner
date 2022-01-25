@@ -11,7 +11,7 @@ defmodule FlowRunner.Compile do
     compile(data)
   end
 
-  def compile(data), do: compile(FlowRunner.DefaultBlocks, data)
+  def compile(data), do: compile(FlowRunner.Blocks, data)
 
   @spec compile(module, map) :: {:ok, FlowRunner.Spec.Container.t()} | {:error, String.t()}
   def compile(module, data) when is_map(data) do
@@ -21,7 +21,7 @@ defmodule FlowRunner.Compile do
   end
 
   @spec compile!(binary | map) :: FlowRunner.Spec.Container.t()
-  def compile!(data), do: compile!(FlowRunner.DefaultBlocks, data)
+  def compile!(data), do: compile!(FlowRunner.Blocks, data)
 
   @spec compile!(module, binary | map) :: FlowRunner.Spec.Container.t()
   def compile!(module, data) do
