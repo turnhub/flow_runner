@@ -22,8 +22,8 @@ defmodule FlowRunner.Spec.Resource do
 
   validates(:uuid, presence: true, uuid: [format: :default])
 
-  @spec matching_resource(%Resource{}, iodata(), iodata(), %Flow{}) ::
-          {:ok, %ResourceValue{}} | {:error, iodata()}
+  @spec matching_resource(Resource.t(), language :: String.t(), mode :: String.t(), Flow.t()) ::
+          {:ok, ResourceValue.t()} | {:error, String.t()}
   def matching_resource(%Resource{values: resources}, language, mode, %Flow{languages: languages}) do
     # Identify the language object that corresponds to our iso-639-3 code.
     languages = Enum.filter(languages, &(&1.iso_639_3 == language))

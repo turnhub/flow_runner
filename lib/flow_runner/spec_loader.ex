@@ -81,11 +81,10 @@ defmodule FlowRunner.SpecLoader do
       {:error, errors} ->
         error_string =
           errors
-          |> Enum.map(fn {:error, key, _rule, error} ->
+          |> Enum.map_join(", ", fn {:error, key, _rule, error} ->
             received_value = Map.get(impl, key)
             "#{inspect(Atom.to_string(key))} #{error}, received: #{inspect(received_value)}"
           end)
-          |> Enum.join(", ")
 
         [module_name | _ignored] =
           impl.__struct__

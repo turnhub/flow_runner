@@ -33,10 +33,9 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
       {:error, reasons} ->
         reasons =
           reasons
-          |> Enum.map(fn {:error, key, _rule, reason} ->
+          |> Enum.map_join(", ", fn {:error, key, _rule, reason} ->
             "In #{Atom.to_string(key)}: #{reason}"
           end)
-          |> Enum.join(", ")
 
         raise reasons
     end

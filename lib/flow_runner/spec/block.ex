@@ -126,8 +126,8 @@ defmodule FlowRunner.Spec.Block do
     Map.merge(validated_config, load_config_for_set_contact_property!(config))
   end
 
-  @spec evaluate_user_input(%Block{}, %FlowRunner.Context{}, iodata()) ::
-          {:ok, %FlowRunner.Context{}}
+  @spec evaluate_user_input(Block.t(), Context.t(), iodata()) ::
+          {:ok, Context.t()}
   def evaluate_user_input(_block, context, nil)
       when context.waiting_for_user_input == true do
     {:ok, context}
@@ -235,12 +235,12 @@ defmodule FlowRunner.Spec.Block do
   end
 
   @spec fetch_next_block(
-          %Block{},
-          %Flow{},
-          %Context{}
+          Block.t(),
+          Flow.t(),
+          Context.t()
         ) ::
           {:error, iodata}
-          | {:ok, %FlowRunner.Context{}, %Block{}}
+          | {:ok, Context.t(), Block.t()}
   def fetch_next_block(block, %Flow{} = flow, %Context{} = context) do
     {:ok, %Exit{destination_block: destination_block}} = Block.evaluate_exits(block, context)
 
@@ -254,8 +254,8 @@ defmodule FlowRunner.Spec.Block do
     end
   end
 
-  @spec evaluate_exits(%FlowRunner.Spec.Block{}, %FlowRunner.Context{}) ::
-          {:ok, %FlowRunner.Spec.Exit{}} | {:error, any()}
+  @spec evaluate_exits(Block.t(), Context.t()) ::
+          {:ok, Exit.t()} | {:error, any()}
   def evaluate_exits(%Block{exits: exits} = block, %Context{} = context) do
     truthy_exits =
       exits
@@ -269,8 +269,8 @@ defmodule FlowRunner.Spec.Block do
     end
   end
 
-  @spec evaluate_default_exit(%FlowRunner.Spec.Block{}, %FlowRunner.Context{}) ::
-          {:error, String.t()} | {:ok, %FlowRunner.Spec.Exit{}}
+  @spec evaluate_default_exit(Block.t(), Context.t()) ::
+          {:error, String.t()} | {:ok, Exit.t()}
   def evaluate_default_exit(%Block{exits: exits}, %Context{} = _context) do
     case Enum.filter(exits, &(&1.default == true)) do
       [first_default_exit | _] -> {:ok, first_default_exit}
