@@ -2,6 +2,7 @@ defmodule FlowRunner.Spec.Blocks.SetGroupMembership do
   @moduledoc """
   Set a group membership.
   """
+  @behaviour FlowRunner.Spec.Block
   alias FlowRunner.Context
   alias FlowRunner.Output
   alias FlowRunner.Spec.Block
@@ -24,7 +25,9 @@ defmodule FlowRunner.Spec.Blocks.SetGroupMembership do
     raise "config block for Core.SetGroupMembership requires 'group_key' and 'is_member' fields"
   end
 
+  @impl true
   def evaluate_incoming(
+        %Container{},
         %Flow{},
         %Block{
           config: %{
@@ -33,8 +36,7 @@ defmodule FlowRunner.Spec.Blocks.SetGroupMembership do
             group_name: name
           }
         } = block,
-        %Context{} = context,
-        %Container{}
+        %Context{} = context
       ) do
     output = %Output{
       group_update_key: key,
@@ -46,6 +48,7 @@ defmodule FlowRunner.Spec.Blocks.SetGroupMembership do
     {:ok, %Context{context | last_block_uuid: block.uuid}, output}
   end
 
+  @impl true
   def evaluate_outgoing(_flow, _block, user_input) do
     {:ok, user_input}
   end

@@ -15,6 +15,11 @@ defmodule FlowRunner.SpecLoader do
     end
 
   """
+
+  @callback cast!(blocks_module :: module, map | [map]) :: any | [any]
+  @callback load!(blocks_module :: module, map | [map]) :: any | [any]
+  @callback validate!(blocks_module :: module, any) :: any
+
   defmacro __using__(opts) do
     manually_loaded_fields =
       Keyword.get(
@@ -28,61 +33,47 @@ defmodule FlowRunner.SpecLoader do
     quote do
       use Vex.Struct
 
+      @behaviour FlowRunner.SpecLoader
       @doc "Load the map or list of maps into #{unquote(mod)} structs."
-      @spec load!(map) :: t()
-      @spec load!([map]) :: [t()]
-      def load!(list) when is_list(list) do
+      @impl true
+      @spec load!(module, map) :: t()
+      @spec load!(module, [map]) :: [t()]
+      def load!(blocks_module, list) when is_list(list) do
         list
-        |> Enum.map(&cast!/1)
-        |> Enum.map(&load!/1)
-        |> Enum.map(&validate!/1)
+        |> Enum.map(&load!(blocks_module, &1))
       end
 
-      def load!(map) when is_map(map) do
-        FlowRunner.SpecLoader.load!(unquote(mod), map, unquote(manually_loaded_fields))
-      end
+      @impl true
+      def load!(blocks_module, map) when is_map(map) do
+        casted_map = cast!(blocks_module, map)
 
-      @spec load(map | [map]) ::
-              {:ok, t()}
-              | {:ok, [t()]}
-              | {:error, String.t()}
-      def load(data) do
-        {:ok, validate!(load!(cast!(data)))}
-      rescue
-        error in KeyError ->
-          {:error,
-           "Key #{error.key} is not valid for #{unquote(mod)}} while trying to load #{inspect(data)}"}
+        implementation =
+          FlowRunner.SpecLoader.load!(
+            blocks_module,
+            unquote(mod),
+            casted_map,
+            unquote(manually_loaded_fields)
+          )
 
-        error in ArgumentError ->
-          {:error, error.message}
-
-        error in RuntimeError ->
-          {:error, error.message}
+        validate!(blocks_module, implementation)
       end
 
       @doc "Cast the received fields to their internal representation"
-      @spec cast!(map) :: map
-      def cast!(map), do: map
-
-      def cast_datetime!(params, field_name) do
-        if value = Map.get(params, field_name) do
-          {:ok, datetime, _offset} = DateTime.from_iso8601(value)
-          Map.put(params, field_name, datetime)
-        else
-          params
-        end
-      end
+      @impl true
+      @spec cast!(module, map) :: map
+      def cast!(_module, map), do: map
 
       @doc "Validate a #{unquote(mod)} struct using Vex.validate"
-      @spec validate!(t()) :: t()
-      defdelegate validate!(impl), to: FlowRunner.SpecLoader
+      @impl true
+      @spec validate!(blocks_module :: module, t()) :: t()
+      defdelegate validate!(blocks_module, impl), to: FlowRunner.SpecLoader
 
-      defoverridable(validate!: 1, cast!: 1)
+      defoverridable(load!: 2, validate!: 2, cast!: 2)
     end
   end
 
   @doc "Validate a struct using Vex.validate"
-  def validate!(impl) do
+  def validate!(_blocks_module, impl) do
     case Vex.validate(impl) do
       {:ok, impl} ->
         impl
@@ -90,11 +81,10 @@ defmodule FlowRunner.SpecLoader do
       {:error, errors} ->
         error_string =
           errors
-          |> Enum.map(fn {:error, key, _rule, error} ->
+          |> Enum.map_join(", ", fn {:error, key, _rule, error} ->
             received_value = Map.get(impl, key)
             "#{inspect(Atom.to_string(key))} #{error}, received: #{inspect(received_value)}"
           end)
-          |> Enum.join(", ")
 
         [module_name | _ignored] =
           impl.__struct__
@@ -105,10 +95,11 @@ defmodule FlowRunner.SpecLoader do
     end
   end
 
-  def load!(mod, struct, manually_loaded_fields) when is_struct(struct),
-    do: load!(mod, Map.from_struct(struct), manually_loaded_fields)
+  def load!(blocks_module, mod, struct, manually_loaded_fields)
+      when is_struct(struct) and is_atom(blocks_module),
+      do: load!(blocks_module, mod, Map.from_struct(struct), manually_loaded_fields)
 
-  def load!(mod, map, manually_loaded_fields) do
+  def load!(blocks_module, mod, map, manually_loaded_fields) when is_atom(blocks_module) do
     manually_loaded_keys = Enum.map(Keyword.keys(manually_loaded_fields), &to_string/1)
 
     {manual_fields, auto_fields} =
@@ -119,7 +110,7 @@ defmodule FlowRunner.SpecLoader do
       |> Enum.reduce(struct(mod), fn {key, value}, impl ->
         atom_key = atom_or_argument_error(key)
         loader = Keyword.get(manually_loaded_fields, atom_key)
-        %{impl | atom_key => loader.load!(value)}
+        %{impl | atom_key => loader.load!(blocks_module, value)}
       end)
 
     auto_fields

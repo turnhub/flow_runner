@@ -2,6 +2,7 @@ defmodule FlowRunner.Spec.Blocks.NumericResponse do
   @moduledoc """
   A specialisation of a block that allows users to send numeric input.
   """
+  @behaviour FlowRunner.Spec.Block
   alias FlowRunner.Context
   alias FlowRunner.Output
   alias FlowRunner.Spec.Container
@@ -30,7 +31,8 @@ defmodule FlowRunner.Spec.Blocks.NumericResponse do
     raise "invalid config, 'prompt' field is required."
   end
 
-  def evaluate_incoming(flow, block, context, container) do
+  @impl true
+  def evaluate_incoming(container, flow, block, context) do
     {:ok, resource} = Container.fetch_resource_by_uuid(container, block.config.prompt)
 
     case Resource.matching_resource(resource, context.language, context.mode, flow) do
@@ -51,6 +53,7 @@ defmodule FlowRunner.Spec.Blocks.NumericResponse do
     end
   end
 
+  @impl true
   @spec evaluate_outgoing(FlowRunner.Spec.Flow.t(), FlowRunner.Spec.Block.t(), String.t()) ::
           {:ok, integer()} | {:invalid, String.t()}
   def evaluate_outgoing(_flow, block, user_input) do

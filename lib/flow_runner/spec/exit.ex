@@ -20,7 +20,7 @@ defmodule FlowRunner.Spec.Exit do
   @type t :: %__MODULE__{
           uuid: String.t(),
           name: String.t(),
-          destination_block: String.t(),
+          destination_block: String.t() | nil,
           semantic_label: String.t(),
           test: String.t(),
           default: term,

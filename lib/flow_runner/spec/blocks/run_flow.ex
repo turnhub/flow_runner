@@ -8,6 +8,7 @@ defmodule FlowRunner.Spec.Blocks.RunFlow do
   - What is an exception exit? It's not defined anywhere I can tell. I think it's probably
     the exit_block_id on the flow.
   """
+  @behaviour FlowRunner.Spec.Block
   alias FlowRunner.Context
   alias FlowRunner.Output
   alias FlowRunner.Spec.Block
@@ -28,7 +29,8 @@ defmodule FlowRunner.Spec.Blocks.RunFlow do
     raise "invalid 'config' for Core.RunFlow block, 'flow' field is required and needs to be a UUID."
   end
 
-  def evaluate_incoming(%Flow{}, %Block{config: config} = block, context, %Container{}) do
+  @impl true
+  def evaluate_incoming(%Container{}, %Flow{}, %Block{config: config} = block, context) do
     next_flow_id = config.flow_id
 
     context = %Context{context | last_block_uuid: block.uuid}
@@ -43,6 +45,7 @@ defmodule FlowRunner.Spec.Blocks.RunFlow do
     {:ok, next_context, %Output{block: block}}
   end
 
+  @impl true
   def evaluate_outgoing(_flow, _block, user_input) do
     {:ok, user_input}
   end

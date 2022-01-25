@@ -9,11 +9,34 @@ defmodule FlowRunner.Spec.Block do
     ]
 
   alias FlowRunner.Context
+  alias FlowRunner.Output
   alias FlowRunner.Spec.Block
+  alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Exit
   alias FlowRunner.Spec.Flow
 
   require Logger
+
+  @doc """
+  # Evaluate the block we have transitioned to and return updated context and output.
+  """
+  @callback evaluate_incoming(Container.t(), Flow.t(), Block.t(), Context.t()) ::
+              {:ok, Context.t(), Output.t()}
+              | {:error, String.t()}
+
+  @doc """
+  On leaving a block give the block an opportunity to evaluate the inputs received.
+  This allows the block to fulfill tasks such as validation.
+
+  If the block returns an `{:ok, user_input}` tuple, use the validated input for
+  further processing and inclusion in the context vars for next blocks.
+
+  If the block returns and `{:invalid, reason}` tuple the flow runner will exit through
+  the default response.
+  """
+  @callback evaluate_outgoing(Flow.t(), Block.t(), user_input :: any) ::
+              {:ok, user_input :: any}
+              | {:invalid, reason :: String.t()}
 
   @derive Jason.Encoder
   defstruct uuid: nil,
@@ -43,28 +66,20 @@ defmodule FlowRunner.Spec.Block do
   validates(:uuid, presence: true, uuid: [format: :default])
   validates(:type, presence: true)
 
-  @blocks %{
-    "Core.Case" => FlowRunner.Spec.Blocks.Case,
-    "Core.Log" => FlowRunner.Spec.Blocks.Log,
-    "Core.Output" => FlowRunner.Spec.Blocks.Output,
-    "Core.RunFlow" => FlowRunner.Spec.Blocks.RunFlow,
-    "Core.SetContactProperty" => FlowRunner.Spec.Blocks.SetContactProperty,
-    "Core.SetGroupMembership" => FlowRunner.Spec.Blocks.SetGroupMembership,
-    "MobilePrimitives.SelectOneResponse" => FlowRunner.Spec.Blocks.SelectOneResponse,
-    "MobilePrimitives.Message" => FlowRunner.Spec.Blocks.Message,
-    "MobilePrimitives.NumericResponse" => FlowRunner.Spec.Blocks.NumericResponse,
-    "MobilePrimitives.OpenResponse" => FlowRunner.Spec.Blocks.OpenResponse
-  }
+  def get_block(blocks_module, type), do: Map.get(blocks_module.blocks, type)
 
-  def cast!(%{"type" => type} = map) do
+  @impl true
+  def cast!(blocks_module, %{"type" => type} = map) do
     config = Map.get(map, "config", %{})
-    Map.put(map, "config", load_config_for_type!(type, config))
+    Map.put(map, "config", load_config_for_type!(blocks_module, type, config))
   end
 
-  def cast!(map), do: map
+  @impl true
+  def cast!(_blocks_module, map), do: map
 
-  def validate!(impl) do
-    impl = FlowRunner.SpecLoader.validate!(impl)
+  @impl true
+  def validate!(blocks_module, impl) do
+    impl = super(blocks_module, impl)
 
     default_exits =
       impl.exits
@@ -98,9 +113,9 @@ defmodule FlowRunner.Spec.Block do
     %{}
   end
 
-  def load_config_for_type!(type, config) do
+  def load_config_for_type!(blocks_module, type, config) do
     validated_config =
-      if implementation = Map.get(@blocks, type) do
+      if implementation = get_block(blocks_module, type) do
         apply(implementation, :validate_config!, [config])
       else
         raise("unknown block type '#{type}'")
@@ -111,8 +126,8 @@ defmodule FlowRunner.Spec.Block do
     Map.merge(validated_config, load_config_for_set_contact_property!(config))
   end
 
-  @spec evaluate_user_input(%Block{}, %FlowRunner.Context{}, iodata()) ::
-          {:ok, %FlowRunner.Context{}}
+  @spec evaluate_user_input(Block.t(), Context.t(), iodata()) ::
+          {:ok, Context.t()}
   def evaluate_user_input(_block, context, nil)
       when context.waiting_for_user_input == true do
     {:ok, context}
@@ -139,6 +154,10 @@ defmodule FlowRunner.Spec.Block do
     {:error, "unexpectedly received user input"}
   end
 
+  @doc """
+  Evaluate any contact updates that a block may specify
+  """
+  @spec evaluate_contact_properties(Block.t()) :: Output.t()
   def evaluate_contact_properties(%Block{
         config: %{
           set_contact_property: %{
@@ -147,33 +166,40 @@ defmodule FlowRunner.Spec.Block do
           }
         }
       }) do
-    %{
+    %Output{
       contact_update_key: property_key,
       contact_update_value: property_value
     }
   end
 
   def evaluate_contact_properties(_block) do
-    %{}
+    %Output{}
   end
 
-  def evaluate_incoming(flow, %Block{type: type} = block, context, container) do
-    if implementation = Map.get(@blocks, type) do
-      apply(implementation, :evaluate_incoming, [flow, block, context, container])
+  def evaluate_incoming(container, flow, %Block{type: type} = block, context) do
+    if implementation = get_block(container.blocks_module, type) do
+      implementation.evaluate_incoming(container, flow, block, context)
     else
       {:error, "unknown block type #{type}"}
     end
   end
 
-  def evaluate_outgoing(block, %Context{} = context, flow, user_input) do
+  def evaluate_outgoing(
+        container,
+        flow,
+        %Block{type: type} = block,
+        %Context{} = context,
+        user_input
+      ) do
     # Give the block an opportunity to evaluate the input. If it returns :ok,
     # we go ahead and store the user input, evaluate the exit and then move
     # onto the next block.
     # If it returns :invalid we will exit through the default block as the
     # block has failed validations.
 
-    with {:ok, user_input} <-
-           apply(Map.get(@blocks, block.type), :evaluate_outgoing, [flow, block, user_input]),
+    block_module = get_block(container.blocks_module, type)
+
+    with {:ok, user_input} <- block_module.evaluate_outgoing(flow, block, user_input),
          # Process any user input we have been given.
          {:ok, context} <-
            Block.evaluate_user_input(
@@ -209,12 +235,12 @@ defmodule FlowRunner.Spec.Block do
   end
 
   @spec fetch_next_block(
-          %Block{},
-          %Flow{},
-          %Context{}
+          Block.t(),
+          Flow.t(),
+          Context.t()
         ) ::
           {:error, iodata}
-          | {:ok, %FlowRunner.Context{}, %Block{}}
+          | {:ok, Context.t(), Block.t()}
   def fetch_next_block(block, %Flow{} = flow, %Context{} = context) do
     {:ok, %Exit{destination_block: destination_block}} = Block.evaluate_exits(block, context)
 
@@ -228,8 +254,8 @@ defmodule FlowRunner.Spec.Block do
     end
   end
 
-  @spec evaluate_exits(%FlowRunner.Spec.Block{}, %FlowRunner.Context{}) ::
-          {:ok, %FlowRunner.Spec.Exit{}} | {:error, any()}
+  @spec evaluate_exits(Block.t(), Context.t()) ::
+          {:ok, Exit.t()} | {:error, any()}
   def evaluate_exits(%Block{exits: exits} = block, %Context{} = context) do
     truthy_exits =
       exits
@@ -243,8 +269,8 @@ defmodule FlowRunner.Spec.Block do
     end
   end
 
-  @spec evaluate_default_exit(%FlowRunner.Spec.Block{}, %FlowRunner.Context{}) ::
-          {:error, String.t()} | {:ok, %FlowRunner.Spec.Exit{}}
+  @spec evaluate_default_exit(Block.t(), Context.t()) ::
+          {:error, String.t()} | {:ok, Exit.t()}
   def evaluate_default_exit(%Block{exits: exits}, %Context{} = _context) do
     case Enum.filter(exits, &(&1.default == true)) do
       [first_default_exit | _] -> {:ok, first_default_exit}

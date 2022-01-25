@@ -3,6 +3,7 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
   A specialisation of a block that sends users a set of options and
   waits for the user to come back with one of them.
   """
+  @behaviour FlowRunner.Spec.Block
   alias FlowRunner.Context
   alias FlowRunner.Output
   alias FlowRunner.Spec.Container
@@ -32,10 +33,9 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
       {:error, reasons} ->
         reasons =
           reasons
-          |> Enum.map(fn {:error, key, _rule, reason} ->
+          |> Enum.map_join(", ", fn {:error, key, _rule, reason} ->
             "In #{Atom.to_string(key)}: #{reason}"
           end)
-          |> Enum.join(", ")
 
         raise reasons
     end
@@ -89,7 +89,8 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
     do:
       {:error, [{:error, :choices, nil, "\"name\", \"test\", and \"prompt\" are all required."}]}
 
-  def evaluate_incoming(flow, block, context, container) do
+  @impl true
+  def evaluate_incoming(container, flow, block, context) do
     {:ok, resource} = Container.fetch_resource_by_uuid(container, block.config.prompt)
 
     case Resource.matching_resource(resource, context.language, context.mode, flow) do
@@ -128,6 +129,9 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
     end
   end
 
+  @impl true
+  @spec evaluate_outgoing(FlowRunner.Spec.Flow.t(), FlowRunner.Spec.Block.t(), String.t()) ::
+          {:ok, String.t()} | {:invalid, String.t()}
   def evaluate_outgoing(flow, block, user_input) do
     matched_option =
       Enum.find(block.config.choices, fn

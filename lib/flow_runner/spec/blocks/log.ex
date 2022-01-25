@@ -2,6 +2,7 @@ defmodule FlowRunner.Spec.Blocks.Log do
   @moduledoc """
   Log things!
   """
+  @behaviour FlowRunner.Spec.Block
   alias FlowRunner.Context
   alias FlowRunner.Output
   alias FlowRunner.Spec.Block
@@ -19,11 +20,12 @@ defmodule FlowRunner.Spec.Blocks.Log do
     raise "invalid config, 'message' field required"
   end
 
+  @impl true
   def evaluate_incoming(
+        %Container{} = container,
         %Flow{} = flow,
         %Block{} = block,
-        context,
-        %Container{} = container
+        context
       ) do
     context =
       case Container.fetch_resource_by_uuid(container, block.config.message) do
@@ -49,6 +51,7 @@ defmodule FlowRunner.Spec.Blocks.Log do
     {:ok, context, %Output{block: block}}
   end
 
+  @impl true
   def evaluate_outgoing(_flow, _block, user_input) do
     {:ok, user_input}
   end
