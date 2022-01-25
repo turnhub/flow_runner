@@ -8,6 +8,7 @@ defmodule FlowRunner.Spec.Blocks.NumericResponse do
   alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Resource
 
+  @impl true
   def validate_config!(%{"prompt" => prompt} = config) do
     validated_config = %{
       prompt: prompt,

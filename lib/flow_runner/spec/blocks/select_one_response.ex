@@ -9,6 +9,7 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
   alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Resource
 
+  @impl true
   def validate_config!(%{"prompt" => prompt, "choices" => choices}) when is_map(choices) do
     # Rewrite RC2 format to RC3 format
     validate_config!(%{

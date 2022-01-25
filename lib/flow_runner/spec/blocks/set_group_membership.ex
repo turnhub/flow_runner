@@ -11,6 +11,7 @@ defmodule FlowRunner.Spec.Blocks.SetGroupMembership do
 
   require Logger
 
+  @impl true
   def validate_config!(%{"group_key" => group_key, "is_member" => is_member} = config) do
     name = Map.get(config, "group_name", nil)
 

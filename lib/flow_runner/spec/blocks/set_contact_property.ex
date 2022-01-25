@@ -10,6 +10,7 @@ defmodule FlowRunner.Spec.Blocks.SetContactProperty do
 
   require Logger
 
+  @impl true
   def validate_config!(_) do
     %{}
   end
