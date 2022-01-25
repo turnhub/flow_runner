@@ -11,6 +11,7 @@ defmodule FlowRunner.Spec.Blocks.Case do
 
   require Logger
 
+  @impl true
   def validate_config!(_) do
     %{}
   end

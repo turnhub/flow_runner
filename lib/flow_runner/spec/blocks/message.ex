@@ -11,6 +11,7 @@ defmodule FlowRunner.Spec.Blocks.Message do
   alias FlowRunner.Spec.Flow
   alias FlowRunner.Spec.Resource
 
+  @impl true
   def validate_config!(%{"prompt" => prompt}) do
     config = %{prompt: prompt}
 

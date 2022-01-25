@@ -12,6 +12,7 @@ defmodule FlowRunner.Spec.Blocks.Log do
 
   require Logger
 
+  @impl true
   def validate_config!(%{"message" => message}) do
     %{message: message}
   end

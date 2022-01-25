@@ -18,6 +18,12 @@ defmodule FlowRunner.Spec.Block do
   require Logger
 
   @doc """
+  Load the raw config received from the original JSON, validate it
+  and return a map with atom keys with the correct configuration
+  """
+  @callback validate_config!(map) :: map
+
+  @doc """
   # Evaluate the block we have transitioned to and return updated context and output.
   """
   @callback evaluate_incoming(Container.t(), Flow.t(), Block.t(), Context.t()) ::
@@ -116,7 +122,7 @@ defmodule FlowRunner.Spec.Block do
   def load_config_for_type!(blocks_module, type, config) do
     validated_config =
       if implementation = get_block(blocks_module, type) do
-        apply(implementation, :validate_config!, [config])
+        implementation.validate_config!(config)
       else
         raise("unknown block type '#{type}'")
       end

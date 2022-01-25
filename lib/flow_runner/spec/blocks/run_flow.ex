@@ -15,6 +15,7 @@ defmodule FlowRunner.Spec.Blocks.RunFlow do
   alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Flow
 
+  @impl true
   def validate_config!(%{"flow_id" => flow_id}) do
     config = %{flow_id: flow_id}
 
