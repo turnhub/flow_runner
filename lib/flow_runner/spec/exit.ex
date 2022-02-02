@@ -32,20 +32,18 @@ defmodule FlowRunner.Spec.Exit do
   validates(:uuid, presence: true, uuid: [format: :default])
 
   def evaluate(exit, context) do
-    if exit.test != nil && exit.test != "" do
-      case FlowRunner.evaluate_expression_block(exit.test, context.vars) do
-        {:ok, truthy} ->
-          truthy || exit.default
+    test = exit.test || ""
 
-        {:error, reason} ->
-          Logger.info(
-            "Expression '#{exit.test}' failed with #{reason} last_block_uuid=#{context.last_block_uuid}"
-          )
+    case FlowRunner.evaluate_expression_block(test, context.vars) do
+      {:ok, result} ->
+        result
 
-          exit.default
-      end
-    else
-      exit.default
+      {:error, reason} ->
+        Logger.info(
+          "Expression '#{exit.test}' failed with #{reason} last_block_uuid=#{context.last_block_uuid}"
+        )
+
+        false
     end
   end
 end

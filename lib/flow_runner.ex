@@ -127,7 +127,7 @@ defmodule FlowRunner do
       ) do
     # Identify the block we are transitioning to and then evaluate incoming block rules.
     with {:ok, flow} <- fetch_flow_by_uuid(container, context.current_flow_uuid),
-         {:ok, context, next_block} <- find_next_block(container, flow, context, user_input) do
+         {:ok, context, next_block} <- find_next_block(flow, context, user_input) do
       cond do
         # If we have ended a Core.RunFlow block then replace the context with its parent.
         is_nil(next_block) && not is_nil(context.parent_context) ->
@@ -177,7 +177,6 @@ defmodule FlowRunner do
   end
 
   def find_next_block(
-        _container,
         %Flow{} = flow,
         %Context{last_block_uuid: nil} = context,
         _user_input
@@ -189,7 +188,6 @@ defmodule FlowRunner do
   end
 
   def find_next_block(
-        container,
         %Flow{} = flow,
         %Context{last_block_uuid: last_block_uuid} = context,
         user_input
@@ -198,7 +196,7 @@ defmodule FlowRunner do
     # exits to identify the next block.
     with {:ok, previous_block} <- Flow.fetch_block(flow, last_block_uuid),
          {:ok, context, next_block} <-
-           Block.evaluate_outgoing(container, flow, previous_block, context, user_input) do
+           Block.evaluate_outgoing(flow, previous_block, context, user_input) do
       {:ok, context, next_block}
     else
       err -> err

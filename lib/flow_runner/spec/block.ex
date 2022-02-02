@@ -191,7 +191,6 @@ defmodule FlowRunner.Spec.Block do
   end
 
   def evaluate_outgoing(
-        container,
         flow,
         %Block{type: type} = block,
         %Context{} = context,
