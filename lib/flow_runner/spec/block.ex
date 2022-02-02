@@ -183,7 +183,7 @@ defmodule FlowRunner.Spec.Block do
   end
 
   def evaluate_incoming(container, flow, %Block{type: type} = block, context) do
-    if implementation = get_block(container.blocks_module, type) do
+    if implementation = get_block(FlowRunner.blocks_module(), type) do
       implementation.evaluate_incoming(container, flow, block, context)
     else
       {:error, "unknown block type #{type}"}
@@ -203,7 +203,7 @@ defmodule FlowRunner.Spec.Block do
     # If it returns :invalid we will exit through the default block as the
     # block has failed validations.
 
-    block_module = get_block(container.blocks_module, type)
+    block_module = get_block(FlowRunner.blocks_module(), type)
 
     with {:ok, user_input} <- block_module.evaluate_outgoing(flow, block, user_input),
          # Process any user input we have been given.

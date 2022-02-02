@@ -33,7 +33,7 @@ defmodule FlowRunner.Spec.Exit do
 
   def evaluate(exit, context) do
     if exit.test != nil && exit.test != "" do
-      case Expression.evaluate_block(exit.test, context.vars) do
+      case FlowRunner.evaluate_expression_block(exit.test, context.vars) do
         {:ok, truthy} ->
           truthy || exit.default
 

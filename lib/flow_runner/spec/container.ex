@@ -10,15 +10,14 @@ defmodule FlowRunner.Spec.Container do
 
   alias FlowRunner.Spec.Container
 
-  @derive {Jason.Encoder, except: [:blocks_module]}
+  @derive Jason.Encoder
   defstruct specification_version: nil,
             uuid: nil,
             name: nil,
             description: nil,
             flows: [],
             resources: [],
-            vendor_metadata: %{},
-            blocks_module: FlowRunner.Blocks
+            vendor_metadata: %{}
 
   @type t :: %__MODULE__{
           specification_version: String.t(),
@@ -36,12 +35,6 @@ defmodule FlowRunner.Spec.Container do
   )
 
   validates(:uuid, presence: true, uuid: [format: :default])
-
-  @impl true
-  def validate!(blocks_module, data) do
-    validated = super(blocks_module, data)
-    Map.put(validated, :blocks_module, blocks_module)
-  end
 
   def fetch_resource_by_uuid(%Container{resources: resources}, uuid) do
     case Enum.find(resources, &(&1.uuid == uuid)) do

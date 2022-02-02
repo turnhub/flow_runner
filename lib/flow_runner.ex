@@ -57,6 +57,9 @@ defmodule FlowRunner do
   @callback fetch_flow_by_uuid(Container.t(), flow_uuid :: String.t()) ::
               {:ok, Flow.t()} | {:error, String.t()}
 
+  @callback evaluate_expression(String.t(), map) :: {:ok, String.t()} | {:error, String.t()}
+  @callback evaluate_expression_block(String.t(), map) :: {:ok, String.t()} | {:error, String.t()}
+
   @doc """
   Compile takes a json flow and returns a parsed and validated flow as a tuple.
   """
@@ -155,6 +158,22 @@ defmodule FlowRunner do
       {:error, reason} ->
         {:error, reason}
     end
+  end
+
+  def blocks_module(),
+    do: Application.get_env(:flow_runner, :blocks_module) || FlowRunner.Blocks
+
+  def expression_callbacks_module(),
+    do: Application.get_env(:flow_runner, :expression_callbacks_module, Expression.Callbacks)
+
+  @spec evaluate_expression(String.t(), map) :: {:ok, String.t()} | {:error, String.t()}
+  def evaluate_expression(expression, context) do
+    Expression.evaluate(expression, context, expression_callbacks_module())
+  end
+
+  @spec evaluate_expression_block(String.t(), map) :: {:ok, String.t()} | {:error, String.t()}
+  def evaluate_expression_block(expression, context) do
+    Expression.evaluate_block(expression, context, expression_callbacks_module())
   end
 
   def find_next_block(

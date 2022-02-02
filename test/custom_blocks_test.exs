@@ -1,6 +1,12 @@
 defmodule RunnerTest do
   use ExUnit.Case, async: true
 
+  setup do
+    original_module = Application.get_env(:flow_runner, :blocks_module)
+    Application.put_env(:flow_runner, :blocks_module, RunnerTest.CustomBlocks)
+    on_exit(fn -> Application.put_env(:flow_runner, :blocks_module, original_module) end)
+  end
+
   defmodule CustomBlocks do
     @behaviour FlowRunner.Blocks
 
@@ -26,7 +32,7 @@ defmodule RunnerTest do
 
   test "run a flow with a custom block type" do
     container = replace_type("test/basic.flow", "MobilePrimitives.Message", "Io.Turn.Custom")
-    assert container.blocks_module == CustomBlocks
+    assert FlowRunner.blocks_module() == CustomBlocks
 
     {:ok, context} =
       FlowRunner.create_context(
@@ -44,7 +50,7 @@ defmodule RunnerTest do
 
   test "custom blocks attribute shouldn't be encoded in JSON" do
     container = replace_type("test/basic.flow", "MobilePrimitives.Message", "Io.Turn.Custom")
-    assert container.blocks_module == CustomBlocks
+    assert FlowRunner.blocks_module() == CustomBlocks
 
     json = Jason.encode!(container)
     assert String.contains?(json, "Io.Turn.Custom")

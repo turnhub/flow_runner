@@ -38,7 +38,7 @@ defmodule FlowRunner.Spec.Blocks.NumericResponse do
 
     case Resource.matching_resource(resource, context.language, context.mode, flow) do
       {:ok, prompt} ->
-        {:ok, value} = Expression.evaluate(prompt.value, context.vars)
+        {:ok, value} = FlowRunner.evaluate_expression(prompt.value, context.vars)
 
         {
           :ok,

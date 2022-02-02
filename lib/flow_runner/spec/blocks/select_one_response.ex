@@ -96,7 +96,7 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
 
     case Resource.matching_resource(resource, context.language, context.mode, flow) do
       {:ok, prompt} ->
-        {:ok, value} = Expression.evaluate(prompt.value, context.vars)
+        {:ok, value} = FlowRunner.evaluate_expression(prompt.value, context.vars)
 
         {
           :ok,
@@ -118,7 +118,7 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
                   )
 
                 {:ok, rendered_resource_value} =
-                  Expression.evaluate(resource_value.value, context.vars)
+                  FlowRunner.evaluate_expression(resource_value.value, context.vars)
 
                 {name, rendered_resource_value}
               end)
@@ -137,10 +137,13 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
     matched_option =
       Enum.find(block.config.choices, fn
         %{name: _name, test: test, prompt: _prompt} ->
-          Expression.evaluate_block!(test, %{
-            "flow" => flow,
-            "block" => %{"response" => user_input}
-          })
+          {:ok, value} =
+            FlowRunner.evaluate_expression_block(test, %{
+              "flow" => flow,
+              "block" => %{"response" => user_input}
+            })
+
+          value
       end)
 
     if matched_option do
