@@ -7,6 +7,7 @@ defmodule FlowRunner do
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Flow
+  require Logger
 
   @doc """
   Create a fresh context for a flow.
@@ -129,9 +130,19 @@ defmodule FlowRunner do
     with {:ok, flow} <- fetch_flow_by_uuid(container, context.current_flow_uuid),
          {:ok, context, next_block} <- find_next_block(flow, context, user_input) do
       cond do
-        # If we have ended a Core.RunFlow block then replace the context with its parent.
+        # If we have ended a Core.RunFlow block then continue where ever the parent left off
         is_nil(next_block) && not is_nil(context.parent_context) ->
-          {:ok, context.parent_context, nil, nil}
+          # swap parent & child contexts
+          {parent_context, child_context} = Map.pop(context, :parent_context)
+
+          parent_context_vars = Map.put(parent_context.vars, :child_context, child_context.vars)
+
+          {:ok, parent_flow} = fetch_flow_by_uuid(container, parent_context.current_flow_uuid)
+
+          {:ok, context, next_block} =
+            find_next_block(parent_flow, %{parent_context | vars: parent_context_vars}, nil)
+
+          evaluate_next_block(container, parent_flow, next_block, context)
 
         # If we have a next block, automatically evaluate it as we're not waiting for user input
         # which is guarded against explicitly above

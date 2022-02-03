@@ -204,7 +204,6 @@ defmodule FlowRunnerTest do
     {:ok, context, _, _output} = FlowRunner.next_block(container, context)
     {:ok, context, _, output} = FlowRunner.next_block(container, context)
     assert %{prompt: %{value: "flow 2"}} = output
-    {:ok, context, _, _output} = FlowRunner.next_block(container, context)
     {:ok, context, _, output} = FlowRunner.next_block(container, context)
     assert %{prompt: %{value: "back to flow 1"}} = output
     {:end, _context} = FlowRunner.next_block(container, context)
