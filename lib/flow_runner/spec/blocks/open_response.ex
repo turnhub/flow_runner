@@ -9,6 +9,7 @@ defmodule FlowRunner.Spec.Blocks.OpenResponse do
   alias FlowRunner.Output
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container
+  alias FlowRunner.Spec.Flow
   alias FlowRunner.Spec.Resource
 
   @impl true

@@ -6,7 +6,9 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
   @behaviour FlowRunner.Spec.Block
   alias FlowRunner.Context
   alias FlowRunner.Output
+  alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container
+  alias FlowRunner.Spec.Flow
   alias FlowRunner.Spec.Resource
 
   @impl true
