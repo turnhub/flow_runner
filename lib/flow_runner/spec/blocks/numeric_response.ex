@@ -55,9 +55,9 @@ defmodule FlowRunner.Spec.Blocks.NumericResponse do
   end
 
   @impl true
-  @spec evaluate_outgoing(FlowRunner.Spec.Flow.t(), FlowRunner.Spec.Block.t(), String.t()) ::
+  @spec evaluate_outgoing(Flow.t(), Block.t(), Context.t(), String.t()) ::
           {:ok, integer()} | {:invalid, String.t()}
-  def evaluate_outgoing(_flow, block, user_input) do
+  def evaluate_outgoing(_flow, block, _context, user_input) do
     case Integer.parse(user_input) do
       {value, _} ->
         cond do

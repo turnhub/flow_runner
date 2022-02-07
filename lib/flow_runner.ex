@@ -135,9 +135,11 @@ defmodule FlowRunner do
           # swap parent & child contexts
           {parent_context, child_context} = Map.pop(context, :parent_context)
 
-          parent_context_vars = Map.put(parent_context.vars, :child_context, child_context.vars)
-
           {:ok, parent_flow} = fetch_flow_by_uuid(container, parent_context.current_flow_uuid)
+          {:ok, parent_block} = Flow.fetch_block(parent_flow, parent_context.last_block_uuid)
+
+          parent_context_vars =
+            Map.put(parent_context.vars, parent_block.name, child_context.vars)
 
           {:ok, context, next_block} =
             find_next_block(parent_flow, %{parent_context | vars: parent_context_vars}, nil)

@@ -55,9 +55,9 @@ defmodule FlowRunner.Spec.Blocks.OpenResponse do
   end
 
   @impl true
-  @spec evaluate_outgoing(FlowRunner.Spec.Flow.t(), FlowRunner.Spec.Block.t(), String.t()) ::
+  @spec evaluate_outgoing(Flow.t(), Block.t(), Context.t(), String.t()) ::
           {:ok, String.t()} | {:invalid, String.t()}
-  def evaluate_outgoing(_flow, %Block{} = block, user_input) do
+  def evaluate_outgoing(_flow, %Block{} = block, %Context{} = _context, user_input) do
     cond do
       block.config.max_response_characters == nil ->
         {:ok, user_input}

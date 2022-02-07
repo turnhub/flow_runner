@@ -131,9 +131,9 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
   end
 
   @impl true
-  @spec evaluate_outgoing(FlowRunner.Spec.Flow.t(), FlowRunner.Spec.Block.t(), String.t()) ::
+  @spec evaluate_outgoing(Flow.t(), Block.t(), Context.t(), String.t()) ::
           {:ok, String.t()} | {:invalid, String.t()}
-  def evaluate_outgoing(flow, block, user_input) do
+  def evaluate_outgoing(flow, block, _context, user_input) do
     matched_option =
       Enum.find(block.config.choices, fn
         %{name: _name, test: test, prompt: _prompt} ->

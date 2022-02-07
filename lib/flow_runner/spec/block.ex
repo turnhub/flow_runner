@@ -40,7 +40,7 @@ defmodule FlowRunner.Spec.Block do
   If the block returns and `{:invalid, reason}` tuple the flow runner will exit through
   the default response.
   """
-  @callback evaluate_outgoing(Flow.t(), Block.t(), user_input :: any) ::
+  @callback evaluate_outgoing(Flow.t(), Block.t(), Context.t(), user_input :: any) ::
               {:ok, user_input :: any}
               | {:invalid, reason :: String.t()}
 
@@ -152,12 +152,24 @@ defmodule FlowRunner.Spec.Block do
     {:ok, context}
   end
 
+  def evaluate_user_input(%{type: "Core.Case"} = block, context, user_input) do
+    vars =
+      Map.merge(context.vars, %{
+        "block" => %{"value" => user_input},
+        block.name => user_input
+      })
+
+    context = %Context{context | vars: vars}
+
+    {:ok, context}
+  end
+
   def evaluate_user_input(_block, context, nil) do
     {:ok, context}
   end
 
-  def evaluate_user_input(_block, _context, _user_input) do
-    {:error, "unexpectedly received user input"}
+  def evaluate_user_input(_block, _context, user_input) do
+    {:error, "unexpectedly received user input: #{inspect(user_input)}"}
   end
 
   @doc """
@@ -204,7 +216,7 @@ defmodule FlowRunner.Spec.Block do
 
     block_module = get_block(FlowRunner.blocks_module(), type)
 
-    with {:ok, user_input} <- block_module.evaluate_outgoing(flow, block, user_input),
+    with {:ok, user_input} <- block_module.evaluate_outgoing(flow, block, context, user_input),
          # Process any user input we have been given.
          {:ok, context} <-
            Block.evaluate_user_input(
