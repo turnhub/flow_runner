@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Elixir
         uses: erlef/setup-elixir@730ac65cba0700bad37c0744de4aa916c16bb728
         with:
