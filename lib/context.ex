@@ -41,6 +41,10 @@ defmodule FlowRunner.Context do
     parent_context: nil
   ]
 
+  @doc """
+  Clone a Context by its language & mode attributes, dropping everything else.
+  """
+  @spec clone_empty(t) :: t
   def clone_empty(%Context{language: language, mode: mode}) do
     %Context{language: language, mode: mode}
   end
