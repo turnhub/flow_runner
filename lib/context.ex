@@ -33,6 +33,8 @@ defmodule FlowRunner.Context do
     last_block_uuid: nil,
     # vars set and mutated during the flow.
     vars: %{},
+    # private context
+    private: %{},
     finished: false,
     # If parent_context is not nil then we should return to parent context
     # after we finish. (Part of Core.RunFlow)
@@ -41,5 +43,15 @@ defmodule FlowRunner.Context do
 
   def clone_empty(%Context{language: language, mode: mode}) do
     %Context{language: language, mode: mode}
+  end
+
+  @doc """
+  Assigns a new private key and value in the context.
+
+  Modelled after [Plug.Conn.put_private/3](https://hexdocs.pm/plug/Plug.Conn.html#put_private/3)
+  """
+  @spec put_private(t, atom, any) :: t
+  def put_private(%Context{private: private} = context, key, value) do
+    %{context | private: Map.put(private, key, value)}
   end
 end
