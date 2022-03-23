@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Set up Elixir
-        uses: erlef/setup-elixir@730ac65cba0700bad37c0744de4aa916c16bb728
+        uses: erlef/setup-elixir@c428d8c359c7a208a7471729c4a619c35780d541
         with:
           elixir-version: "1.12.1"
           otp-version: "24.0.3"
