@@ -194,6 +194,27 @@ defmodule FlowRunnerTest do
     {:end, _context} = FlowRunner.next_block(container, context)
   end
 
+  @tag flow: "test/selectoneresponse.rc3.flow"
+  test "select one response with rc3 and unexpected response", %{container: container} do
+    {:ok, context} =
+      FlowRunner.create_context(
+        container,
+        "efaabaac-d035-43f5-a7fe-0e4e757c8095",
+        "fra",
+        "TEXT",
+        %{
+          "contact" => %{"name" => "foo bar"}
+        }
+      )
+
+    {:ok, context, _, output} = FlowRunner.next_block(container, context)
+    assert %{prompt: %{value: "اختر اسمًا"}} = output
+    assert %{waiting_for_user_input: true} = context
+    {:end, context} = FlowRunner.next_block(container, context, "something unexpected")
+    assert context.vars["choose"] == "something unexpected"
+    assert context.vars["block"]["value"] == "something unexpected"
+  end
+
   @tag flow: "test/runflow.flow"
   test "runflow block", %{container: container} do
     {:ok, context} =
@@ -295,8 +316,11 @@ defmodule FlowRunnerTest do
         FlowRunner.next_block(container, context)
     )
 
-    assert {:ok, _context, _, %{prompt: %{value: "please enter a numeric age between 5 and 80"}}} =
+    assert {:ok, context, _, %{prompt: %{value: "please enter a numeric age between 5 and 80"}}} =
              FlowRunner.next_block(container, context, "yaseen")
+
+    assert context.vars["prompt_number"] == "yaseen"
+    assert context.vars["block"]["value"] == "yaseen"
   end
 
   @tag flow: "test/numeric_response.flow"
