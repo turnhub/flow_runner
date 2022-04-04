@@ -213,6 +213,10 @@ defmodule FlowRunner.Spec.Block do
     # onto the next block.
     # If it returns :invalid we will exit through the default block as the
     # block has failed validations.
+    #
+    # We will however store the supplied (invalid) input in the context as
+    # that could be useful in later blocks to report back on the supplied
+    # invalid or (in the case of MobilePrimitives.SelectOneResponse "unmatched") value
 
     block_module = get_block(FlowRunner.blocks_module(), type)
 
@@ -230,6 +234,7 @@ defmodule FlowRunner.Spec.Block do
     else
       {:invalid, reason} ->
         Logger.info("Fetching default block because #{reason}")
+        {:ok, context} = Block.evaluate_user_input(block, context, user_input)
         Block.fetch_default_block(block, flow, context)
 
       err ->
