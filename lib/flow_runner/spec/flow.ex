@@ -31,7 +31,7 @@ defmodule FlowRunner.Spec.Flow do
           supported_modes: [String.t()],
           first_block_id: String.t(),
           exit_block_id: String.t(),
-          languages: [map],
+          languages: [FlowRunner.Spec.Language.t()],
           blocks: [FlowRunner.Spec.Block.t()]
         }
 
