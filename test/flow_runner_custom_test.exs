@@ -30,7 +30,7 @@ defmodule FlowRunner.CustomTest do
   end
 
   test "fetch a flow", %{flow_runner: flow_runner} do
-    {:ok, flow} = apply(flow_runner, :fetch_flow_by_uuid, [nil, "some-id"])
+    {:ok, flow} = flow_runner.fetch_flow_by_uuid(nil, "some-id")
 
     assert flow.name == "test santiago"
   end

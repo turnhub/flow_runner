@@ -1,4 +1,5 @@
 defmodule FlowRunner.Test.Custom do
+  @moduledoc false
   use FlowRunner.Custom
 
   @impl FlowRunner

@@ -1,4 +1,22 @@
 defmodule FlowRunner.Custom do
+  @moduledoc """
+
+  A base module from which one can implement one's custom
+  flow runner.
+
+  # Example
+
+  ```elixir
+  defmodule MyFlowRunner do
+    use FlowRunner.Custom
+
+    def fetch_flow_by_uuid(container, uuid) do
+      load_from_custom_storage(uuid)
+    end
+  end
+  ```
+
+  """
   defmacro __using__(_opts) do
     quote do
       @behaviour FlowRunner
