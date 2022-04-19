@@ -7,85 +7,30 @@ defmodule FlowRunner do
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Flow
+  alias FlowRunner.Compile
   require Logger
 
-  @doc """
-  Create a fresh context for a flow.
-
-  It takes a flow_uuid rather than a %Flow{} because blocks always refer to
-  the next block by the UUID which should then be retrieved from the container.
-  """
-  @callback create_context(
-              Container.t(),
-              flow_uuid :: String.t(),
-              language :: String.t(),
-              mode :: String.t(),
-              var :: map
-            ) :: {:ok, FlowRunner.Context.t()} | {:error, String.t()}
-
-  @doc """
-  next_block transitions us from one block to the next block in a flow. It requires a
-  flow, a run context and optionally user input requested from the previous block.
-  It returns an updated context, optionally an output that should be rendered on the
-  clients device.
-
-  The updated context may have context.waiting_for_user_input set to true. If so the
-  next call of next_block must have user_input != nil.
-
-  If the block was a Core.RunFlow, ie. a flow called from a flow, and it's reached its end
-  then return the context of the parent flow.
-  """
-  @callback next_block(Container.t(), Context.t(), user_input :: nil | String.t()) ::
-              {:ok, %FlowRunner.Context{}, %FlowRunner.Spec.Block{} | nil,
-               %FlowRunner.Output{} | nil}
-              | {:error, reason :: String.t()}
-
-  @doc """
-  If the current block is not waiting on user input then FlowRunner proceeds automatically to
-  the next block with the the context of the previous block by calling this callback.
-
-  This is where we evaluate the block we have transitioned to and return updated context and output.
-  """
-  @callback evaluate_next_block(Container.t(), Flow.t(), Block.t(), Context.t()) ::
-              {:ok, Context.t(), Block.t(), Output.t()}
-              | {:end, Context.t()}
-              | {:error, String.t()}
-
-  @doc """
-  Retrieves a flow from a container by its given UUID. Used internally by create_context/5 to
-  load the flow when creating a new context
-  """
-  @callback fetch_flow_by_uuid(Container.t(), flow_uuid :: String.t()) ::
-              {:ok, Flow.t()} | {:error, String.t()}
-
-  @callback evaluate_expression(String.t(), map) :: {:ok, String.t()} | {:error, String.t()}
-  @callback evaluate_expression_block(String.t(), map) :: {:ok, String.t()} | {:error, String.t()}
+  @behaviour FlowRunner.Contract
 
   @doc """
   Compile takes a json flow and returns a parsed and validated flow as a tuple.
   """
-  defdelegate compile(json), to: FlowRunner.Compile
-  defdelegate compile(blocks_module, json), to: FlowRunner.Compile
+  defdelegate compile(json), to: Compile
+  defdelegate compile(blocks_module, json), to: Compile
 
   @doc """
   Compile takes a json flow and returns a parsed and validated flow.
   """
-  defdelegate compile!(json), to: FlowRunner.Compile
-  defdelegate compile!(blocks_module, json), to: FlowRunner.Compile
+  defdelegate compile!(json), to: Compile
+  defdelegate compile!(blocks_module, json), to: Compile
 
   @doc """
   Fetches a flow from a container with the given UUID
   """
-  defdelegate fetch_flow_by_uuid(container, uuid), to: FlowRunner.Spec.Container
+  @impl FlowRunner.Contract
+  defdelegate fetch_flow_by_uuid(container, uuid), to: Container
 
-  @spec create_context(
-          Container.t(),
-          flow_uuid :: String.t(),
-          language :: String.t(),
-          mode :: String.t(),
-          vars :: map
-        ) ::
-          {:ok, Context.t()} | {:error, reason :: String.t()}
+  @impl FlowRunner.Contract
   def create_context(container, flow_uuid, language, mode, vars \\ %{}) do
     case fetch_flow_by_uuid(container, flow_uuid) do
       {:ok, flow} ->
@@ -102,14 +47,7 @@ defmodule FlowRunner do
     end
   end
 
-  @spec next_block(
-          Container.t(),
-          Context.t(),
-          any
-        ) ::
-          {:ok, Context.t(), Block.t() | nil, Output.t() | nil}
-          | {:end, Context.t()}
-          | {:error, String.t()}
+  @impl FlowRunner.Contract
   def next_block(container, context, user_input \\ nil)
 
   def next_block(
@@ -158,8 +96,7 @@ defmodule FlowRunner do
     end
   end
 
-  @spec evaluate_next_block(Container.t(), Flow.t(), Block.t(), Context.t()) ::
-          {:ok, Context.t(), Block.t(), Output.t()} | {:error, String.t()}
+  @impl FlowRunner.Contract
   def evaluate_next_block(container, flow, next_block, context) do
     # Evaluate the block we have transitioned to and return updated context and output.
     contact_output = Block.evaluate_contact_properties(next_block)
@@ -179,12 +116,12 @@ defmodule FlowRunner do
   def expression_callbacks_module(),
     do: Application.get_env(:flow_runner, :expression_callbacks_module, Expression.Callbacks)
 
-  @spec evaluate_expression(String.t(), map) :: {:ok, String.t()} | {:error, String.t()}
+  @impl FlowRunner.Contract
   def evaluate_expression(expression, context) do
     Expression.evaluate(expression, context, expression_callbacks_module())
   end
 
-  @spec evaluate_expression_block(String.t(), map) :: {:ok, String.t()} | {:error, String.t()}
+  @impl FlowRunner.Contract
   def evaluate_expression_block(expression, context) do
     Expression.evaluate_block(expression, context, expression_callbacks_module())
   end
