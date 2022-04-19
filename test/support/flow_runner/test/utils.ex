@@ -23,6 +23,8 @@ defmodule FlowRunner.Test.Utils do
 
   """
   def with_flow_loader!(context) do
+    implementation = Map.get(context, :flow_runner, FlowRunner)
+
     if flow_file = Map.get(context, :flow) do
       blocks_module = Map.get(context, :blocks_module, FlowRunner.Blocks)
 
@@ -33,7 +35,7 @@ defmodule FlowRunner.Test.Utils do
         |> File.read!()
         |> Jason.decode!()
 
-      container = FlowRunner.compile!(blocks_module, json)
+      container = apply(implementation, :compile!, [blocks_module, json])
 
       {:ok, container: container}
     else
