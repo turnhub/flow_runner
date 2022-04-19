@@ -20,7 +20,7 @@ defmodule FlowRunner.Contract do
               flow_uuid :: String.t(),
               language :: String.t(),
               mode :: String.t(),
-              var :: Map.t()
+              var :: map()
             ) :: {:ok, Context.t()} | {:error, String.t()}
 
   @doc """
