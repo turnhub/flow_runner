@@ -1,4 +1,8 @@
 defmodule FlowRunner.Contract do
+  @moduledoc """
+  Specify the callback functions to run a Flow.
+  """
+
   alias FlowRunner.Context
   alias FlowRunner.Output
   alias FlowRunner.Spec.Block

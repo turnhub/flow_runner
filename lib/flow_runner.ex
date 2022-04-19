@@ -1,7 +1,10 @@
 defmodule FlowRunner do
   @moduledoc """
-  Provides methods to run a Flow.
+  Provides functions to run a Flow.
   """
+
+  @behaviour FlowRunner.Contract
+
   alias FlowRunner.Context
   alias FlowRunner.Output
   alias FlowRunner.Spec.Block
@@ -9,8 +12,6 @@ defmodule FlowRunner do
   alias FlowRunner.Spec.Flow
   alias FlowRunner.Compile
   require Logger
-
-  @behaviour FlowRunner.Contract
 
   @doc """
   Compile takes a json flow and returns a parsed and validated flow as a tuple.
