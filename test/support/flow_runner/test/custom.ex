@@ -2,7 +2,7 @@ defmodule FlowRunner.Test.Custom do
   @moduledoc false
   use FlowRunner.Custom
 
-  @impl FlowRunner
+  @impl FlowRunner.Contract
   def fetch_flow_by_uuid(_container, "error"), do: {:error, "error fetching flow"}
 
   def fetch_flow_by_uuid(_container, _uuid) do
