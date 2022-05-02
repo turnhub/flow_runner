@@ -11,8 +11,8 @@ defmodule FlowRunner.Spec.Blocks.Output do
   require Logger
 
   @impl true
-  def validate_config!(_config) do
-    %{}
+  def validate_config!(%{"value" => value}) do
+    %{value: value}
   end
 
   @impl true
