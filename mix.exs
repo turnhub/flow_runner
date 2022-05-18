@@ -37,7 +37,7 @@ defmodule FlowRunner.MixProject do
     [
       name: "flow_runner",
       organization: "turnio",
-      licenses: ["PROPRIETARY"],
+      licenses: ["AGPL-3.0"],
       links: %{
         "Github" => "https://github.com/turnhub/flowrunner"
       }
@@ -57,7 +57,7 @@ defmodule FlowRunner.MixProject do
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:elixir_uuid, "~> 1.2"},
       {:excoveralls, "~> 0.10", only: :test},
-      {:expression, "~> 0.7.2"},
+      {:expression, "~> 1.0"},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:jason, "~> 1.2"},
       {:junit_formatter, "~> 3.1", only: [:test]},
