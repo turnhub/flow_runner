@@ -27,10 +27,6 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
     })
   end
 
-  def validate_config!(%{"dynamic_config" => config_expression}) do
-    validate_config!(%{})
-  end
-
   def validate_config!(%{"prompt" => prompt, "choices" => choices}) when is_list(choices) do
     with {:ok, choices} <- validate_choices(choices),
          {:ok, %{prompt: prompt}} <-
