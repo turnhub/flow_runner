@@ -27,6 +27,10 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
     })
   end
 
+  def validate_config!(%{"dynamic_config" => config_expression}) do
+    validate_config!(%{})
+  end
+
   def validate_config!(%{"prompt" => prompt, "choices" => choices}) when is_list(choices) do
     with {:ok, choices} <- validate_choices(choices),
          {:ok, %{prompt: prompt}} <-
@@ -98,7 +102,7 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
 
     case Resource.matching_resource(resource, context.language, context.mode, flow) do
       {:ok, prompt} ->
-        {:ok, value} = FlowRunner.evaluate_expression(prompt.value, context.vars)
+        value = FlowRunner.evaluate_expression_to_string!(prompt.value, context.vars)
 
         {
           :ok,
@@ -119,8 +123,8 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
                     flow
                   )
 
-                {:ok, rendered_resource_value} =
-                  FlowRunner.evaluate_expression(resource_value.value, context.vars)
+                rendered_resource_value =
+                  FlowRunner.evaluate_expression_to_string!(resource_value.value, context.vars)
 
                 {name, rendered_resource_value}
               end)
@@ -139,7 +143,7 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
     matched_option =
       Enum.find(block.config.choices, fn
         %{name: _name, test: test, prompt: _prompt} ->
-          {:ok, value} =
+          {:ok, [value]} =
             FlowRunner.evaluate_expression_block(test, %{
               "flow" => flow,
               "block" => %{"response" => user_input}

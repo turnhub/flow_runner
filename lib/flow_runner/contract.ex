@@ -57,6 +57,7 @@ defmodule FlowRunner.Contract do
   @callback fetch_flow_by_uuid(Container.t(), flow_uuid :: String.t()) ::
               {:ok, Flow.t()} | {:error, String.t()}
 
-  @callback evaluate_expression(String.t(), map) :: {:ok, String.t()} | {:error, String.t()}
-  @callback evaluate_expression_block(String.t(), map) :: {:ok, String.t()} | {:error, String.t()}
+  @callback evaluate_expression(String.t(), map) :: {:ok, [term]} | {:error, String.t()}
+  @callback evaluate_expression_to_string!(String.t(), map) :: String.t()
+  @callback evaluate_expression_block(String.t(), map) :: {:ok, [term]} | {:error, String.t()}
 end
