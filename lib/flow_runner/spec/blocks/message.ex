@@ -32,7 +32,7 @@ defmodule FlowRunner.Spec.Blocks.Message do
 
     case Resource.matching_resource(resource, context.language, context.mode, flow) do
       {:ok, prompt} ->
-        {:ok, [value]} = FlowRunner.evaluate_expression(prompt.value, context.vars)
+        value = FlowRunner.evaluate_expression_as_string!(prompt.value, context.vars)
 
         {
           :ok,
