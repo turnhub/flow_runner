@@ -123,8 +123,8 @@ defmodule FlowRunner do
   end
 
   @impl FlowRunner.Contract
-  def evaluate_expression_to_string!(expression, context) do
-    Expression.to_string!(expression, context, expression_callbacks_module())
+  def evaluate_expression_as_string!(expression, context) do
+    Expression.evaluate_as_string!(expression, context, expression_callbacks_module())
   end
 
   @impl FlowRunner.Contract

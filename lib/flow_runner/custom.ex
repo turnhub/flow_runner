@@ -34,7 +34,7 @@ defmodule FlowRunner.Custom do
       defdelegate evaluate_expression(expression, context), to: FlowRunner
 
       @impl FlowRunner.Contract
-      defdelegate evaluate_expression_to_string!(expression, context), to: FlowRunner
+      defdelegate evaluate_expression_as_string!(expression, context), to: FlowRunner
 
       @impl FlowRunner.Contract
       defdelegate evaluate_expression_block(expression, context), to: FlowRunner

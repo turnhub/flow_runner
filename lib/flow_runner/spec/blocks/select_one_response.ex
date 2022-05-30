@@ -98,7 +98,7 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
 
     case Resource.matching_resource(resource, context.language, context.mode, flow) do
       {:ok, prompt} ->
-        value = FlowRunner.evaluate_expression_to_string!(prompt.value, context.vars)
+        value = FlowRunner.evaluate_expression_as_string!(prompt.value, context.vars)
 
         {
           :ok,
@@ -120,7 +120,7 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
                   )
 
                 rendered_resource_value =
-                  FlowRunner.evaluate_expression_to_string!(resource_value.value, context.vars)
+                  FlowRunner.evaluate_expression_as_string!(resource_value.value, context.vars)
 
                 {name, rendered_resource_value}
               end)

@@ -39,7 +39,7 @@ defmodule FlowRunner.Spec.Blocks.OpenResponse do
 
     case Resource.matching_resource(resource, context.language, context.mode, flow) do
       {:ok, prompt} ->
-        value = FlowRunner.evaluate_expression_to_string!(prompt.value, context.vars)
+        value = FlowRunner.evaluate_expression_as_string!(prompt.value, context.vars)
 
         {
           :ok,

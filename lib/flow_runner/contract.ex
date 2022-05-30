@@ -58,6 +58,6 @@ defmodule FlowRunner.Contract do
               {:ok, Flow.t()} | {:error, String.t()}
 
   @callback evaluate_expression(String.t(), map) :: {:ok, [term]} | {:error, String.t()}
-  @callback evaluate_expression_to_string!(String.t(), map) :: String.t()
+  @callback evaluate_expression_as_string!(String.t(), map) :: String.t()
   @callback evaluate_expression_block(String.t(), map) :: {:ok, [term]} | {:error, String.t()}
 end
