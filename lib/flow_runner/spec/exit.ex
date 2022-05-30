@@ -35,7 +35,7 @@ defmodule FlowRunner.Spec.Exit do
     test = exit.test || ""
 
     case FlowRunner.evaluate_expression_block(test, context.vars) do
-      {:ok, result} ->
+      {:ok, [result]} ->
         result
 
       {:error, reason} ->
