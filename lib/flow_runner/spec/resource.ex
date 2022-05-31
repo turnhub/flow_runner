@@ -47,4 +47,7 @@ defmodule FlowRunner.Spec.Resource do
       {:error, "no matching languages for resource"}
     end
   end
+
+  def fetch_resource_value(resource, language, mode, flow),
+    do: matching_resource(resource, language, mode, flow)
 end

@@ -4,7 +4,6 @@ defmodule FlowRunner.Spec.Blocks.Log do
   """
   @behaviour FlowRunner.Spec.Block
   alias FlowRunner.Context
-  alias FlowRunner.Output
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Flow
@@ -49,7 +48,7 @@ defmodule FlowRunner.Spec.Blocks.Log do
           }
       end
 
-    {:ok, context, %Output{block: block}}
+    {:ok, container, flow, block, context}
   end
 
   @impl true

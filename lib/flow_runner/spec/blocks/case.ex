@@ -7,7 +7,6 @@ defmodule FlowRunner.Spec.Blocks.Case do
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Flow
-  alias FlowRunner.Output
 
   require Logger
 
@@ -18,12 +17,12 @@ defmodule FlowRunner.Spec.Blocks.Case do
 
   @impl true
   def evaluate_incoming(
-        %Container{},
-        %Flow{},
+        %Container{} = container,
+        %Flow{} = flow,
         %Block{} = block,
         %Context{} = context
       ) do
-    {:ok, %Context{context | last_block_uuid: block.uuid}, %Output{block: block}}
+    {:ok, container, flow, block, %Context{context | last_block_uuid: block.uuid}}
   end
 
   @impl true

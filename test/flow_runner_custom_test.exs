@@ -23,10 +23,17 @@ defmodule FlowRunner.CustomTest do
         "TEXT"
       )
 
-    {:ok, _context, _, output} = FlowRunner.next_block(container, context)
-    assert output.prompt.value == "welcome to this block"
-    assert output.prompt.modes == ["TEXT"]
-    assert output.prompt.content_type == "TEXT"
+    {:ok, container, flow, block, context} = FlowRunner.next_block(container, context)
+    assert block.type == "MobilePrimitives.Message"
+    assert %{prompt: resource_uuid} = block.config
+    assert {:ok, resource} = FlowRunner.fetch_resource_by_uuid(container, resource_uuid)
+
+    assert {:ok, resource_value} =
+             FlowRunner.fetch_resource_value(resource, context.language, context.mode, flow)
+
+    assert resource_value.value == "welcome to this block"
+    assert resource_value.modes == ["TEXT"]
+    assert resource_value.content_type == "TEXT"
   end
 
   test "fetch a flow", %{flow_runner: flow_runner} do

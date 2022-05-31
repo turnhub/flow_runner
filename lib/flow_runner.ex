@@ -6,7 +6,7 @@ defmodule FlowRunner do
   @behaviour FlowRunner.Contract
 
   alias FlowRunner.Context
-  alias FlowRunner.Output
+  # alias FlowRunner.Output
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Flow
@@ -100,15 +100,9 @@ defmodule FlowRunner do
   @impl FlowRunner.Contract
   def evaluate_next_block(container, flow, next_block, context) do
     # Evaluate the block we have transitioned to and return updated context and output.
-    contact_output = Block.evaluate_contact_properties(next_block)
+    # contact_output = Block.evaluate_contact_properties(next_block)
 
-    case Block.evaluate_incoming(container, flow, next_block, context) do
-      {:ok, context, output} ->
-        {:ok, context, next_block, Output.merge(output, contact_output)}
-
-      {:error, reason} ->
-        {:error, reason}
-    end
+    Block.evaluate_incoming(container, flow, next_block, context)
   end
 
   def blocks_module(),
@@ -131,6 +125,9 @@ defmodule FlowRunner do
   def evaluate_expression_block(expression, context) do
     Expression.evaluate_block(expression, context, expression_callbacks_module())
   end
+
+  defdelegate fetch_resource_by_uuid(container, uuid), to: FlowRunner.Spec.Container
+  defdelegate fetch_resource_value(resource, language, mode, flow), to: FlowRunner.Spec.Resource
 
   def find_next_block(
         %Flow{} = flow,

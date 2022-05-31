@@ -5,11 +5,11 @@ defmodule FlowRunner.Spec.Blocks.Message do
   @behaviour FlowRunner.Spec.Block
 
   alias FlowRunner.Context
-  alias FlowRunner.Output
+  # alias FlowRunner.Output
   alias FlowRunner.Spec.Block
-  alias FlowRunner.Spec.Container
+  # alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Flow
-  alias FlowRunner.Spec.Resource
+  # alias FlowRunner.Spec.Resource
 
   @impl true
   def validate_config!(%{"prompt" => prompt}) do
@@ -28,24 +28,23 @@ defmodule FlowRunner.Spec.Blocks.Message do
 
   @impl true
   def evaluate_incoming(container, %Flow{} = flow, %Block{} = block, context) do
-    {:ok, resource} = Container.fetch_resource_by_uuid(container, block.config.prompt)
+    # {:ok, resource} = Container.fetch_resource_by_uuid(container, block.config.prompt)
 
-    case Resource.matching_resource(resource, context.language, context.mode, flow) do
-      {:ok, prompt} ->
-        value = FlowRunner.evaluate_expression_as_string!(prompt.value, context.vars)
+    # case Resource.matching_resource(resource, context.language, context.mode, flow) do
+    # {:ok, prompt} ->
+    # value = FlowRunner.evaluate_expression_as_string!(prompt.value, context.vars)
 
-        {
-          :ok,
-          %Context{context | waiting_for_user_input: false, last_block_uuid: block.uuid},
-          %Output{
-            block: block,
-            prompt: %{prompt | value: value}
-          }
-        }
+    {
+      :ok,
+      container,
+      flow,
+      block,
+      %Context{context | waiting_for_user_input: false, last_block_uuid: block.uuid}
+    }
 
-      {:error, reason} ->
-        {:error, reason}
-    end
+    # {:error, reason} ->
+    #   {:error, reason}
+    # end
   end
 
   @impl true

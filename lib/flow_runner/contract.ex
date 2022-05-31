@@ -36,7 +36,7 @@ defmodule FlowRunner.Contract do
   then return the context of the parent flow.
   """
   @callback next_block(Container.t(), Context.t(), user_input :: nil | String.t()) ::
-              {:ok, %Context{}, %Block{} | nil, %Output{} | nil}
+              {:ok, Container.t(), Flow.t(), Block.t() | nil, Context.t()}
               | {:error, reason :: String.t()}
 
   @doc """

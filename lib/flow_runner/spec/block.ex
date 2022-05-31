@@ -27,7 +27,7 @@ defmodule FlowRunner.Spec.Block do
   # Evaluate the block we have transitioned to and return updated context and output.
   """
   @callback evaluate_incoming(Container.t(), Flow.t(), Block.t(), Context.t()) ::
-              {:ok, Context.t(), Output.t()}
+              {:ok, Container.t(), Flow.t(), Block.t(), Context.t()}
               | {:error, String.t()}
 
   @doc """
