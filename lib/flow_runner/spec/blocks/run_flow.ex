@@ -10,7 +10,6 @@ defmodule FlowRunner.Spec.Blocks.RunFlow do
   """
   @behaviour FlowRunner.Spec.Block
   alias FlowRunner.Context
-  # alias FlowRunner.Output
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Flow

@@ -4,7 +4,6 @@ defmodule FlowRunner.Spec.Blocks.SetGroupMembership do
   """
   @behaviour FlowRunner.Spec.Block
   alias FlowRunner.Context
-  # alias FlowRunner.Output
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Flow
@@ -40,13 +39,6 @@ defmodule FlowRunner.Spec.Blocks.SetGroupMembership do
         } = block,
         %Context{} = context
       ) do
-    # output = %Output{
-    #   group_update_key: key,
-    #   group_update_name: name,
-    #   group_update_is_member: is_member,
-    #   block: block
-    # }
-
     {:ok, container, flow, block, %Context{context | last_block_uuid: block.uuid}}
   end
 

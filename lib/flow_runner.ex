@@ -6,7 +6,6 @@ defmodule FlowRunner do
   @behaviour FlowRunner.Contract
 
   alias FlowRunner.Context
-  # alias FlowRunner.Output
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Flow
