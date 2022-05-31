@@ -21,16 +21,9 @@ defmodule FlowRunnerTest do
       )
 
     assert {:ok, container, flow, block, context} = FlowRunner.next_block(container, context)
-    assert block.type == "MobilePrimitives.Message"
-    assert %{prompt: resource_uuid} = block.config
-    assert {:ok, resource} = FlowRunner.fetch_resource_by_uuid(container, resource_uuid)
 
-    assert {:ok, resource_value} =
-             FlowRunner.fetch_resource_value(resource, context.language, context.mode, flow)
-
-    assert resource_value.value == "welcome to this block"
-    assert resource_value.modes == ["TEXT"]
-    assert resource_value.content_type == "TEXT"
+    assert resource_value(container, flow, context, block.config.prompt) ==
+             "welcome to this block"
   end
 
   @tag flow: "test/selectoneresponse.flow"
@@ -45,8 +38,8 @@ defmodule FlowRunnerTest do
         }
       )
 
-    assert %{prompt: resource_uuid} = block.config
-    assert resource_value(container, flow, context, resource_uuid) == "اختر اسمًا"
+    assert resource_value(container, flow, context, block.config.prompt) ==
+             "اختر اسمًا"
 
     {:ok, container, flow, block, context} =
       FlowRunner.next_block(
@@ -58,8 +51,7 @@ defmodule FlowRunnerTest do
         }
       )
 
-    assert %{prompt: resource_uuid} = block.config
-    assert resource_value(container, flow, context, resource_uuid) == "choose a name"
+    assert resource_value(container, flow, context, block.config.prompt) == "choose a name"
   end
 
   @tag flow: "test/selectoneresponse.rc3.flow"
@@ -77,16 +69,7 @@ defmodule FlowRunnerTest do
         }
       )
 
-    assert block.type == "MobilePrimitives.SelectOneResponse"
-    assert %{prompt: resource_uuid} = block.config
-    assert {:ok, resource} = FlowRunner.fetch_resource_by_uuid(container, resource_uuid)
-
-    assert {:ok, resource_value} =
-             FlowRunner.fetch_resource_value(resource, context.language, context.mode, flow)
-
-    assert resource_value.value == "اختر اسمًا"
-    assert resource_value.modes == ["TEXT"]
-    assert resource_value.content_type == "TEXT"
+    assert resource_value(container, flow, context, block.config.prompt) == "اختر اسمًا"
 
     {:ok, container, flow, block, context} =
       FlowRunner.next_block(
@@ -101,16 +84,8 @@ defmodule FlowRunnerTest do
         }
       )
 
-    assert block.type == "MobilePrimitives.SelectOneResponse"
-    assert %{prompt: resource_uuid} = block.config
-    assert {:ok, resource} = FlowRunner.fetch_resource_by_uuid(container, resource_uuid)
-
-    assert {:ok, resource_value} =
-             FlowRunner.fetch_resource_value(resource, context.language, context.mode, flow)
-
-    assert resource_value.value == "hi *@PROPER(contact.name)*! Choose a name:"
-    assert resource_value.modes == ["TEXT"]
-    assert resource_value.content_type == "TEXT"
+    assert resource_value(container, flow, context, block.config.prompt) ==
+             "hi *@PROPER(contact.name)*! Choose a name:"
   end
 
   @tag flow: "test/selectoneresponse.rc3.flow"
@@ -127,14 +102,14 @@ defmodule FlowRunnerTest do
       )
 
     {:ok, container, flow, block, context} = FlowRunner.next_block(container, context)
-    assert %{prompt: resource_uuid} = block.config
-    assert resource_value(container, flow, context, resource_uuid) == "اختر اسمًا"
-
+    assert resource_value(container, flow, context, block.config.prompt) == "اختر اسمًا"
     assert context.waiting_for_user_input
+
     {:ok, container, flow, block, context} = FlowRunner.next_block(container, context, "maalika")
     assert %{prompt: resource_uuid} = block.config
     assert resource_value(container, flow, context, resource_uuid) == "salaam maalika"
     refute context.waiting_for_user_input
+
     {:end, _context} = FlowRunner.next_block(container, context)
 
     {:ok, context} =

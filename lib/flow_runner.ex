@@ -98,9 +98,6 @@ defmodule FlowRunner do
 
   @impl FlowRunner.Contract
   def evaluate_next_block(container, flow, next_block, context) do
-    # Evaluate the block we have transitioned to and return updated context and output.
-    # contact_output = Block.evaluate_contact_properties(next_block)
-
     Block.evaluate_incoming(container, flow, next_block, context)
   end
 
