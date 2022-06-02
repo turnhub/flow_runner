@@ -42,4 +42,13 @@ defmodule FlowRunner.Test.Utils do
       :ok
     end
   end
+
+  def resource_value(container, flow, context, resource_uuid) do
+    {:ok, resource} = FlowRunner.fetch_resource_by_uuid(container, resource_uuid)
+
+    {:ok, resource_value} =
+      FlowRunner.fetch_resource_value(resource, context.language, context.mode, flow)
+
+    resource_value.value
+  end
 end

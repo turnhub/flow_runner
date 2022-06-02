@@ -17,13 +17,13 @@ defmodule FlowRunner.Spec.Blocks.Output do
 
   @impl true
   def evaluate_incoming(
-        %Container{},
-        %Flow{},
+        %Container{} = container,
+        %Flow{} = flow,
         %Block{} = block,
         %Context{} = context
       ) do
     # When Flow Results are implemented we should store the output results.
-    {:ok, %Context{context | last_block_uuid: block.uuid}, %FlowRunner.Output{block: block}}
+    {:ok, container, flow, block, %Context{context | last_block_uuid: block.uuid}}
   end
 
   @impl true

@@ -5,11 +5,8 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
   """
   @behaviour FlowRunner.Spec.Block
   alias FlowRunner.Context
-  alias FlowRunner.Output
   alias FlowRunner.Spec.Block
-  alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Flow
-  alias FlowRunner.Spec.Resource
 
   @impl true
   def validate_config!(%{"prompt" => prompt, "choices" => choices}) when is_map(choices) do
@@ -94,42 +91,13 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
 
   @impl true
   def evaluate_incoming(container, flow, block, context) do
-    {:ok, resource} = Container.fetch_resource_by_uuid(container, block.config.prompt)
-
-    case Resource.matching_resource(resource, context.language, context.mode, flow) do
-      {:ok, prompt} ->
-        value = FlowRunner.evaluate_expression_as_string!(prompt.value, context.vars)
-
-        {
-          :ok,
-          %Context{context | waiting_for_user_input: true, last_block_uuid: block.uuid},
-          %Output{
-            block: block,
-            prompt: %{prompt | value: value},
-            choices:
-              block.config.choices
-              |> Enum.map(fn %{name: name, test: _test, prompt: prompt_resource} ->
-                {:ok, resource} = Container.fetch_resource_by_uuid(container, prompt_resource)
-
-                {:ok, resource_value} =
-                  Resource.matching_resource(
-                    resource,
-                    context.language,
-                    context.mode,
-                    flow
-                  )
-
-                rendered_resource_value =
-                  FlowRunner.evaluate_expression_as_string!(resource_value.value, context.vars)
-
-                {name, rendered_resource_value}
-              end)
-          }
-        }
-
-      {:error, reason} ->
-        {:error, reason}
-    end
+    {
+      :ok,
+      container,
+      flow,
+      block,
+      %Context{context | waiting_for_user_input: true, last_block_uuid: block.uuid}
+    }
   end
 
   @impl true

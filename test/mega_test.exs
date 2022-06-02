@@ -12,57 +12,95 @@ defmodule MegaTest do
     {:ok, context} =
       FlowRunner.create_context(container, "ee84b2b7-ca0f-4492-a964-fdc5eb83dd47", "eng", "TEXT")
 
-    {:ok, context, _, output} = FlowRunner.next_block(container, context)
-    assert %{prompt: %{value: "welcome to the MEGA test"}} = output
+    {:ok, container, flow, block, context} = FlowRunner.next_block(container, context)
+
+    assert resource_value(container, flow, context, block.config.prompt) ==
+             "welcome to the MEGA test"
 
     # Test Core.Log
-    {:ok, context, _, _output} = FlowRunner.next_block(container, context)
+    {:ok, container, _flow, _block, context} = FlowRunner.next_block(container, context)
     assert %{log: ["we are logging the mega test"]} = context
 
     # Test MobilePrimitive.SelectOneResponse
-    {:ok, context, _, output} = FlowRunner.next_block(container, context)
+    {:ok, container, flow, block, context} = FlowRunner.next_block(container, context)
 
     assert %{
-             prompt: %{
-               value: "do you want to CONTINUE or START AGAIN"
-             },
-             choices: [{"continue", "continue"}, {"start_again", "start again"}]
-           } = output
+             prompt: menu_prompt,
+             choices: [
+               %{
+                 name: "continue",
+                 prompt: continue_prompt,
+                 test: "block.response = \"continue\""
+               },
+               %{
+                 name: "start_again",
+                 prompt: start_again_prompt,
+                 test: "block.response = \"start_again\""
+               }
+             ]
+           } = block.config
+
+    assert resource_value(container, flow, context, menu_prompt) ==
+             "do you want to CONTINUE or START AGAIN"
+
+    assert resource_value(container, flow, context, continue_prompt) ==
+             "continue"
+
+    assert resource_value(container, flow, context, start_again_prompt) ==
+             "start again"
 
     # Choose start_again
-    {:ok, _context, _, output} = FlowRunner.next_block(container, context, "start_again")
-    assert %{prompt: %{value: "welcome to the MEGA test"}} = output
+    {:ok, container, flow, block, context} =
+      FlowRunner.next_block(container, context, "start_again")
+
+    assert resource_value(container, flow, context, block.config.prompt) ==
+             "welcome to the MEGA test"
+
+    {:ok, container, _flow, _block, context} = FlowRunner.next_block(container, context)
+
+    # Test Core.Log again
+    assert %{log: ["we are logging the mega test", "we are logging the mega test"]} = context
+
+    # Test MobilePrimitive.SelectOneResponse
+    {:ok, container, _flow, _block, context} = FlowRunner.next_block(container, context)
 
     # Choose something none of the choices and proceed through default exit.
-    {:ok, _context, _, output} = FlowRunner.next_block(container, context, "something else")
-    assert %{prompt: %{value: "you chose none of them"}} = output
+    {:ok, container, flow, block, _context} =
+      FlowRunner.next_block(container, context, "something else")
+
+    assert resource_value(container, flow, context, block.config.prompt) ==
+             "you chose none of them"
 
     # Choose continue
-    {:ok, context, _, output} = FlowRunner.next_block(container, context, "continue")
-    assert %{prompt: %{value: "what is your name?"}} = output
-
+    {:ok, container, flow, block, context} = FlowRunner.next_block(container, context, "continue")
+    assert resource_value(container, flow, context, block.config.prompt) == "what is your name?"
     # See that max_response_characters works.
-    {:ok, _context, _, output} =
+    {:ok, container, flow, block, _context} =
       FlowRunner.next_block(container, context, "longer name than we allow")
 
-    assert %{prompt: %{value: "your name or age is either too long or not a number or something"}} =
-             output
+    assert resource_value(container, flow, context, block.config.prompt) ==
+             "your name or age is either too long or not a number or something"
 
     # And then a valid response. Test MobilePrimitive.NumericResponse
-    {:ok, context, _, output} = FlowRunner.next_block(container, context, "yaseen")
-    assert %{prompt: %{value: "yaseen what is your age?"}} = output
+    {:ok, container, flow, block, context} = FlowRunner.next_block(container, context, "yaseen")
+
+    assert resource_value(container, flow, context, block.config.prompt) ==
+             "@(block.value) what is your age?"
 
     # What happens if we give NumericResponse a non-numeric input?
-    {:ok, _context, _, output} = FlowRunner.next_block(container, context, "not a number")
+    {:ok, container, flow, block, _context} =
+      FlowRunner.next_block(container, context, "not a number")
 
-    assert %{prompt: %{value: "your name or age is either too long or not a number or something"}} =
-             output
+    assert resource_value(container, flow, context, block.config.prompt) ==
+             "your name or age is either too long or not a number or something"
 
     # Ok let's give it real input again
-    {:ok, context, _, output} = FlowRunner.next_block(container, context, "11")
+    {:ok, container, flow, block, context} = FlowRunner.next_block(container, context, "11")
 
-    assert %{prompt: %{value: "i think we're done here"}} = output
+    assert resource_value(container, flow, context, block.config.prompt) ==
+             "i think we're done here"
 
-    {:end, %{log: ["we are logging the mega test"]}} = FlowRunner.next_block(container, context)
+    {:end, %{log: ["we are logging the mega test", "we are logging the mega test"]}} =
+      FlowRunner.next_block(container, context)
   end
 end

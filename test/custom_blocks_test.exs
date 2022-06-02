@@ -42,10 +42,17 @@ defmodule RunnerTest do
         "TEXT"
       )
 
-    {:ok, _context, _, output} = FlowRunner.next_block(container, context)
-    assert output.prompt.value == "welcome to this block"
-    assert output.prompt.modes == ["TEXT"]
-    assert output.prompt.content_type == "TEXT"
+    {:ok, container, flow, block, context} = FlowRunner.next_block(container, context)
+    assert block.type == "Io.Turn.Custom"
+    assert %{prompt: resource_uuid} = block.config
+    assert {:ok, resource} = FlowRunner.fetch_resource_by_uuid(container, resource_uuid)
+
+    assert {:ok, resource_value} =
+             FlowRunner.fetch_resource_value(resource, context.language, context.mode, flow)
+
+    assert resource_value.value == "welcome to this block"
+    assert resource_value.modes == ["TEXT"]
+    assert resource_value.content_type == "TEXT"
   end
 
   test "custom blocks attribute shouldn't be encoded in JSON" do

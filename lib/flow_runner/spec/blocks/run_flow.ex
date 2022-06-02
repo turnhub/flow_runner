@@ -10,7 +10,6 @@ defmodule FlowRunner.Spec.Blocks.RunFlow do
   """
   @behaviour FlowRunner.Spec.Block
   alias FlowRunner.Context
-  alias FlowRunner.Output
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Flow
@@ -31,7 +30,12 @@ defmodule FlowRunner.Spec.Blocks.RunFlow do
   end
 
   @impl true
-  def evaluate_incoming(%Container{}, %Flow{}, %Block{config: config} = block, context) do
+  def evaluate_incoming(
+        %Container{} = container,
+        %Flow{} = flow,
+        %Block{config: config} = block,
+        context
+      ) do
     next_flow_id = config.flow_id
 
     context = %Context{context | last_block_uuid: block.uuid}
@@ -43,7 +47,7 @@ defmodule FlowRunner.Spec.Blocks.RunFlow do
         last_block_uuid: nil
     }
 
-    {:ok, next_context, %Output{block: block}}
+    {:ok, container, flow, block, next_context}
   end
 
   @impl true

@@ -9,7 +9,6 @@ defmodule FlowRunner.Spec.Block do
     ]
 
   alias FlowRunner.Context
-  alias FlowRunner.Output
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Exit
@@ -24,10 +23,11 @@ defmodule FlowRunner.Spec.Block do
   @callback validate_config!(map) :: map
 
   @doc """
-  # Evaluate the block we have transitioned to and return updated context and output.
+  Evaluate the block we have transitioned to and return updated container, flow,
+  block and context
   """
   @callback evaluate_incoming(Container.t(), Flow.t(), Block.t(), Context.t()) ::
-              {:ok, Context.t(), Output.t()}
+              {:ok, Container.t(), Flow.t(), Block.t(), Context.t()}
               | {:error, String.t()}
 
   @doc """
@@ -170,28 +170,6 @@ defmodule FlowRunner.Spec.Block do
 
   def evaluate_user_input(_block, _context, user_input) do
     {:error, "unexpectedly received user input: #{inspect(user_input)}"}
-  end
-
-  @doc """
-  Evaluate any contact updates that a block may specify
-  """
-  @spec evaluate_contact_properties(Block.t()) :: Output.t()
-  def evaluate_contact_properties(%Block{
-        config: %{
-          set_contact_property: %{
-            property_key: property_key,
-            property_value: property_value
-          }
-        }
-      }) do
-    %Output{
-      contact_update_key: property_key,
-      contact_update_value: property_value
-    }
-  end
-
-  def evaluate_contact_properties(_block) do
-    %Output{}
   end
 
   def evaluate_incoming(container, flow, %Block{type: type} = block, context) do

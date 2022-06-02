@@ -4,7 +4,6 @@ defmodule FlowRunner.Contract do
   """
 
   alias FlowRunner.Context
-  alias FlowRunner.Output
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Flow
@@ -26,8 +25,7 @@ defmodule FlowRunner.Contract do
   @doc """
   next_block transitions us from one block to the next block in a flow. It requires a
   flow, a run context and optionally user input requested from the previous block.
-  It returns an updated context, optionally an output that should be rendered on the
-  clients device.
+  It returns an updated container, flow, block, and context.
 
   The updated context may have context.waiting_for_user_input set to true. If so the
   next call of next_block must have user_input != nil.
@@ -36,17 +34,18 @@ defmodule FlowRunner.Contract do
   then return the context of the parent flow.
   """
   @callback next_block(Container.t(), Context.t(), user_input :: nil | String.t()) ::
-              {:ok, %Context{}, %Block{} | nil, %Output{} | nil}
+              {:ok, Container.t(), Flow.t(), Block.t() | nil, Context.t()}
               | {:error, reason :: String.t()}
 
   @doc """
   If the current block is not waiting on user input then FlowRunner proceeds automatically to
   the next block with the the context of the previous block by calling this callback.
 
-  This is where we evaluate the block we have transitioned to and return updated context and output.
+  This is where we evaluate the block we have transitioned to and return updated container, flow,
+  block, and context.
   """
   @callback evaluate_next_block(Container.t(), Flow.t(), Block.t(), Context.t()) ::
-              {:ok, Context.t(), Block.t(), Output.t()}
+              {:ok, Container.t(), Flow.t(), Block.t(), Context.t()}
               | {:end, Context.t()}
               | {:error, String.t()}
 

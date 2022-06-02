@@ -17,13 +17,13 @@ defmodule FlowRunner.Spec.Blocks.SetContactProperty do
 
   @impl true
   def evaluate_incoming(
-        %Container{},
-        %Flow{},
+        %Container{} = container,
+        %Flow{} = flow,
         %Block{} = block,
         %Context{} = context
       ) do
     # This is a no-op as we check these fields for all blocks in FlowRunner module.
-    {:ok, %Context{context | last_block_uuid: block.uuid}, %FlowRunner.Output{block: block}}
+    {:ok, container, flow, block, %Context{context | last_block_uuid: block.uuid}}
   end
 
   @impl true
