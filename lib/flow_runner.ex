@@ -123,7 +123,9 @@ defmodule FlowRunner do
   end
 
   defdelegate fetch_resource_by_uuid(container, uuid), to: FlowRunner.Spec.Container
-  def fetch_resource_value(resource, language, mode, flow), do: FlowRunner.Spec.Resource.matching_resource(resource, language, mode, flow)
+
+  def fetch_resource_value(resource, language, mode, flow),
+    do: FlowRunner.Spec.Resource.matching_resource(resource, language, mode, flow)
 
   def find_next_block(
         %Flow{} = flow,
