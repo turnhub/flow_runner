@@ -29,14 +29,7 @@ defmodule FlowRunner.Spec.Blocks.SetGroupMembership do
   def evaluate_incoming(
         %Container{} = container,
         %Flow{} = flow,
-        %Block{
-          config:
-            %{
-              # group_key: key,
-              # is_member: is_member,
-              # group_name: name
-            }
-        } = block,
+        %Block{} = block,
         %Context{} = context
       ) do
     {:ok, container, flow, block, %Context{context | last_block_uuid: block.uuid}}
