@@ -91,7 +91,7 @@ defmodule FlowRunner do
 
         # if we don't have a next block then we've reached our end
         is_nil(next_block) ->
-          {:end, current_block, context}
+          {:end, container, flow, current_block, context}
       end
     end
   end

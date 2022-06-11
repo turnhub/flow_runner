@@ -110,7 +110,7 @@ defmodule FlowRunnerTest do
     assert resource_value(container, flow, context, resource_uuid) == "salaam maalika"
     refute context.waiting_for_user_input
 
-    {:end, _context} = FlowRunner.next_block(container, context)
+    {:end, _container, _flow, _block, _context} = FlowRunner.next_block(container, context)
 
     {:ok, context} =
       FlowRunner.create_context(
@@ -136,7 +136,7 @@ defmodule FlowRunnerTest do
     assert resource_value(container, flow, context, resource_uuid) == "hello yaseen"
 
     refute context.waiting_for_user_input
-    {:end, _context} = FlowRunner.next_block(container, context)
+    {:end, _container, _flow, _block, _context} = FlowRunner.next_block(container, context)
   end
 
   @tag flow: "test/selectoneresponse.flow"
@@ -152,7 +152,7 @@ defmodule FlowRunnerTest do
     assert resource_value(container, flow, context, block.config.prompt) == "salaam maalika"
     refute context.waiting_for_user_input
 
-    {:end, _context} = FlowRunner.next_block(container, context)
+    {:end, _container, _flow, _block, _context} = FlowRunner.next_block(container, context)
 
     {:ok, context} =
       FlowRunner.create_context(container, "efaabaac-d035-43f5-a7fe-0e4e757c8095", "eng", "TEXT")
@@ -165,7 +165,7 @@ defmodule FlowRunnerTest do
     assert resource_value(container, flow, context, block.config.prompt) == "hello yaseen"
     refute context.waiting_for_user_input
 
-    {:end, _context} = FlowRunner.next_block(container, context)
+    {:end, _container, _flow, _block, _context} = FlowRunner.next_block(container, context)
   end
 
   @tag flow: "test/selectoneresponse.rc3.flow"
@@ -189,7 +189,7 @@ defmodule FlowRunnerTest do
     assert resource_value(container, flow, context, block.config.prompt) == "salaam maalika"
     refute context.waiting_for_user_input
 
-    {:end, _context} = FlowRunner.next_block(container, context)
+    {:end, _container, _flow, _block, _context} = FlowRunner.next_block(container, context)
 
     {:ok, context} =
       FlowRunner.create_context(
@@ -213,7 +213,7 @@ defmodule FlowRunnerTest do
     assert resource_value(container, flow, context, block.config.prompt) == "hello yaseen"
     refute context.waiting_for_user_input
 
-    {:end, _context} = FlowRunner.next_block(container, context)
+    {:end, _container, _flow, _block, _context} = FlowRunner.next_block(container, context)
   end
 
   @tag flow: "test/selectoneresponse.rc3.flow"
@@ -233,7 +233,8 @@ defmodule FlowRunnerTest do
     assert resource_value(container, flow, context, block.config.prompt) == "اختر اسمًا"
     assert context.waiting_for_user_input
 
-    {:end, context} = FlowRunner.next_block(container, context, "something unexpected")
+    {:end, _container, _flow, _block, context} =
+      FlowRunner.next_block(container, context, "something unexpected")
 
     assert context.vars["choose"] == "something unexpected"
     assert context.vars["block"]["value"] == "something unexpected"
@@ -255,7 +256,7 @@ defmodule FlowRunnerTest do
 
     {:ok, container, flow, block, context} = FlowRunner.next_block(container, context)
     assert resource_value(container, flow, context, block.config.prompt) == "back to flow 1"
-    {:end, _current_block, _context} = FlowRunner.next_block(container, context)
+    {:end, _container, _flow, _block, _context} = FlowRunner.next_block(container, context)
   end
 
   @tag flow: "test/log.flow"
@@ -265,7 +266,7 @@ defmodule FlowRunnerTest do
 
     {:ok, container, _flow, _block, context} = FlowRunner.next_block(container, context)
     {:ok, container, _flow, _block, context} = FlowRunner.next_block(container, context)
-    {:end, _current_block, context} = FlowRunner.next_block(container, context)
+    {:end, _container, _flow, _block, context} = FlowRunner.next_block(container, context)
 
     assert context.log == ["block2", "block1"]
   end
@@ -413,6 +414,6 @@ defmodule FlowRunnerTest do
     assert resource_value(container, flow, context, block.config.prompt) ==
              "done"
 
-    assert {:end, _current_block, _context} = FlowRunner.next_block(container, context)
+    assert {:end, _container, _flow, _block, _context} = FlowRunner.next_block(container, context)
   end
 end
