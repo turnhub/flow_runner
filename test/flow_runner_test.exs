@@ -255,7 +255,7 @@ defmodule FlowRunnerTest do
 
     {:ok, container, flow, block, context} = FlowRunner.next_block(container, context)
     assert resource_value(container, flow, context, block.config.prompt) == "back to flow 1"
-    {:end, _context} = FlowRunner.next_block(container, context)
+    {:end, _current_block, _context} = FlowRunner.next_block(container, context)
   end
 
   @tag flow: "test/log.flow"
@@ -265,7 +265,7 @@ defmodule FlowRunnerTest do
 
     {:ok, container, _flow, _block, context} = FlowRunner.next_block(container, context)
     {:ok, container, _flow, _block, context} = FlowRunner.next_block(container, context)
-    {:end, context} = FlowRunner.next_block(container, context)
+    {:end, _current_block, context} = FlowRunner.next_block(container, context)
 
     assert context.log == ["block2", "block1"]
   end
@@ -413,6 +413,6 @@ defmodule FlowRunnerTest do
     assert resource_value(container, flow, context, block.config.prompt) ==
              "done"
 
-    assert {:end, _context} = FlowRunner.next_block(container, context)
+    assert {:end, _current_block, _context} = FlowRunner.next_block(container, context)
   end
 end
