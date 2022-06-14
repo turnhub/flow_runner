@@ -46,7 +46,7 @@ defmodule FlowRunner.Contract do
   """
   @callback evaluate_next_block(Container.t(), Flow.t(), Block.t(), Context.t()) ::
               {:ok, Container.t(), Flow.t(), Block.t(), Context.t()}
-              | {:end, Context.t()}
+              | {:end, Container.t(), Flow.t(), Block.t(), Context.t()}
               | {:error, String.t()}
 
   @doc """

@@ -100,7 +100,8 @@ defmodule MegaTest do
     assert resource_value(container, flow, context, block.config.prompt) ==
              "i think we're done here"
 
-    {:end, %{log: ["we are logging the mega test", "we are logging the mega test"]}} =
+    {:end, _container, _flow, _block,
+     %{log: ["we are logging the mega test", "we are logging the mega test"]}} =
       FlowRunner.next_block(container, context)
   end
 end

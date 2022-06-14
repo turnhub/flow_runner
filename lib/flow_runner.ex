@@ -66,7 +66,7 @@ defmodule FlowRunner do
       ) do
     # Identify the block we are transitioning to and then evaluate incoming block rules.
     with {:ok, flow} <- fetch_flow_by_uuid(container, context.current_flow_uuid),
-         {:ok, context, next_block} <- find_next_block(flow, context, user_input) do
+         {:ok, context, current_block, next_block} <- find_next_block(flow, context, user_input) do
       cond do
         # If we have ended a Core.RunFlow block then continue where ever the parent left off
         is_nil(next_block) && not is_nil(context.parent_context) ->
@@ -79,7 +79,7 @@ defmodule FlowRunner do
           parent_context_vars =
             Map.put(parent_context.vars, parent_block.name, child_context.vars)
 
-          {:ok, context, next_block} =
+          {:ok, context, _current_block, next_block} =
             find_next_block(parent_flow, %{parent_context | vars: parent_context_vars}, nil)
 
           evaluate_next_block(container, parent_flow, next_block, context)
@@ -91,7 +91,7 @@ defmodule FlowRunner do
 
         # if we don't have a next block then we've reached our end
         is_nil(next_block) ->
-          {:end, context}
+          {:end, container, flow, current_block, context}
       end
     end
   end
@@ -127,6 +127,13 @@ defmodule FlowRunner do
   def fetch_resource_value(resource, language, mode, flow),
     do: FlowRunner.Spec.Resource.matching_resource(resource, language, mode, flow)
 
+  @doc """
+  Find the next block the current context is expecting. Returns both the current block and the next
+  block
+  """
+  @spec find_next_block(Flow.t(), Context.t(), user_input :: String.t() | nil) ::
+          {:ok, Context.t(), previous_block :: Block.t() | nil, next_block :: Block.t() | nil}
+          | {:error, reason :: String.t()}
   def find_next_block(
         %Flow{} = flow,
         %Context{last_block_uuid: nil} = context,
@@ -135,7 +142,7 @@ defmodule FlowRunner do
     # If this is the first time we are executing this flow (last_block_uuid == nil) then
     # transition to the first block.
     {:ok, next_block} = Flow.fetch_block(flow, flow.first_block_id)
-    {:ok, context, next_block}
+    {:ok, context, nil, next_block}
   end
 
   def find_next_block(
@@ -148,7 +155,7 @@ defmodule FlowRunner do
     with {:ok, previous_block} <- Flow.fetch_block(flow, last_block_uuid),
          {:ok, context, next_block} <-
            Block.evaluate_outgoing(flow, previous_block, context, user_input) do
-      {:ok, context, next_block}
+      {:ok, context, previous_block, next_block}
     else
       err -> err
     end
