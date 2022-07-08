@@ -33,7 +33,7 @@ defmodule FlowRunner do
   @impl FlowRunner.Contract
   def create_context(container, flow_uuid, language, mode, vars \\ %{}) do
     case fetch_flow_by_uuid(container, flow_uuid) do
-      {:ok, flow} ->
+      {:ok, _container, flow} ->
         {:ok,
          %Context{
            current_flow_uuid: flow.uuid,
@@ -65,15 +65,19 @@ defmodule FlowRunner do
         user_input
       ) do
     # Identify the block we are transitioning to and then evaluate incoming block rules.
-    with {:ok, flow} <- fetch_flow_by_uuid(container, context.current_flow_uuid),
-         {:ok, context, current_block, next_block} <- find_next_block(flow, context, user_input) do
+    with {:ok, container, flow} <-
+           fetch_flow_by_uuid(container, context.current_flow_uuid),
+         {:ok, context, current_block, next_block} <-
+           find_next_block(flow, context, user_input) do
       cond do
         # If we have ended a Core.RunFlow block then continue where ever the parent left off
         is_nil(next_block) && not is_nil(context.parent_context) ->
           # swap parent & child contexts
           {parent_context, child_context} = Map.pop(context, :parent_context)
 
-          {:ok, parent_flow} = fetch_flow_by_uuid(container, parent_context.current_flow_uuid)
+          {:ok, container, parent_flow} =
+            fetch_flow_by_uuid(container, parent_context.current_flow_uuid)
+
           {:ok, parent_block} = Flow.fetch_block(parent_flow, parent_context.last_block_uuid)
 
           parent_context_vars =
@@ -152,7 +156,8 @@ defmodule FlowRunner do
       ) do
     # Fetch the previous block we were at and then evaluate the
     # exits to identify the next block.
-    with {:ok, previous_block} <- Flow.fetch_block(flow, last_block_uuid),
+    with {:ok, previous_block} <-
+           Flow.fetch_block(flow, last_block_uuid),
          {:ok, context, next_block} <-
            Block.evaluate_outgoing(flow, previous_block, context, user_input) do
       {:ok, context, previous_block, next_block}

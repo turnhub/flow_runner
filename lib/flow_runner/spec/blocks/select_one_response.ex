@@ -45,6 +45,15 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
     raise "invalid config, 'prompt' and 'choices' fields required"
   end
 
+  @impl true
+  def list_resources_referenced(
+        container,
+        %{config: %{prompt: resource_uuid, choices: choices}}
+      ) do
+    resource_uuids = [resource_uuid | Enum.map(choices, & &1.prompt)]
+    Enum.filter(container.resources, &Enum.member?(resource_uuids, &1))
+  end
+
   defp validate_choices(choices) do
     {valid_choices, invalid_choices} =
       choices
