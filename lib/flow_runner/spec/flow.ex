@@ -37,6 +37,12 @@ defmodule FlowRunner.Spec.Flow do
 
   validates(:uuid, presence: true, uuid: [format: :default])
 
+  def list_resources_referenced(container, flow) do
+    Enum.reduce(flow.blocks, [], fn block, acc ->
+      FlowRunner.Spec.Block.list_resources_referenced(container, block) ++ acc
+    end)
+  end
+
   def cast!(params) do
     cast_datetime!(params, "last_modified")
   end

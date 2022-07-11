@@ -54,7 +54,7 @@ defmodule FlowRunner.Contract do
   load the flow when creating a new context
   """
   @callback fetch_flow_by_uuid(Container.t(), flow_uuid :: String.t()) ::
-              {:ok, Flow.t()} | {:error, String.t()}
+              {:ok, Container.t(), Flow.t()} | {:error, String.t()}
 
   @callback evaluate_expression(String.t(), map) :: {:ok, [term]} | {:error, String.t()}
   @callback evaluate_expression_as_string!(String.t(), map) :: String.t()

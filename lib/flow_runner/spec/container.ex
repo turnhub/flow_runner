@@ -9,6 +9,7 @@ defmodule FlowRunner.Spec.Container do
     ]
 
   alias FlowRunner.Spec.Container
+  alias FlowRunner.Spec.Flow
 
   @derive Jason.Encoder
   defstruct specification_version: nil,
@@ -36,6 +37,21 @@ defmodule FlowRunner.Spec.Container do
 
   validates(:uuid, presence: true, uuid: [format: :default])
 
+  def insert_flow_and_resources(
+        %Container{} = destination_container,
+        %Container{} = source_container,
+        %Flow{} = flow
+      ) do
+    %{
+      destination_container
+      | flows: destination_container.flows ++ [flow],
+        # NOTE: there should be a better way to do this
+        resources:
+          destination_container.resources ++
+            Flow.list_resources_referenced(source_container, flow)
+    }
+  end
+
   def fetch_resource_by_uuid(%Container{resources: resources}, uuid) do
     case Enum.find(resources, &(&1.uuid == uuid)) do
       nil -> {:error, "no matching resource"}
@@ -43,10 +59,10 @@ defmodule FlowRunner.Spec.Container do
     end
   end
 
-  def fetch_flow_by_uuid(%Container{flows: flows}, uuid) do
+  def fetch_flow_by_uuid(%Container{flows: flows} = container, uuid) do
     case Enum.find(flows, &(&1.uuid == uuid)) do
       nil -> {:error, "no matching flow"}
-      flow -> {:ok, flow}
+      flow -> {:ok, container, flow}
     end
   end
 end
