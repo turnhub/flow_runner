@@ -45,7 +45,18 @@ defmodule FlowRunner.Spec.Block do
               {:ok, user_input :: any}
               | {:invalid, reason :: String.t()}
 
-  # Return a list of all resources referenced by a block
+  @doc """
+  Return a list of all resources referenced by a block
+
+  This is needed so we can merge flows between containers. Flows depend on resources
+  but RC3 of the flowspec states that these resources are keep at the container level
+  rather than the flow level.
+
+  This callback gives us the resources a flow depends on from the container.
+
+  RC4 may move the resources into the flows themselves which would remove the need
+  for this function entirely.
+  """
   @callback list_resources_referenced(Container.t(), Block.t()) :: [Resource.t()]
 
   @derive Jason.Encoder
