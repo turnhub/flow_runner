@@ -16,8 +16,8 @@ jobs:
       - name: Set up Elixir
         uses: erlef/setup-elixir@10d50f70626dbb9c5174531ada017b8b4f14c215
         with:
-          elixir-version: "1.13.0"
-          otp-version: "24.3.4"
+          elixir-version: "1.14.0"
+          otp-version: "25.0.4"
       - name: Restore dependencies cache
         uses: actions/cache@v3
         id: mix-cache
