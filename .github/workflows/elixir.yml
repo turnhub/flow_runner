@@ -43,7 +43,7 @@ jobs:
         run: |
           mix format --check-formatted
           mix credo
-          mix dialyzer
+          mix dialyzer --format github
       - name: Code Annotations Report
         if: ${{ always() }}
         uses: mikepenz/action-junit-report@v3.5.0
