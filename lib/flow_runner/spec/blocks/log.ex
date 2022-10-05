@@ -35,12 +35,12 @@ defmodule FlowRunner.Spec.Blocks.Log do
         {:ok, resource} ->
           case Resource.matching_resource(resource, context.language, context.mode, flow) do
             {:ok, log} ->
+              Logger.info(Expression.evaluate_as_string!(log.value, context.vars))
               %Context{context | log: [log.value | context.log], last_block_uuid: block.uuid}
 
             {:error, reason} ->
-              Logger.error("Could not fetch log message for #{block.config["message"]} #{reason}")
-
-              context
+              Logger.error("Unable to resolve resource for log, reason: #{inspect(reason)}.")
+              %Context{context | last_block_uuid: block.uuid}
           end
 
         {:error, _reason} ->
