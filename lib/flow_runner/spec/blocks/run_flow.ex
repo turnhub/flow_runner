@@ -9,7 +9,6 @@ defmodule FlowRunner.Spec.Blocks.RunFlow do
     the exit_block_id on the flow.
   """
   @behaviour FlowRunner.Spec.Block
-  alias FlowRunner.Context
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Flow
@@ -36,21 +35,11 @@ defmodule FlowRunner.Spec.Blocks.RunFlow do
   def evaluate_incoming(
         %Container{} = container,
         %Flow{} = flow,
-        %Block{config: config} = block,
+        %Block{} = block,
         context
       ) do
-    next_flow_id = config.flow_id
-
-    context = %Context{context | last_block_uuid: block.uuid}
-
-    next_context = %Context{
-      Context.clone_empty(context)
-      | parent_context: context,
-        current_flow_uuid: next_flow_id,
-        last_block_uuid: nil
-    }
-
-    {:ok, container, flow, block, next_context}
+    {:ok, container, flow, block,
+     %{context | waiting_for_user_input: false, last_block_uuid: block.uuid}}
   end
 
   @impl true
