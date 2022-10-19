@@ -14,6 +14,8 @@ defmodule FlowRunner.Context do
           last_block_uuid: nil | String.t(),
           vars: map,
           finished: boolean,
+          parent_flow_uuid: nil | String.t(),
+          parent_state_uuid: nil | String.t(),
           parent_context: nil | t
         }
 
@@ -39,8 +41,9 @@ defmodule FlowRunner.Context do
     # private context
     private: %{},
     finished: false,
-    # If parent_context is not nil then we should return to parent context
-    # after we finish. (Part of Core.RunFlow)
+    # Details of the parent flow in case this flow was executed by a parent flow with `run_stack()`
+    parent_flow_uuid: nil,
+    parent_state_uuid: nil,
     parent_context: nil
   ]
 
