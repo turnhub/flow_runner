@@ -9,11 +9,12 @@ defmodule FlowRunner.Context do
           mode: String.t(),
           log: [String.t()],
           waiting_for_user_input: boolean,
-          waiting_for_flow: nil | String.t(),
           current_flow_uuid: nil | String.t(),
           last_block_uuid: nil | String.t(),
           vars: map,
           finished: boolean,
+          waiting_for_child_flow: boolean,
+          child_flow_uuid: nil | String.t(),
           parent_flow_uuid: nil | String.t(),
           parent_state_uuid: nil | String.t()
         }
@@ -29,8 +30,6 @@ defmodule FlowRunner.Context do
     log: [],
     # Whether we are blocked pending user input
     waiting_for_user_input: false,
-    # In case we are waiting for a child flow to finish executing, this contains its UUID
-    waiting_for_flow: nil,
     # Flow uuid that is currently being run.
     current_flow_uuid: nil,
     # Uuid of the last block executed and rendered to the user. No exits have been evaluated.
@@ -40,7 +39,10 @@ defmodule FlowRunner.Context do
     # private context
     private: %{},
     finished: false,
-    # Details of the parent flow in case this flow was executed by a parent flow with `run_stack()`
+    # Details of the child flow, in case this flow executed a child flow with `run_stack()`
+    waiting_for_child_flow: false,
+    child_flow_uuid: nil,
+    # Details of the parent flow, in case this flow was executed by a parent flow with `run_stack()`
     parent_flow_uuid: nil,
     parent_state_uuid: nil
   ]
