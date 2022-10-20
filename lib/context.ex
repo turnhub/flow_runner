@@ -15,8 +15,7 @@ defmodule FlowRunner.Context do
           vars: map,
           finished: boolean,
           parent_flow_uuid: nil | String.t(),
-          parent_state_uuid: nil | String.t(),
-          parent_context: nil | t
+          parent_state_uuid: nil | String.t()
         }
 
   defstruct [
@@ -43,8 +42,7 @@ defmodule FlowRunner.Context do
     finished: false,
     # Details of the parent flow in case this flow was executed by a parent flow with `run_stack()`
     parent_flow_uuid: nil,
-    parent_state_uuid: nil,
-    parent_context: nil
+    parent_state_uuid: nil
   ]
 
   @doc """
