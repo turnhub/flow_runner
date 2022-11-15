@@ -240,25 +240,6 @@ defmodule FlowRunnerTest do
     assert context.vars["block"]["value"] == "something unexpected"
   end
 
-  @tag flow: "test/runflow.flow"
-  test "runflow block", %{container: container} do
-    {:ok, context} =
-      FlowRunner.create_context(container, "f81559f9-1cf5-4125-abb0-4c88a1c4083f", "eng", "TEXT")
-
-    {:ok, container, flow, block, context} = FlowRunner.next_block(container, context)
-    assert resource_value(container, flow, context, block.config.prompt) == "flow 1"
-    # assert %{prompt: %{value: "flow 1"}} = output
-
-    {:ok, container, _flow, _block, context} = FlowRunner.next_block(container, context)
-    {:ok, container, flow, block, context} = FlowRunner.next_block(container, context)
-
-    assert resource_value(container, flow, context, block.config.prompt) == "flow 2"
-
-    {:ok, container, flow, block, context} = FlowRunner.next_block(container, context)
-    assert resource_value(container, flow, context, block.config.prompt) == "back to flow 1"
-    {:end, _container, _flow, _block, _context} = FlowRunner.next_block(container, context)
-  end
-
   @tag flow: "test/log.flow"
   test "log block", %{container: container} do
     {:ok, context} =

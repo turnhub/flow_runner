@@ -70,26 +70,7 @@ defmodule FlowRunner do
          {:ok, context, current_block, next_block} <-
            find_next_block(flow, context, user_input) do
       cond do
-        # If we have ended a Core.RunFlow block then continue where ever the parent left off
-        is_nil(next_block) && not is_nil(context.parent_context) ->
-          # swap parent & child contexts
-          {parent_context, child_context} = Map.pop(context, :parent_context)
-
-          {:ok, container, parent_flow} =
-            fetch_flow_by_uuid(container, parent_context.current_flow_uuid)
-
-          {:ok, parent_block} = Flow.fetch_block(parent_flow, parent_context.last_block_uuid)
-
-          parent_context_vars =
-            Map.put(parent_context.vars, parent_block.name, child_context.vars)
-
-          {:ok, context, _current_block, next_block} =
-            find_next_block(parent_flow, %{parent_context | vars: parent_context_vars}, nil)
-
-          evaluate_next_block(container, parent_flow, next_block, context)
-
-        # If we have a next block, automatically evaluate it as we're not waiting for user input
-        # which is guarded against explicitly above
+        # If we have a next block, automatically evaluate it
         not is_nil(next_block) ->
           evaluate_next_block(container, flow, next_block, context)
 
