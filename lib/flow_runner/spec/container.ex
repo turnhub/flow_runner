@@ -52,6 +52,8 @@ defmodule FlowRunner.Spec.Container do
     }
   end
 
+  @spec fetch_resource_by_uuid(Container.t(), uuid :: String.t()) ::
+          {:ok, FlowRunner.Spec.Resource.t()} | {:error, reason :: String.t()}
   def fetch_resource_by_uuid(%Container{resources: resources}, uuid) do
     case Enum.find(resources, &(&1.uuid == uuid)) do
       nil -> {:error, "no matching resource"}

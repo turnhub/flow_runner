@@ -68,7 +68,7 @@ defmodule FlowRunner do
     with {:ok, container, flow} <-
            fetch_flow_by_uuid(container, context.current_flow_uuid),
          {:ok, context, current_block, next_block} <-
-           find_next_block(flow, context, user_input) do
+           find_next_block(container, flow, context, user_input) do
       cond do
         # If we have a next block, automatically evaluate it
         not is_nil(next_block) ->
@@ -116,10 +116,11 @@ defmodule FlowRunner do
   Find the next block the current context is expecting. Returns both the current block and the next
   block
   """
-  @spec find_next_block(Flow.t(), Context.t(), user_input :: String.t() | nil) ::
+  @spec find_next_block(Container.t(), Flow.t(), Context.t(), user_input :: String.t() | nil) ::
           {:ok, Context.t(), previous_block :: Block.t() | nil, next_block :: Block.t() | nil}
           | {:error, reason :: String.t()}
   def find_next_block(
+        %Container{} = _container,
         %Flow{} = flow,
         %Context{last_block_uuid: nil} = context,
         _user_input
@@ -131,6 +132,7 @@ defmodule FlowRunner do
   end
 
   def find_next_block(
+        %Container{} = container,
         %Flow{} = flow,
         %Context{last_block_uuid: last_block_uuid} = context,
         user_input
@@ -140,7 +142,7 @@ defmodule FlowRunner do
     with {:ok, previous_block} <-
            Flow.fetch_block(flow, last_block_uuid),
          {:ok, context, next_block} <-
-           Block.evaluate_outgoing(flow, previous_block, context, user_input) do
+           Block.evaluate_outgoing(container, flow, previous_block, context, user_input) do
       {:ok, context, previous_block, next_block}
     else
       err -> err
