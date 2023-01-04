@@ -6,6 +6,7 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
   @behaviour FlowRunner.Spec.Block
   alias FlowRunner.Context
   alias FlowRunner.Spec.Block
+  alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Flow
 
   @impl true
@@ -110,9 +111,9 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
   end
 
   @impl true
-  @spec evaluate_outgoing(Flow.t(), Block.t(), Context.t(), String.t()) ::
+  @spec evaluate_outgoing(Container.t(), Flow.t(), Block.t(), Context.t(), String.t()) ::
           {:ok, String.t()} | {:invalid, String.t()}
-  def evaluate_outgoing(flow, block, _context, user_input) do
+  def evaluate_outgoing(container, flow, block, context, user_input) do
     matched_option =
       Enum.find(block.config.choices, fn
         %{name: _name, test: test, prompt: _prompt} ->
@@ -126,7 +127,17 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
       end)
 
     if matched_option do
-      {:ok, matched_option.name}
+      {:ok, resource} = FlowRunner.fetch_resource_by_uuid(container, matched_option.prompt)
+
+      {:ok, resource_value} =
+        FlowRunner.fetch_resource_value(resource, context.language, context.mode, flow)
+
+      {:ok,
+       %{
+         "__value__" => matched_option.name,
+         "name" => matched_option.name,
+         "label" => resource_value.value
+       }}
     else
       {:invalid, "No choice tests evaluated to true."}
     end

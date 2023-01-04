@@ -5,6 +5,7 @@ defmodule FlowRunner.Spec.Blocks.NumericResponse do
   @behaviour FlowRunner.Spec.Block
   alias FlowRunner.Context
   alias FlowRunner.Spec.Block
+  alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Flow
 
   @impl true
@@ -47,9 +48,9 @@ defmodule FlowRunner.Spec.Blocks.NumericResponse do
   end
 
   @impl true
-  @spec evaluate_outgoing(Flow.t(), Block.t(), Context.t(), String.t()) ::
+  @spec evaluate_outgoing(Container.t(), Flow.t(), Block.t(), Context.t(), String.t()) ::
           {:ok, integer()} | {:invalid, String.t()}
-  def evaluate_outgoing(_flow, block, _context, user_input) do
+  def evaluate_outgoing(_container, _flow, block, _context, user_input) do
     case Integer.parse(user_input) do
       {value, _} ->
         cond do

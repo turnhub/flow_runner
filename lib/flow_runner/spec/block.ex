@@ -41,7 +41,7 @@ defmodule FlowRunner.Spec.Block do
   If the block returns and `{:invalid, reason}` tuple the flow runner will exit through
   the default response.
   """
-  @callback evaluate_outgoing(Flow.t(), Block.t(), Context.t(), user_input :: any) ::
+  @callback evaluate_outgoing(Container.t(), Flow.t(), Block.t(), Context.t(), user_input :: any) ::
               {:ok, user_input :: any}
               | {:invalid, reason :: String.t()}
 
@@ -201,7 +201,10 @@ defmodule FlowRunner.Spec.Block do
     end
   end
 
+  @spec evaluate_outgoing(Container.t(), Flow.t(), Block.t(), Context.t(), user_input :: any) ::
+          {:ok, Context.t(), Block.t()} | {:invalid, reason :: String.t()}
   def evaluate_outgoing(
+        container,
         flow,
         %Block{type: type} = block,
         %Context{} = context,
@@ -219,7 +222,8 @@ defmodule FlowRunner.Spec.Block do
 
     block_module = get_block(FlowRunner.blocks_module(), type)
 
-    with {:ok, user_input} <- block_module.evaluate_outgoing(flow, block, context, user_input),
+    with {:ok, user_input} <-
+           block_module.evaluate_outgoing(container, flow, block, context, user_input),
          # Process any user input we have been given.
          {:ok, context} <-
            Block.evaluate_user_input(
