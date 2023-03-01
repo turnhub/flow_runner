@@ -33,11 +33,8 @@ defmodule FlowRunner.Spec.Blocks.Case do
     {:ok, block_exit} = Block.evaluate_exits(block, context)
 
     case FlowRunner.evaluate_expression_block(block_exit.name, context.vars) do
-      {:ok, result} ->
-        {:ok, result}
-
-      {:error, _reason} ->
-        {:ok, block_exit.name}
+      nil -> {:ok, block_exit.name}
+      value -> {:ok, value}
     end
   end
 end
