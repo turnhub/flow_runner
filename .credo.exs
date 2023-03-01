@@ -124,7 +124,6 @@
         {Credo.Check.Refactor.CyclomaticComplexity, []},
         {Credo.Check.Refactor.FunctionArity, []},
         {Credo.Check.Refactor.LongQuoteBlocks, []},
-        {Credo.Check.Refactor.MapInto, []},
         {Credo.Check.Refactor.MatchInCondition, []},
         {Credo.Check.Refactor.NegatedConditionsInUnless, []},
         {Credo.Check.Refactor.NegatedConditionsWithElse, []},
@@ -140,7 +139,6 @@
         {Credo.Check.Warning.ExpensiveEmptyEnumCheck, []},
         {Credo.Check.Warning.IExPry, []},
         {Credo.Check.Warning.IoInspect, []},
-        {Credo.Check.Warning.LazyLogging, []},
         {Credo.Check.Warning.MixEnv, false},
         {Credo.Check.Warning.OperationOnSameValues, []},
         {Credo.Check.Warning.OperationWithConstantResult, []},
@@ -173,13 +171,15 @@
         {Credo.Check.Refactor.ABCSize, false},
         {Credo.Check.Refactor.AppendSingleItem, false},
         {Credo.Check.Refactor.DoubleBooleanNegation, false},
+        {Credo.Check.Refactor.MapInto, false},
         {Credo.Check.Refactor.ModuleDependencies, false},
         {Credo.Check.Refactor.NegatedIsNil, false},
         {Credo.Check.Refactor.PipeChainStart, false},
         {Credo.Check.Refactor.VariableRebinding, false},
         {Credo.Check.Warning.LeakyEnvironment, false},
         {Credo.Check.Warning.MapGetUnsafePass, false},
-        {Credo.Check.Warning.UnsafeToAtom, false}
+        {Credo.Check.Warning.UnsafeToAtom, false},
+        {Credo.Check.Warning.LazyLogging, false},
 
         #
         # Custom checks can be created using `mix credo.gen.check`.
