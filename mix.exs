@@ -1,7 +1,7 @@
 defmodule FlowRunner.MixProject do
   use Mix.Project
 
-  @version "5.0.0-rc0"
+  @version "5.0.0-rc1"
 
   def project do
     [
@@ -62,7 +62,8 @@ defmodule FlowRunner.MixProject do
       {:jason, "~> 1.2"},
       {:junit_formatter, "~> 3.1", only: [:test]},
       {:mix_test_watch, "~> 1.1", only: [:dev, :test], runtime: false},
-      {:version_tasks, "~> 0.12.0", only: [:dev], runtime: false},
+      {:version_tasks, "~> 0.12.0",
+       only: [:dev], runtime: false, github: "turnhub/version_tasks"},
       {:vex, "~> 0.9.0"}
     ]
   end
@@ -72,7 +73,7 @@ defmodule FlowRunner.MixProject do
       "release.major": ["version.up major", "version.tag"],
       "release.minor": ["version.up minor", "version.tag"],
       "release.patch": ["version.up patch", "version.tag"],
-      "release.candidate": ["flow_runner.release_candidate", "version.tag"]
+      "release.rc": ["version.up rc", "version.tag"]
     ]
   end
 end
