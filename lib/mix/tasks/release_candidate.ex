@@ -15,6 +15,12 @@ defmodule Mix.Tasks.FlowRunner.ReleaseCandidate do
 
     update_file("mix.exs", current, next, &update_mix_version/3)
     update_file("README.md", current, next, &update_readme_version/3)
+
+    IO.puts("Committing updates to git")
+    repo = Git.new(".")
+    {:ok, _} = Git.add(repo, ["mix.exs", "README.md"])
+    {:ok, output} = Git.commit(repo, ["-m", "v#{next}"])
+    IO.puts(output)
   end
 
   defp update_file(filename, current, next, update_fn) do
