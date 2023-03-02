@@ -71,7 +71,8 @@ defmodule FlowRunner.MixProject do
     [
       "release.major": ["version.up major", "version.tag"],
       "release.minor": ["version.up minor", "version.tag"],
-      "release.patch": ["version.up patch", "version.tag"]
+      "release.patch": ["version.up patch", "version.tag"],
+      "release.candidate": ["flow_runner.release_candidate", "version.tag"]
     ]
   end
 end
