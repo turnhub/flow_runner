@@ -17,7 +17,7 @@ defmodule FlowRunner.MixProject do
       deps: deps(),
       dialyzer: [
         plt_add_apps: [:ex_unit, :mix],
-        ignore_warnings: "config/dialyzer.ignore"
+        ignore_warnings: "config/dialyzer.ignore.exs"
       ]
     ]
   end
@@ -72,7 +72,7 @@ defmodule FlowRunner.MixProject do
       "release.major": ["version.up major", "version.tag"],
       "release.minor": ["version.up minor", "version.tag"],
       "release.patch": ["version.up patch", "version.tag"],
-      "release.candidate": ["version", "flow_runner.release_candidate"]
+      "release.candidate": ["flow_runner.release_candidate", "version.tag"]
     ]
   end
 end

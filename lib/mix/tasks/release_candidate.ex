@@ -1,11 +1,9 @@
 defmodule Mix.Tasks.FlowRunner.ReleaseCandidate do
   use Mix.Task
-  use VersionTasks.FnExpr
-  alias Mix.Tasks.Version.Current
 
-  @shortdoc "The next version (e.g v0.9.2)"
+  @shortdoc "The next release candidate version (e.g v2.0.0-rc0)"
   def run(_args) do
-    current = Current.calc(["patch"])
+    current = Mix.Tasks.Version.Current.calc(["patch"])
     next = calc(["rc"])
     IO.puts("Updating mix.exs from #{current} to #{next}")
 
@@ -19,11 +17,11 @@ defmodule Mix.Tasks.FlowRunner.ReleaseCandidate do
 
       filename
       |> File.read()
-      |> invoke(fn {:ok, content} -> content end)
+      |> then(fn {:ok, content} -> content end)
       |> String.split("\n")
       |> Enum.map(fn line -> update_fn.(line, current, next) end)
       |> Enum.join("\n")
-      |> invoke(fn content -> File.write!(filename, content) end)
+      |> then(fn content -> File.write!(filename, content) end)
     else
       IO.puts("  -- Skipping missing file #{filename}")
     end
@@ -43,7 +41,7 @@ defmodule Mix.Tasks.FlowRunner.ReleaseCandidate do
   def calc([]), do: calc(["patch"])
 
   def calc([mode]) do
-    Current.calc()
+    Mix.Tasks.Version.Current.calc()
     |> String.split(".")
     |> uptick(mode)
   end
