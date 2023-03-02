@@ -114,7 +114,6 @@ defmodule FlowRunner do
   end
 
   @impl FlowRunner.Contract
-  @spec evaluate_expression_block(String.t(), map) :: term
   def evaluate_expression_block(expression, context) do
     Expression.V2.eval_block(expression, to_expression_context(context))
   end
