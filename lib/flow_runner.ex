@@ -86,25 +86,36 @@ defmodule FlowRunner do
     Block.evaluate_incoming(container, flow, next_block, context)
   end
 
+  def to_expression_context(%Context{vars: vars}),
+    do: to_expression_context(vars)
+
+  def to_expression_context(map) when is_map(map),
+    do: Expression.V2.Context.new(map, expression_callbacks_module())
+
   def blocks_module(),
     do: Application.get_env(:flow_runner, :blocks_module) || FlowRunner.Blocks
 
   def expression_callbacks_module(),
-    do: Application.get_env(:flow_runner, :expression_callbacks_module, Expression.Callbacks)
+    do:
+      Application.get_env(
+        :flow_runner,
+        :expression_callbacks_module,
+        Expression.V2.Callbacks.Standard
+      )
 
   @impl FlowRunner.Contract
   def evaluate_expression(expression, context) do
-    Expression.evaluate(expression, context, expression_callbacks_module())
+    Expression.V2.eval(expression, to_expression_context(context))
   end
 
   @impl FlowRunner.Contract
   def evaluate_expression_as_string!(expression, context) do
-    Expression.evaluate_as_string!(expression, context, expression_callbacks_module())
+    Expression.V2.eval_as_string(expression, to_expression_context(context))
   end
 
   @impl FlowRunner.Contract
   def evaluate_expression_block(expression, context) do
-    Expression.evaluate_block(expression, context, expression_callbacks_module())
+    Expression.V2.eval_block(expression, to_expression_context(context))
   end
 
   defdelegate fetch_resource_by_uuid(container, uuid), to: FlowRunner.Spec.Container

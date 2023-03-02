@@ -17,7 +17,7 @@ defmodule FlowRunner.MixProject do
       deps: deps(),
       dialyzer: [
         plt_add_apps: [:ex_unit, :mix],
-        ignore_warnings: "config/dialyzer.ignore"
+        ignore_warnings: "config/dialyzer.ignore.exs"
       ]
     ]
   end
@@ -57,7 +57,7 @@ defmodule FlowRunner.MixProject do
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:elixir_uuid, "~> 1.2"},
       {:excoveralls, "~> 0.10", only: :test},
-      {:expression, "~> 2.17"},
+      {:expression, "~> 2.19"},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:jason, "~> 1.2"},
       {:junit_formatter, "~> 3.1", only: [:test]},
@@ -71,7 +71,8 @@ defmodule FlowRunner.MixProject do
     [
       "release.major": ["version.up major", "version.tag"],
       "release.minor": ["version.up minor", "version.tag"],
-      "release.patch": ["version.up patch", "version.tag"]
+      "release.patch": ["version.up patch", "version.tag"],
+      "release.candidate": ["flow_runner.release_candidate", "version.tag"]
     ]
   end
 end

@@ -35,15 +35,22 @@ defmodule FlowRunner.Spec.Exit do
     test = exit.test || ""
 
     case FlowRunner.evaluate_expression_block(test, context.vars) do
-      {:ok, result} ->
-        result
-
-      {:error, reason} ->
+      other when not is_boolean(other) ->
         Logger.info(
-          "Expression '#{exit.test}' failed with #{reason} last_block_uuid=#{context.last_block_uuid}"
+          "Expression '#{exit.test}' returned #{inspect(other)} when expecting a boolean last_block_uuid=#{context.last_block_uuid}"
         )
 
         false
+
+      {:error, reason, bad_parts} ->
+        Logger.info(
+          "Expression '#{exit.test}' returned parsing error #{inspect(reason)} when hit #{inspect(bad_parts)} last_block_uuid=#{context.last_block_uuid}"
+        )
+
+        false
+
+      boolean ->
+        boolean
     end
   end
 end

@@ -257,7 +257,7 @@ defmodule FlowRunnerTest do
     {:ok, context} =
       FlowRunner.create_context(container, "289bb197-fc9e-44dc-ada2-a769a91bf416", "eng", "TEXT")
 
-    context = %FlowRunner.Context{context | vars: %{patient_age: 19}}
+    context = %FlowRunner.Context{context | vars: %{"patient_age" => 19}}
 
     {:ok, container, _flow, _block, context} = FlowRunner.next_block(container, context)
     {:ok, container, _flow, _block, context} = FlowRunner.next_block(container, context)
@@ -267,10 +267,7 @@ defmodule FlowRunnerTest do
     {:ok, context} =
       FlowRunner.create_context(container, "289bb197-fc9e-44dc-ada2-a769a91bf416", "eng", "TEXT")
 
-    context = %FlowRunner.Context{
-      context
-      | vars: %{patient_age: 10}
-    }
+    context = %FlowRunner.Context{context | vars: %{"patient_age" => 10}}
 
     {:ok, container, _flow, _block, context} = FlowRunner.next_block(container, context)
     {:ok, _container, _flow, _block, context} = FlowRunner.next_block(container, context)

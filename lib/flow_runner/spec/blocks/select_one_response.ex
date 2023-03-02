@@ -117,13 +117,10 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
     matched_option =
       Enum.find(block.config.choices, fn
         %{name: _name, test: test, prompt: _prompt} ->
-          {:ok, value} =
-            FlowRunner.evaluate_expression_block(test, %{
-              "flow" => flow,
-              "block" => %{"response" => user_input}
-            })
-
-          value
+          FlowRunner.evaluate_expression_block(test, %{
+            "flow" => flow,
+            "block" => %{"response" => user_input}
+          })
       end)
 
     if matched_option do
