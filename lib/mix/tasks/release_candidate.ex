@@ -1,7 +1,13 @@
 defmodule Mix.Tasks.FlowRunner.ReleaseCandidate do
+  @shortdoc "The next release candidate version (e.g v2.0.0-rc0)"
+  @moduledoc """
+  #{@shortdoc}
+    
+  Ugly module to add the minimum necessary to allow version.tasks to do
+  release candidates. The standard release only does major, minor, patch
+  """
   use Mix.Task
 
-  @shortdoc "The next release candidate version (e.g v2.0.0-rc0)"
   def run(_args) do
     current = Mix.Tasks.Version.Current.calc(["patch"])
     next = calc(["rc"])
@@ -19,8 +25,7 @@ defmodule Mix.Tasks.FlowRunner.ReleaseCandidate do
       |> File.read()
       |> then(fn {:ok, content} -> content end)
       |> String.split("\n")
-      |> Enum.map(fn line -> update_fn.(line, current, next) end)
-      |> Enum.join("\n")
+      |> Enum.map_join("\n", fn line -> update_fn.(line, current, next) end)
       |> then(fn content -> File.write!(filename, content) end)
     else
       IO.puts("  -- Skipping missing file #{filename}")
