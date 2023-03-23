@@ -123,7 +123,7 @@
             {
               "uuid": "c38c1176-be89-449a-8964-1563d46eb3cb",
               "name": "1",
-              "test": "block.value > 0",
+              "test": "block.value == \"something\"",
               "config": {}
             },
             {
