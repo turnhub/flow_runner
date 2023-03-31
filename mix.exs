@@ -1,7 +1,7 @@
 defmodule FlowRunner.MixProject do
   use Mix.Project
 
-  @version "5.0.0-rc2"
+  @version "5.0.0-rc3"
 
   def project do
     [
