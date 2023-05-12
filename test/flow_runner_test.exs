@@ -271,7 +271,6 @@ defmodule FlowRunnerTest do
     assert context.vars["block"]["value"] == "something unexpected"
   end
 
-  @tag :current
   @tag flow: "test/change-language.flow"
   test "changing language with a known language", %{container: container} do
     [flow] = container.flows
@@ -310,7 +309,6 @@ defmodule FlowRunnerTest do
              "done"
   end
 
-  @tag :current
   @tag flow: "test/change-language.flow"
   test "changing language with an unknown language", %{container: container} do
     [flow] = container.flows
