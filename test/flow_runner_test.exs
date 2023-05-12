@@ -273,11 +273,13 @@ defmodule FlowRunnerTest do
 
   @tag :current
   @tag flow: "test/change-language.flow"
-  test "changing language", %{container: container} do
+  test "changing language with a known language", %{container: container} do
+    [flow] = container.flows
+
     {:ok, context} =
       FlowRunner.create_context(
         container,
-        "efaabaac-d035-43f5-a7fe-0e4e757c8095",
+        flow.uuid,
         "fra",
         "TEXT",
         %{
@@ -286,21 +288,46 @@ defmodule FlowRunnerTest do
       )
 
     {:ok, container, flow, block, context} = FlowRunner.next_block(container, context)
-    assert resource_value(container, flow, context, block.config.prompt) == "اختر اسمًا"
+
+    assert resource_value(container, flow, context, block.config.prompt) ==
+             "Quelle est votre langue de préférence ?"
+
     assert context.waiting_for_user_input
 
-    {:ok, container, flow, block, context} = FlowRunner.next_block(container, context, "maalika")
+    {:ok, container, flow, block, context} = FlowRunner.next_block(container, context, "eng")
     assert %{prompt: resource_uuid} = block.config
-    assert resource_value(container, flow, context, resource_uuid) == "salaam maalika"
+
+    assert resource_value(container, flow, context, resource_uuid) ==
+             "Votre préférence linguistique a été appliquée."
+
+    assert context.vars["language"]["__value__"] == "eng"
     refute context.waiting_for_user_input
 
-    {:end, _container, _flow, _block, _context} = FlowRunner.next_block(container, context)
+    {:ok, container, flow, block, context} = FlowRunner.next_block(container, context, nil)
+    assert %{prompt: resource_uuid} = block.config
+
+    assert resource_value(container, flow, context, resource_uuid) ==
+             "done"
+  end
+
+  @tag :current
+  @tag flow: "test/change-language.flow"
+  test "changing language with an unknown language", %{container: container} do
+    [flow] = container.flows
+
+    # Ensure NLD isn't a known language to the flow
+    refute flow.languages
+           |> Enum.map(& &1.iso_639_3)
+           |> Enum.member?("nld")
+
+    assert default_language = FlowRunner.default_flow_language(flow)
+    assert default_language.iso_639_3 == "eng"
 
     {:ok, context} =
       FlowRunner.create_context(
         container,
-        "efaabaac-d035-43f5-a7fe-0e4e757c8095",
-        "eng",
+        flow.uuid,
+        "nld",
         "TEXT",
         %{
           "contact" => %{"name" => "foo bar"}
@@ -308,19 +335,27 @@ defmodule FlowRunnerTest do
       )
 
     {:ok, container, flow, block, context} = FlowRunner.next_block(container, context)
+
+    #
+    assert resource_value(container, flow, context, block.config.prompt) ==
+             "What's your language of preference?"
+
+    assert context.waiting_for_user_input
+
+    {:ok, container, flow, block, context} = FlowRunner.next_block(container, context, "fra")
     assert %{prompt: resource_uuid} = block.config
 
     assert resource_value(container, flow, context, resource_uuid) ==
-             "hi *@PROPER(contact.name)*! Choose a name:"
+             "Your language preference has been applied."
 
-    assert context.waiting_for_user_input
-    {:ok, container, flow, block, context} = FlowRunner.next_block(container, context, "yaseen")
-
-    assert %{prompt: resource_uuid} = block.config
-    assert resource_value(container, flow, context, resource_uuid) == "hello yaseen"
-
+    assert context.vars["language"]["__value__"] == "fra"
     refute context.waiting_for_user_input
-    {:end, _container, _flow, _block, _context} = FlowRunner.next_block(container, context)
+
+    {:ok, container, flow, block, context} = FlowRunner.next_block(container, context, nil)
+    assert %{prompt: resource_uuid} = block.config
+
+    assert resource_value(container, flow, context, resource_uuid) ==
+             "done"
   end
 
   @tag flow: "test/log.flow"
