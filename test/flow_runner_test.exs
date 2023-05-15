@@ -5,6 +5,37 @@ defmodule FlowRunnerTest do
 
   setup :with_flow_loader!
 
+  describe "language resolving" do
+    setup do
+      eng = %FlowRunner.Spec.Language{iso_639_3: "eng"}
+      afr = %FlowRunner.Spec.Language{iso_639_3: "afr"}
+
+      {:ok, languages: [eng, afr]}
+    end
+
+    test "default_flow_language", %{languages: [eng, afr]} do
+      flow = %FlowRunner.Spec.Flow{languages: [eng, afr]}
+      assert FlowRunner.default_flow_language(flow) == eng
+    end
+
+    test "language_for_context for known languages", %{languages: [eng, afr]} do
+      flow = %FlowRunner.Spec.Flow{languages: [eng, afr]}
+
+      assert FlowRunner.language_for_context(flow, %FlowRunner.Context{language: eng.iso_639_3}) ==
+               eng
+
+      assert FlowRunner.language_for_context(flow, %FlowRunner.Context{language: afr.iso_639_3}) ==
+               afr
+    end
+
+    test "language_for_context for unknown languages", %{languages: [eng, afr]} do
+      flow = %FlowRunner.Spec.Flow{languages: [eng, afr]}
+      # fallback to english (default)
+      assert FlowRunner.language_for_context(flow, %FlowRunner.Context{language: "nld"}) ==
+               eng
+    end
+  end
+
   @tag flow: "test/basic.flow"
   test "compile a flow", %{container: container} do
     assert container
@@ -238,6 +269,91 @@ defmodule FlowRunnerTest do
 
     assert context.vars["choose"] == "something unexpected"
     assert context.vars["block"]["value"] == "something unexpected"
+  end
+
+  @tag flow: "test/change-language.flow"
+  test "changing language with a known language", %{container: container} do
+    [flow] = container.flows
+
+    {:ok, context} =
+      FlowRunner.create_context(
+        container,
+        flow.uuid,
+        "fra",
+        "TEXT",
+        %{
+          "contact" => %{"name" => "foo bar"}
+        }
+      )
+
+    {:ok, container, flow, block, context} = FlowRunner.next_block(container, context)
+
+    assert resource_value(container, flow, context, block.config.prompt) ==
+             "Quelle est votre langue de préférence ?"
+
+    assert context.waiting_for_user_input
+
+    {:ok, container, flow, block, context} = FlowRunner.next_block(container, context, "eng")
+    assert %{prompt: resource_uuid} = block.config
+
+    assert resource_value(container, flow, context, resource_uuid) ==
+             "Votre préférence linguistique a été appliquée."
+
+    assert context.vars["language"]["__value__"] == "eng"
+    refute context.waiting_for_user_input
+
+    {:ok, container, flow, block, context} = FlowRunner.next_block(container, context, nil)
+    assert %{prompt: resource_uuid} = block.config
+
+    assert resource_value(container, flow, context, resource_uuid) ==
+             "done"
+  end
+
+  @tag flow: "test/change-language.flow"
+  test "changing language with an unknown language", %{container: container} do
+    [flow] = container.flows
+
+    # Ensure NLD isn't a known language to the flow
+    refute flow.languages
+           |> Enum.map(& &1.iso_639_3)
+           |> Enum.member?("nld")
+
+    assert default_language = FlowRunner.default_flow_language(flow)
+    assert default_language.iso_639_3 == "eng"
+
+    {:ok, context} =
+      FlowRunner.create_context(
+        container,
+        flow.uuid,
+        "nld",
+        "TEXT",
+        %{
+          "contact" => %{"name" => "foo bar"}
+        }
+      )
+
+    {:ok, container, flow, block, context} = FlowRunner.next_block(container, context)
+
+    #
+    assert resource_value(container, flow, context, block.config.prompt) ==
+             "What's your language of preference?"
+
+    assert context.waiting_for_user_input
+
+    {:ok, container, flow, block, context} = FlowRunner.next_block(container, context, "fra")
+    assert %{prompt: resource_uuid} = block.config
+
+    assert resource_value(container, flow, context, resource_uuid) ==
+             "Your language preference has been applied."
+
+    assert context.vars["language"]["__value__"] == "fra"
+    refute context.waiting_for_user_input
+
+    {:ok, container, flow, block, context} = FlowRunner.next_block(container, context, nil)
+    assert %{prompt: resource_uuid} = block.config
+
+    assert resource_value(container, flow, context, resource_uuid) ==
+             "done"
   end
 
   @tag flow: "test/log.flow"
