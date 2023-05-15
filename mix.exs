@@ -1,7 +1,7 @@
 defmodule FlowRunner.MixProject do
   use Mix.Project
 
-  @version "5.0.0-rc2"
+  @version "5.0.0-rc3"
 
   def project do
     [
@@ -57,7 +57,7 @@ defmodule FlowRunner.MixProject do
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:elixir_uuid, "~> 1.2"},
       {:excoveralls, "~> 0.10", only: :test},
-      {:expression, "~> 2.19"},
+      {:expression, "~> 2.21"},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:jason, "~> 1.2"},
       {:junit_formatter, "~> 3.1", only: [:test]},

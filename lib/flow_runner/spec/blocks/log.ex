@@ -35,9 +35,7 @@ defmodule FlowRunner.Spec.Blocks.Log do
         {:ok, resource} ->
           case Resource.matching_resource(resource, context.language, context.mode, flow) do
             {:ok, log} ->
-              Logger.info(
-                Expression.V2.eval_as_string(log.value, Expression.V2.Context.new(context.vars))
-              )
+              Logger.info(FlowRunner.evaluate_expression_as_string!(log.value, context.vars))
 
               %Context{context | log: [log.value | context.log], last_block_uuid: block.uuid}
 
