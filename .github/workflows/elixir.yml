@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Set up Elixir
-        uses: erlef/setup-elixir@e3f6ffe2878180f57318bf13febd3933ee81f664
+        uses: erlef/setup-elixir@c2e02f777c158310fc6d3d4e11b36a52d2d52db8
         with:
           elixir-version: "1.14.0"
           otp-version: "25.0.4"
@@ -46,7 +46,7 @@ jobs:
           mix dialyzer --format github
       - name: Code Annotations Report
         if: ${{ always() }}
-        uses: mikepenz/action-junit-report@v3.7.5
+        uses: mikepenz/action-junit-report@v3.7.6
         with:
           report_paths: "reports/junit/*.xml"
           github_token: ${{ secrets.GITHUB_TOKEN }}

@@ -45,9 +45,10 @@ defmodule FlowRunner.Test.Utils do
 
   def resource_value(container, flow, context, resource_uuid) do
     {:ok, resource} = FlowRunner.fetch_resource_by_uuid(container, resource_uuid)
+    language = FlowRunner.language_for_context(flow, context)
 
     {:ok, resource_value} =
-      FlowRunner.fetch_resource_value(resource, context.language, context.mode, flow)
+      FlowRunner.fetch_resource_value(resource, language.iso_639_3, context.mode, flow)
 
     resource_value.value
   end

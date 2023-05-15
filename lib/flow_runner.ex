@@ -118,6 +118,35 @@ defmodule FlowRunner do
     do: FlowRunner.Spec.Resource.matching_resource(resource, language, mode, flow)
 
   @doc """
+  Get the language struct for a context
+
+  The FlowRunner.Context stores the language as an iso-639-3 language code ("eng"/"afr" etc).
+  Internally flowspec maintains a list of languages which have a UUID as an id.
+
+  Here we lookup the language struct for the language code currently active in the context.
+  This is needed because the Flowspec resource values refer to languages by the Language's ID (uuid)
+  rather than the iso-639-3 code.
+  """
+  @spec language_for_context(FlowRunner.Spec.Flow.t(), FlowRunner.Context.t()) ::
+          FlowRunner.Spec.Language.t()
+  def language_for_context(flow, context),
+    do:
+      Enum.find(flow.languages, &(&1.iso_639_3 == context.language)) ||
+        default_flow_language(flow)
+
+  @doc """
+  Get the default language for a flow.
+
+  The flowspec is unclear about how to go about this. Our assumption is
+  that the first language defined in the list of a flow's languages is
+  the default language.
+
+  The flowspec does guarantee that there must be at least 1 language.
+  """
+  @spec default_flow_language(FlowRunner.Spec.Flow.t()) :: FlowRunner.Spec.Language.t()
+  def default_flow_language(flow), do: List.first(flow.languages)
+
+  @doc """
   Find the next block the current context is expecting. Returns both the current block and the next
   block
   """
