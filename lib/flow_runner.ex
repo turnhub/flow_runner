@@ -94,7 +94,7 @@ defmodule FlowRunner do
       Application.get_env(
         :flow_runner,
         :expression_callbacks_module,
-        Expression.V2.Callbacks.Standard
+        Expression.Callbacks.Standard
       )
 
   @impl FlowRunner.Contract
