@@ -3,6 +3,8 @@ defmodule FlowRunner.Spec.Block do
   A Block is a unit of execution within a flow. It may wait for user input
   and provide content that should be rendered to the user.
   """
+  use OpenTelemetryDecorator
+
   use FlowRunner.SpecLoader,
     using: [
       exits: FlowRunner.Spec.Exit
@@ -193,6 +195,9 @@ defmodule FlowRunner.Spec.Block do
     {:error, "unexpectedly received user input: #{inspect(user_input)}"}
   end
 
+  @decorate trace("FlowRunner.Spec.Block.evaluate_incoming",
+              include: [[:block, :type], [:block, :config]]
+            )
   def evaluate_incoming(container, flow, %Block{type: type} = block, context) do
     if implementation = get_block(FlowRunner.blocks_module(), type) do
       implementation.evaluate_incoming(container, flow, block, context)
@@ -201,6 +206,9 @@ defmodule FlowRunner.Spec.Block do
     end
   end
 
+  @decorate trace("FlowRunner.Spec.Block.evaluate_outgoing",
+              include: [[:block, :type], [:block, :config]]
+            )
   @spec evaluate_outgoing(Container.t(), Flow.t(), Block.t(), Context.t(), user_input :: any) ::
           {:ok, Context.t(), Block.t()} | {:invalid, reason :: String.t()}
   def evaluate_outgoing(
