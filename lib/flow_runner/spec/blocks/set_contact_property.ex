@@ -3,6 +3,7 @@ defmodule FlowRunner.Spec.Blocks.SetContactProperty do
   Set a contact property.
   """
   @behaviour FlowRunner.Spec.Block
+  use OpenTelemetryDecorator
   alias FlowRunner.Context
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container
@@ -19,6 +20,7 @@ defmodule FlowRunner.Spec.Blocks.SetContactProperty do
   def list_resources_referenced(_container, _block), do: []
 
   @impl true
+  @decorate trace("FlowRunner.Blocks.SetContactProperty.evaluate_incoming")
   def evaluate_incoming(
         %Container{} = container,
         %Flow{} = flow,

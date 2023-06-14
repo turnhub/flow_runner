@@ -3,6 +3,7 @@ defmodule FlowRunner.Spec.Blocks.SetGroupMembership do
   Set a group membership.
   """
   @behaviour FlowRunner.Spec.Block
+  use OpenTelemetryDecorator
   alias FlowRunner.Context
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container
@@ -29,6 +30,7 @@ defmodule FlowRunner.Spec.Blocks.SetGroupMembership do
   def list_resources_referenced(_container, _block), do: []
 
   @impl true
+  @decorate trace("FlowRunner.Blocks.SetGroupMembership.evaluate_incoming")
   def evaluate_incoming(
         %Container{} = container,
         %Flow{} = flow,

@@ -3,6 +3,7 @@ defmodule FlowRunner.Spec.Blocks.Case do
   Switch between various exit conditions.
   """
   @behaviour FlowRunner.Spec.Block
+  use OpenTelemetryDecorator
   alias FlowRunner.Context
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container
@@ -19,6 +20,7 @@ defmodule FlowRunner.Spec.Blocks.Case do
   def list_resources_referenced(_container, _block), do: []
 
   @impl true
+  @decorate trace("FlowRunner.Case.Log.evaluate_incoming")
   def evaluate_incoming(
         %Container{} = container,
         %Flow{} = flow,
