@@ -9,6 +9,7 @@ defmodule FlowRunner.Spec.Blocks.RunFlow do
     the exit_block_id on the flow.
   """
   @behaviour FlowRunner.Spec.Block
+  use OpenTelemetryDecorator
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Flow
@@ -32,6 +33,7 @@ defmodule FlowRunner.Spec.Blocks.RunFlow do
   end
 
   @impl true
+  @decorate trace("FlowRunner.Blocks.RunFlow.evaluate_incoming")
   def evaluate_incoming(
         %Container{} = container,
         %Flow{} = flow,

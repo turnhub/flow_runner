@@ -4,7 +4,7 @@ defmodule FlowRunner.Spec.Blocks.OpenResponse do
   waits for the user to come back with one of them.
   """
   @behaviour FlowRunner.Spec.Block
-
+  use OpenTelemetryDecorator
   alias FlowRunner.Context
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container
@@ -36,6 +36,7 @@ defmodule FlowRunner.Spec.Blocks.OpenResponse do
     do: Enum.filter(container.resources, &(&1.uuid == resource_uuid))
 
   @impl true
+  @decorate trace("FlowRunner.Blocks.OpenResponse.evaluate_incoming")
   def evaluate_incoming(container, flow, block, context) do
     {
       :ok,

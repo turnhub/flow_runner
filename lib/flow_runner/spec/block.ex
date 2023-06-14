@@ -196,7 +196,7 @@ defmodule FlowRunner.Spec.Block do
   end
 
   @decorate trace("FlowRunner.Spec.Block.evaluate_incoming",
-              include: [[:block, :type], [:block, :config]]
+              include: [[:block, :type], [:block, :name], [:block, :uuid], [:block, :config]]
             )
   def evaluate_incoming(container, flow, %Block{type: type} = block, context) do
     if implementation = get_block(FlowRunner.blocks_module(), type) do
@@ -207,7 +207,7 @@ defmodule FlowRunner.Spec.Block do
   end
 
   @decorate trace("FlowRunner.Spec.Block.evaluate_outgoing",
-              include: [[:block, :type], [:block, :config]]
+              include: [[:block, :type], [:block, :name], [:block, :uuid], [:block, :config]]
             )
   @spec evaluate_outgoing(Container.t(), Flow.t(), Block.t(), Context.t(), user_input :: any) ::
           {:ok, Context.t(), Block.t()} | {:invalid, reason :: String.t()}
@@ -289,6 +289,9 @@ defmodule FlowRunner.Spec.Block do
 
   @spec evaluate_exits(Block.t(), Context.t()) ::
           {:ok, Exit.t()} | {:error, any()}
+  @decorate trace("FlowRunner.Spec.Block.evalute_exits",
+              include: [[:block, :type], [:block, :name], [:block, :uuid], [:block, :config]]
+            )
   def evaluate_exits(%Block{exits: exits} = block, %Context{} = context) do
     truthy_exits =
       exits

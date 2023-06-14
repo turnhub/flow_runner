@@ -3,7 +3,7 @@ defmodule FlowRunner.Spec.Blocks.Message do
   A type of block that sends a message to the user.
   """
   @behaviour FlowRunner.Spec.Block
-
+  use OpenTelemetryDecorator
   alias FlowRunner.Context
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Flow
@@ -28,6 +28,7 @@ defmodule FlowRunner.Spec.Blocks.Message do
     do: Enum.filter(container.resources, &(&1.uuid == resource_uuid))
 
   @impl true
+  @decorate trace("FlowRunner.Blocks.Message.evaluate_incoming")
   def evaluate_incoming(container, %Flow{} = flow, %Block{} = block, context) do
     {
       :ok,

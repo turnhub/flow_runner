@@ -3,6 +3,7 @@ defmodule FlowRunner.Spec.Blocks.Output do
   Output to a Flow Result which is not yet implemented.
   """
   @behaviour FlowRunner.Spec.Block
+  use OpenTelemetryDecorator
   alias FlowRunner.Context
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container
@@ -19,6 +20,7 @@ defmodule FlowRunner.Spec.Blocks.Output do
   def list_resources_referenced(_container, _block), do: []
 
   @impl true
+  @decorate trace("FlowRunner.Blocks.Output.evaluate_incoming")
   def evaluate_incoming(
         %Container{} = container,
         %Flow{} = flow,

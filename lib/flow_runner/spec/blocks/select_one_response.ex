@@ -4,6 +4,7 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
   waits for the user to come back with one of them.
   """
   @behaviour FlowRunner.Spec.Block
+  use OpenTelemetryDecorator
   alias FlowRunner.Context
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container
@@ -100,6 +101,7 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
       {:error, [{:error, :choices, nil, "\"name\", \"test\", and \"prompt\" are all required."}]}
 
   @impl true
+  @decorate trace("FlowRunner.Blocks.SelectOneResponse.evaluate_incoming")
   def evaluate_incoming(container, flow, block, context) do
     {
       :ok,

@@ -3,6 +3,7 @@ defmodule FlowRunner.Spec.Blocks.NumericResponse do
   A specialisation of a block that allows users to send numeric input.
   """
   @behaviour FlowRunner.Spec.Block
+  use OpenTelemetryDecorator
   alias FlowRunner.Context
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container
@@ -37,6 +38,7 @@ defmodule FlowRunner.Spec.Blocks.NumericResponse do
     do: Enum.filter(container.resources, &(&1.uuid == resource_uuid))
 
   @impl true
+  @decorate trace("FlowRunner.Blocks.NumericResponse.evaluate_incoming")
   def evaluate_incoming(container, flow, block, context) do
     {
       :ok,
