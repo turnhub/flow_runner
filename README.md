@@ -46,7 +46,7 @@ by adding `flow_runner` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:flow_runner, "~> 5.4.0"}
+    {:flow_runner, "~> 5.4.1"}
   ]
 end
 ```
