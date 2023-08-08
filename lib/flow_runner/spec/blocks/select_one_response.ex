@@ -116,31 +116,34 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
   @spec evaluate_outgoing(Container.t(), Flow.t(), Block.t(), Context.t(), String.t()) ::
           {:ok, String.t()} | {:invalid, String.t()}
   def evaluate_outgoing(container, flow, block, context, user_input) do
-    matched_option =
-      Enum.find(block.config.choices, fn
-        %{name: _name, test: test, prompt: _prompt} ->
-          FlowRunner.evaluate_expression_block(test, %{
-            "flow" => flow,
-            "block" => %{"response" => user_input}
-          })
+    result =
+      block.config.choices
+      |> Enum.with_index()
+      |> Enum.find(fn {%{name: _name, test: test, prompt: _prompt}, _index} ->
+        FlowRunner.evaluate_expression_block(test, %{
+          "flow" => flow,
+          "block" => %{"response" => user_input}
+        })
       end)
 
-    if matched_option do
-      {:ok, resource} = FlowRunner.fetch_resource_by_uuid(container, matched_option.prompt)
+    case result do
+      {matched_option, index} ->
+        language = FlowRunner.language_for_context(flow, context)
+        {:ok, resource} = FlowRunner.fetch_resource_by_uuid(container, matched_option.prompt)
 
-      language = FlowRunner.language_for_context(flow, context)
+        {:ok, resource_value} =
+          FlowRunner.fetch_resource_value(resource, language.iso_639_3, context.mode, flow)
 
-      {:ok, resource_value} =
-        FlowRunner.fetch_resource_value(resource, language.iso_639_3, context.mode, flow)
+        {:ok,
+         %{
+           "__value__" => matched_option.name,
+           "name" => matched_option.name,
+           "index" => index,
+           "label" => resource_value.value
+         }}
 
-      {:ok,
-       %{
-         "__value__" => matched_option.name,
-         "name" => matched_option.name,
-         "label" => resource_value.value
-       }}
-    else
-      {:invalid, "No choice tests evaluated to true."}
+      nil ->
+        {:invalid, "No choice tests evaluated to true."}
     end
   end
 end
