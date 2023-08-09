@@ -165,9 +165,11 @@ defmodule FlowRunnerTest do
 
     assert %{prompt: resource_uuid} = block.config
     assert resource_value(container, flow, context, resource_uuid) == "hello yaseen"
-
     refute context.waiting_for_user_input
+
     {:end, _container, _flow, _block, _context} = FlowRunner.next_block(container, context)
+
+    assert context.vars["choose"]["index"] == 0
   end
 
   @tag flow: "test/selectoneresponse.flow"
@@ -196,7 +198,9 @@ defmodule FlowRunnerTest do
     assert resource_value(container, flow, context, block.config.prompt) == "hello yaseen"
     refute context.waiting_for_user_input
 
-    {:end, _container, _flow, _block, _context} = FlowRunner.next_block(container, context)
+    {:end, _container, _flow, _block, context} = FlowRunner.next_block(container, context)
+
+    assert context.vars["choose"]["index"] == 1
   end
 
   @tag flow: "test/selectoneresponse.rc3.flow"
@@ -244,7 +248,9 @@ defmodule FlowRunnerTest do
     assert resource_value(container, flow, context, block.config.prompt) == "hello yaseen"
     refute context.waiting_for_user_input
 
-    {:end, _container, _flow, _block, _context} = FlowRunner.next_block(container, context)
+    {:end, _container, _flow, _block, context} = FlowRunner.next_block(container, context)
+
+    assert context.vars["choose"]["index"] == 0
   end
 
   @tag flow: "test/selectoneresponse.rc3.flow"
