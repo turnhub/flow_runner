@@ -42,6 +42,7 @@ defmodule FlowRunner.Spec.Blocks.Log do
               %Context{context | log: [log.value | context.log], last_block_uuid: block.uuid}
 
             {:error, reason} ->
+              # credo:disable-for-next-line
               Logger.warning("Unable to resolve resource for log, reason: #{inspect(reason)}.",
                 metadata: [
                   language: context.language,
