@@ -42,7 +42,15 @@ defmodule FlowRunner.Spec.Blocks.Log do
               %Context{context | log: [log.value | context.log], last_block_uuid: block.uuid}
 
             {:error, reason} ->
-              Logger.error("Unable to resolve resource for log, reason: #{inspect(reason)}.")
+              Logger.warning("Unable to resolve resource for log, reason: #{inspect(reason)}.",
+                metadata: [
+                  language: context.language,
+                  resource: resource.uuid,
+                  flow: flow.uuid,
+                  container: container.uuid
+                ]
+              )
+
               %Context{context | last_block_uuid: block.uuid}
           end
 
