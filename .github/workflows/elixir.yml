@@ -26,8 +26,8 @@ jobs:
             deps
             _build
             priv/plts
-          key: ${{ runner.os }}-v1-mix-${{ hashFiles('**/mix.lock') }}
-          restore-keys: ${{ runner.os }}-v1-mix-
+          key: ${{ runner.os }}-v2-mix-${{ hashFiles('**/mix.lock') }}
+          restore-keys: ${{ runner.os }}-v2-mix-
       - name: Install Dependencies
         if: steps.mix-cache.outputs.cache-hit != 'true'
         run: |
