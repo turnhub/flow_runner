@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Set up Elixir
-        uses: erlef/setup-elixir@c2e02f777c158310fc6d3d4e11b36a52d2d52db8
+        uses: erlef/setup-beam@v1
         with:
           elixir-version: "1.15"
           otp-version: "26"
@@ -26,8 +26,8 @@ jobs:
             deps
             _build
             priv/plts
-          key: ${{ runner.os }}-v1-mix-${{ hashFiles('**/mix.lock') }}
-          restore-keys: ${{ runner.os }}-v1-mix-
+          key: ${{ runner.os }}-v2-mix-${{ hashFiles('**/mix.lock') }}
+          restore-keys: ${{ runner.os }}-v2-mix-
       - name: Install Dependencies
         if: steps.mix-cache.outputs.cache-hit != 'true'
         run: |
