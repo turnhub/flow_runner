@@ -9,7 +9,17 @@ jobs:
     steps:
       - name: Check out
         uses: actions/checkout@v3
-
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: "1.15"
+          otp-version: "26"
+      - name: Install Dependencies
+        run: |
+          mix local.rebar --force
+          mix local.hex --force
+          mix deps.get
+          mix compile
       - name: Publish package to hex.pm
         uses: wesleimp/action-publish-hex@v1
         env:
