@@ -34,10 +34,6 @@ defmodule FlowRunner.Spec.Blocks.NumericResponse do
   end
 
   @impl true
-  def list_resources_referenced(container, %{config: %{prompt: resource_uuid}}),
-    do: Enum.filter(container.resources, &(&1.uuid == resource_uuid))
-
-  @impl true
   @decorate trace("FlowRunner.Blocks.NumericResponse.evaluate_incoming")
   def evaluate_incoming(container, flow, block, context) do
     {
