@@ -15,9 +15,6 @@ defmodule FlowRunner.Spec.Blocks.RunFlow do
   alias FlowRunner.Spec.Flow
 
   @impl true
-  def list_resources_referenced(_container, _block), do: []
-
-  @impl true
   def validate_config!(%{"flow_id" => flow_id}) do
     config = %{flow_id: flow_id}
 

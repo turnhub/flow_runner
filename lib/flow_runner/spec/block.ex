@@ -15,7 +15,6 @@ defmodule FlowRunner.Spec.Block do
   alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Exit
   alias FlowRunner.Spec.Flow
-  alias FlowRunner.Spec.Resource
 
   require Logger
 
@@ -47,20 +46,6 @@ defmodule FlowRunner.Spec.Block do
               {:ok, user_input :: any}
               | {:invalid, reason :: String.t()}
 
-  @doc """
-  Return a list of all resources referenced by a block
-
-  This is needed so we can merge flows between containers. Flows depend on resources
-  but RC3 of the flowspec states that these resources are keep at the container level
-  rather than the flow level.
-
-  This callback gives us the resources a flow depends on from the container.
-
-  RC4 may move the resources into the flows themselves which would remove the need
-  for this function entirely.
-  """
-  @callback list_resources_referenced(Container.t(), Block.t()) :: [Resource.t()]
-
   @derive Jason.Encoder
   defstruct uuid: nil,
             name: nil,
@@ -90,12 +75,6 @@ defmodule FlowRunner.Spec.Block do
   validates(:type, presence: true)
 
   def get_block(blocks_module, type), do: Map.get(blocks_module.blocks, type)
-
-  @spec list_resources_referenced(Container.t(), Block.t()) :: [Resource.t()]
-  def list_resources_referenced(container, block) do
-    implementation = get_block(FlowRunner.blocks_module(), block.type)
-    apply(implementation, :list_resources_referenced, [container, block])
-  end
 
   @impl true
   def cast!(blocks_module, %{"type" => type} = map) do
