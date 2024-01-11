@@ -10,6 +10,7 @@ defmodule FlowRunner.MixProject do
       version: @version,
       elixir: "~> 1.13",
       elixirc_paths: elixirc_paths(Mix.env()),
+      compilers: [:yecc] ++ Mix.compilers(),
       description: description(),
       package: package(),
       start_permanent: Mix.env() == :prod,
