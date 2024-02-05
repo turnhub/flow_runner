@@ -46,7 +46,7 @@ jobs:
           mix dialyzer --format github
       - name: Code Annotations Report
         if: ${{ always() }}
-        uses: mikepenz/action-junit-report@v4.0.4
+        uses: mikepenz/action-junit-report@v4.1.0
         with:
           report_paths: "reports/junit/*.xml"
           github_token: ${{ secrets.GITHUB_TOKEN }}
