@@ -108,8 +108,8 @@ defmodule FlowRunner do
   end
 
   @impl FlowRunner.Contract
-  def evaluate_expression_block(expression, context) do
-    Expression.V2.Compat.evaluate_block!(expression, context, expression_callbacks_module())
+  def evaluate_expression_block(expression, context, opts \\ []) do
+    Expression.V2.Compat.evaluate_block!(expression, context, expression_callbacks_module(), opts)
   end
 
   defdelegate fetch_resource_by_uuid(container, uuid), to: FlowRunner.Spec.Container

@@ -516,4 +516,62 @@ defmodule FlowRunnerTest do
 
     assert {:end, _container, _flow, _block, _context} = FlowRunner.next_block(container, context)
   end
+
+  describe "The 1skip_context_evaluation?` flag works as expected when evaluating Expression blocks" do
+    test "string values in context that resemble booleans should not be parsed as booleans" do
+      # Right now the Expression package always tries to parse boolean-ish strings into actual booleans,
+      # which breaks the evaluation of comparisons like the following one (which returns `false` instead of `true`):
+      assert false ==
+               FlowRunner.evaluate_expression_block(
+                 "block.response = \"True\"",
+                 %{
+                   "block" => %{"response" => "True"}
+                 }
+               )
+
+      # When evaluating Block exits we don't want Expression to transform the context.
+      # The `skip_context_evaluation?` flag should prevent that:
+      assert true ==
+               FlowRunner.evaluate_expression_block(
+                 "block.response = \"True\"",
+                 %{
+                   "block" => %{"response" => "True"}
+                 },
+                 skip_context_evaluation?: true
+               )
+    end
+
+    test "string values in context that resemble numbers should not be parsed as numbers" do
+      # Right now the Expression package always tries to parse number-ish strings into actual numbers,
+      # which breaks the evaluation of comparisons like the following one (which returns `false` instead of `true`):
+      assert false ==
+               FlowRunner.evaluate_expression_block(
+                 "ref_Buttons_7bef16 == \"2\"",
+                 %{
+                   "ref_Buttons_7bef16" => %{
+                     "__value__" => "2",
+                     "index" => 1,
+                     "label" => "2",
+                     "name" => "2"
+                   }
+                 }
+               )
+
+      # When evaluating Block exits we don't want Expression to transform the context.
+      # The `skip_context_evaluation?` flag should prevent that:
+      assert true ==
+               FlowRunner.evaluate_expression_block(
+                 "ref_Buttons_7bef16 == \"2\"",
+                 %{
+                   "ref_Buttons_7bef16" => %{
+                     "__value__" => "2",
+                     "index" => 1,
+                     "label" => "2",
+                     "name" => "2"
+                   }
+                 },
+                 skip_context_evaluation?: true
+               )
+    end
+  end
 end
