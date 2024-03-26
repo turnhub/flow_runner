@@ -9,7 +9,6 @@ defmodule FlowRunner.Spec.Container do
     ]
 
   alias FlowRunner.Spec.Container
-  alias FlowRunner.Spec.Flow
 
   @derive Jason.Encoder
   defstruct specification_version: nil,
@@ -36,21 +35,6 @@ defmodule FlowRunner.Spec.Container do
   )
 
   validates(:uuid, presence: true, uuid: [format: :default])
-
-  def insert_flow_and_resources(
-        %Container{} = destination_container,
-        %Container{} = source_container,
-        %Flow{} = flow
-      ) do
-    %{
-      destination_container
-      | flows: destination_container.flows ++ [flow],
-        # NOTE: there should be a better way to do this
-        resources:
-          destination_container.resources ++
-            Flow.list_resources_referenced(source_container, flow)
-    }
-  end
 
   @spec fetch_resource_by_uuid(Container.t(), uuid :: String.t()) ::
           {:ok, FlowRunner.Spec.Resource.t()} | {:error, reason :: String.t()}

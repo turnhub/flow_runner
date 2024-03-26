@@ -16,10 +16,10 @@ jobs:
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
-          elixir-version: "1.15"
+          elixir-version: "1.16"
           otp-version: "26"
       - name: Restore dependencies cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: mix-cache
         with:
           path: |
@@ -46,7 +46,7 @@ jobs:
           mix dialyzer --format github
       - name: Code Annotations Report
         if: ${{ always() }}
-        uses: mikepenz/action-junit-report@v4.0.1
+        uses: mikepenz/action-junit-report@v4.1.0
         with:
           report_paths: "reports/junit/*.xml"
           github_token: ${{ secrets.GITHUB_TOKEN }}

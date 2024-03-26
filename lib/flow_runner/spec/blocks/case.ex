@@ -17,9 +17,6 @@ defmodule FlowRunner.Spec.Blocks.Case do
   end
 
   @impl true
-  def list_resources_referenced(_container, _block), do: []
-
-  @impl true
   @decorate trace("FlowRunner.Case.Log.evaluate_incoming")
   def evaluate_incoming(
         %Container{} = container,

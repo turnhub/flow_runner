@@ -17,9 +17,6 @@ defmodule FlowRunner.Spec.Blocks.Output do
   end
 
   @impl true
-  def list_resources_referenced(_container, _block), do: []
-
-  @impl true
   @decorate trace("FlowRunner.Blocks.Output.evaluate_incoming")
   def evaluate_incoming(
         %Container{} = container,
