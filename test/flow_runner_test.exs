@@ -517,7 +517,7 @@ defmodule FlowRunnerTest do
     assert {:end, _container, _flow, _block, _context} = FlowRunner.next_block(container, context)
   end
 
-  describe "The 1skip_context_evaluation?` flag works as expected when evaluating Expression blocks" do
+  describe "The `skip_context_evaluation?` flag works as expected when evaluating Expression blocks" do
     test "string values in context that resemble booleans should not be parsed as booleans" do
       # Right now the Expression package always tries to parse boolean-ish strings into actual booleans,
       # which breaks the evaluation of comparisons like the following one (which returns `false` instead of `true`):
