@@ -34,7 +34,11 @@ defmodule FlowRunner.Spec.Blocks.Case do
   def evaluate_outgoing(_container, _flow, block, context, nil) do
     {:ok, block_exit} = Block.evaluate_exits(block, context)
 
-    case FlowRunner.evaluate_expression_block(block_exit.name, context.vars) do
+    case FlowRunner.evaluate_expression_block(
+           block_exit.name,
+           context.vars,
+           skip_context_evaluation?: true
+         ) do
       # We didn't manage to parse it and it returned a parsing error
       {:error, _error, _reason} -> {:ok, block_exit.name}
       # We managed to evaluate it and it returned nil
