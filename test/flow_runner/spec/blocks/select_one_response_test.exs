@@ -241,7 +241,7 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponseTest do
               %{
                 name: "2",
                 prompt: "ae97bb77-8f80-4b93-b51f-d7b1e96e5eeb",
-                test: "block.response = 2"
+                test: "block.response = \"2\""
               },
               %{
                 name: "Button 3",
@@ -489,7 +489,7 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponseTest do
           %{
             name: "2",
             prompt: "ae97bb77-8f80-4b93-b51f-d7b1e96e5eeb",
-            test: "block.response = 2"
+            test: "block.response = \"2\""
           },
           %{
             name: "Button 3",
@@ -778,7 +778,7 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponseTest do
               %{
                 name: "2",
                 prompt: "ae97bb77-8f80-4b93-b51f-d7b1e96e5eeb",
-                test: "block.response = 2"
+                test: "block.response = \"2\""
               },
               %{
                 name: "Button 3",
@@ -1026,7 +1026,7 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponseTest do
           %{
             name: "2",
             prompt: "ae97bb77-8f80-4b93-b51f-d7b1e96e5eeb",
-            test: "block.response = 2"
+            test: "block.response = \"2\""
           },
           %{
             name: "Button 3",
