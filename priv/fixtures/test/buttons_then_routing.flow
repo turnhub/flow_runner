@@ -1,0 +1,330 @@
+{
+  "specification_version": "1.0.0-rc3",
+  "uuid": "2894759f-7aa0-4875-8929-2c5999bee38d",
+  "name": "Journey 2",
+  "description": "Default description",
+  "flows": [
+    {
+      "uuid": "9c0b42bf-ff0b-43f6-8423-2f7b6666efbd",
+      "name": "stack",
+      "label": null,
+      "last_modified": "2024-03-26T13:20:45.012220Z",
+      "interaction_timeout": 300,
+      "vendor_metadata": {},
+      "supported_modes": [
+        "RICH_MESSAGING"
+      ],
+      "first_block_id": "ddc1b3d7-f93f-513e-8990-5241821e700d",
+      "exit_block_id": "",
+      "languages": [
+        {
+          "id": "d1c09571-c321-4e1d-8d68-efb7607abe26",
+          "iso_639_3": "eng",
+          "label": "English",
+          "variant": null,
+          "bcp_47": null
+        }
+      ],
+      "blocks": [
+        {
+          "uuid": "37ce2c90-f5f7-5772-8464-b2a1553a78b8",
+          "name": "text_cf8c95_text",
+          "label": null,
+          "semantic_label": null,
+          "tags": [],
+          "type": "MobilePrimitives.Message",
+          "config": {
+            "prompt": "0413082a-9755-4731-8dd4-d93e8e878d8a"
+          },
+          "exits": [
+            {
+              "uuid": "6e45986e-e6bf-452f-b76c-679355661383",
+              "name": "text_cf8c95_text",
+              "destination_block": null,
+              "semantic_label": "",
+              "test": "",
+              "default": true,
+              "config": {},
+              "vendor_metadata": {}
+            }
+          ]
+        },
+        {
+          "uuid": "5827c3fd-5e31-594a-a5a5-e7c92c7210fd",
+          "name": "text_57cef1_text",
+          "label": null,
+          "semantic_label": null,
+          "tags": [],
+          "type": "MobilePrimitives.Message",
+          "config": {
+            "prompt": "c5606e1b-b0ca-45a1-8e48-5e633eb7f220"
+          },
+          "exits": [
+            {
+              "uuid": "f7caa007-92b4-4713-a83a-98f05cf212bd",
+              "name": "text_57cef1_text",
+              "destination_block": null,
+              "semantic_label": "",
+              "test": "",
+              "default": true,
+              "config": {},
+              "vendor_metadata": {}
+            }
+          ]
+        },
+        {
+          "uuid": "3dd88151-96d1-5e76-aad2-13d5f02b77ff",
+          "name": "reserved_default_card_text",
+          "label": null,
+          "semantic_label": null,
+          "tags": [],
+          "type": "MobilePrimitives.Message",
+          "config": {
+            "prompt": "11d5d8be-43d9-4e7f-baa3-18b972e51d01"
+          },
+          "exits": [
+            {
+              "uuid": "dee36a6f-69ac-481e-aacf-e31e50e4070b",
+              "name": "reserved_default_card_text",
+              "destination_block": null,
+              "semantic_label": "",
+              "test": "",
+              "default": true,
+              "config": {},
+              "vendor_metadata": {}
+            }
+          ]
+        },
+        {
+          "uuid": "be115dce-1f85-515c-9494-95bf3f00e87d",
+          "name": "text_4dd50b_text",
+          "label": null,
+          "semantic_label": null,
+          "tags": [],
+          "type": "MobilePrimitives.Message",
+          "config": {
+            "prompt": "ede492cb-7145-4843-af91-4036456f484a"
+          },
+          "exits": [
+            {
+              "uuid": "688c098a-6da7-4409-935c-8af3130c10fc",
+              "name": "text_4dd50b_text",
+              "destination_block": null,
+              "semantic_label": "",
+              "test": "",
+              "default": true,
+              "config": {},
+              "vendor_metadata": {}
+            }
+          ]
+        },
+        {
+          "uuid": "ddc1b3d7-f93f-513e-8990-5241821e700d",
+          "name": "ref_Buttons_7bef16",
+          "label": null,
+          "semantic_label": null,
+          "tags": [],
+          "type": "MobilePrimitives.SelectOneResponse",
+          "config": {
+            "prompt": "aa9d2ff7-0db2-44f9-8074-aece760795a5",
+            "choices": [
+              {
+                "name": "True",
+                "prompt": "48e95d58-a623-46fd-93c7-0a2674111d1c",
+                "test": "block.response = \"True\""
+              },
+              {
+                "name": "2",
+                "prompt": "ae97bb77-8f80-4b93-b51f-d7b1e96e5eeb",
+                "test": "block.response = \"2\""
+              },
+              {
+                "name": "Button 3",
+                "prompt": "86271754-00e8-4f9f-bafb-68abdbb74350",
+                "test": "block.response = \"Button 3\""
+              }
+            ]
+          },
+          "exits": [
+            {
+              "uuid": "bd90534c-7974-466a-a50d-532efd7104ea",
+              "name": "ref_Buttons_7bef16",
+              "destination_block": "528d89f0-7b69-5b93-9376-a6c41ac3ac22",
+              "semantic_label": "",
+              "test": "",
+              "default": true,
+              "config": {},
+              "vendor_metadata": {}
+            }
+          ]
+        },
+        {
+          "uuid": "528d89f0-7b69-5b93-9376-a6c41ac3ac22",
+          "name": "Routing for Buttons_7bef16",
+          "label": null,
+          "semantic_label": null,
+          "tags": [],
+          "type": "Core.Case",
+          "config": {},
+          "exits": [
+            {
+              "uuid": "dff8ba17-d73d-4607-91de-dca8b2ed8630",
+              "name": "Exit for Text_4dd50b",
+              "destination_block": "be115dce-1f85-515c-9494-95bf3f00e87d",
+              "semantic_label": null,
+              "test": "ref_Buttons_7bef16 == \"True\"",
+              "default": false,
+              "config": {},
+              "vendor_metadata": {}
+            },
+            {
+              "uuid": "dd605033-ef05-4edd-9170-1adb1a8c45a5",
+              "name": "Exit for Text_cf8c95",
+              "destination_block": "37ce2c90-f5f7-5772-8464-b2a1553a78b8",
+              "semantic_label": null,
+              "test": "ref_Buttons_7bef16 == \"2\"",
+              "default": false,
+              "config": {},
+              "vendor_metadata": {}
+            },
+            {
+              "uuid": "9eb3c26d-fb83-4784-99da-003e156279b3",
+              "name": "Exit for Text_57cef1",
+              "destination_block": "5827c3fd-5e31-594a-a5a5-e7c92c7210fd",
+              "semantic_label": null,
+              "test": "ref_Buttons_7bef16 == \"Button 3\"",
+              "default": false,
+              "config": {},
+              "vendor_metadata": {}
+            },
+            {
+              "uuid": "6c20dd20-92b4-4e53-b651-9d9c2a484fc2",
+              "name": "Routing for Buttons_7bef16",
+              "destination_block": null,
+              "semantic_label": "",
+              "test": "",
+              "default": true,
+              "config": {},
+              "vendor_metadata": {}
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "uuid": "0413082a-9755-4731-8dd4-d93e8e878d8a",
+      "values": [
+        {
+          "language_id": "d1c09571-c321-4e1d-8d68-efb7607abe26",
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "value": "You clicked button 2"
+        }
+      ]
+    },
+    {
+      "uuid": "c5606e1b-b0ca-45a1-8e48-5e633eb7f220",
+      "values": [
+        {
+          "language_id": "d1c09571-c321-4e1d-8d68-efb7607abe26",
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "value": "You clicked button 3"
+        }
+      ]
+    },
+    {
+      "uuid": "11d5d8be-43d9-4e7f-baa3-18b972e51d01",
+      "values": [
+        {
+          "language_id": "d1c09571-c321-4e1d-8d68-efb7607abe26",
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "value": "The button is not linked with any card. Please link a card to proceed."
+        }
+      ]
+    },
+    {
+      "uuid": "ede492cb-7145-4843-af91-4036456f484a",
+      "values": [
+        {
+          "language_id": "d1c09571-c321-4e1d-8d68-efb7607abe26",
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "value": "You clicked button 1"
+        }
+      ]
+    },
+    {
+      "uuid": "aa9d2ff7-0db2-44f9-8074-aece760795a5",
+      "values": [
+        {
+          "language_id": "d1c09571-c321-4e1d-8d68-efb7607abe26",
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "value": "Boolean buttons test"
+        }
+      ]
+    },
+    {
+      "uuid": "48e95d58-a623-46fd-93c7-0a2674111d1c",
+      "values": [
+        {
+          "language_id": "d1c09571-c321-4e1d-8d68-efb7607abe26",
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "value": "True"
+        }
+      ]
+    },
+    {
+      "uuid": "ae97bb77-8f80-4b93-b51f-d7b1e96e5eeb",
+      "values": [
+        {
+          "language_id": "d1c09571-c321-4e1d-8d68-efb7607abe26",
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "uuid": "86271754-00e8-4f9f-bafb-68abdbb74350",
+      "values": [
+        {
+          "language_id": "d1c09571-c321-4e1d-8d68-efb7607abe26",
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "value": "Button 3"
+        }
+      ]
+    }
+  ],
+  "vendor_metadata": {}
+}
