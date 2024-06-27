@@ -74,7 +74,7 @@ defmodule FlowRunner.Spec.Block do
   validates(:uuid, presence: true, uuid: [format: :default])
   validates(:type, presence: true)
 
-  def get_block(blocks_module, type), do: Map.get(blocks_module.blocks, type)
+  def get_block(blocks_module, type), do: Map.get(blocks_module.blocks(), type)
 
   @impl true
   def cast!(blocks_module, %{"type" => type} = map) do
