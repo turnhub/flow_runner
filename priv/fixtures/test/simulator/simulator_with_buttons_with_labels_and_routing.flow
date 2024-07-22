@@ -1,0 +1,416 @@
+{
+  "name": "Default name",
+  "description": "Default description",
+  "uuid": "17b74be7-7ab1-4e24-ae80-0e7bba0a0f13",
+  "resources": [
+    {
+      "values": [
+        {
+          "value": "Let's go!",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "e3987a06-3592-4e13-8935-e64c9b14a1fe"
+        }
+      ],
+      "uuid": "49c15465-e4ce-4029-b84d-ea7cc06f62a3"
+    },
+    {
+      "values": [
+        {
+          "value": "this is the body",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "e3987a06-3592-4e13-8935-e64c9b14a1fe"
+        }
+      ],
+      "uuid": "5064f945-c92f-4c19-bc69-3b8cf7a80115"
+    },
+    {
+      "values": [
+        {
+          "value": "Continue",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "e3987a06-3592-4e13-8935-e64c9b14a1fe"
+        }
+      ],
+      "uuid": "690c4221-a6e3-4090-87b3-b22e894787d0"
+    },
+    {
+      "values": [
+        {
+          "value": "Finish",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "e3987a06-3592-4e13-8935-e64c9b14a1fe"
+        }
+      ],
+      "uuid": "232c51e9-8eeb-4b18-87a3-094a97b26655"
+    },
+    {
+      "values": [
+        {
+          "value": "Thanks!",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "e3987a06-3592-4e13-8935-e64c9b14a1fe"
+        }
+      ],
+      "uuid": "55e6c963-29bc-4341-a06e-e1226f87beef"
+    }
+  ],
+  "flows": [
+    {
+      "label": null,
+      "name": "stack",
+      "blocks": [
+        {
+          "label": null,
+          "name": "next_text",
+          "type": "MobilePrimitives.Message",
+          "config": {
+            "prompt": "49c15465-e4ce-4029-b84d-ea7cc06f62a3"
+          },
+          "tags": [],
+          "uuid": "1689ae51-28a3-5e9e-aac3-35aa7fcdd2d5",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "next_text",
+              "config": {},
+              "test": "",
+              "uuid": "adec30f6-ad12-455d-901a-203c84483078",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": null
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 15
+                      },
+                      "name": "Next",
+                      "uuid": "ae88cbf3-4039-53dd-9e9c-b0995a15d962"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 9,
+                        "line": 16
+                      },
+                      "text": {},
+                      "type": "text"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "option",
+          "type": "MobilePrimitives.SelectOneResponse",
+          "config": {
+            "prompt": "5064f945-c92f-4c19-bc69-3b8cf7a80115",
+            "choices": [
+              {
+                "name": "next",
+                "prompt": "690c4221-a6e3-4090-87b3-b22e894787d0",
+                "test": "block.response = \"Continue\""
+              },
+              {
+                "name": "end",
+                "prompt": "232c51e9-8eeb-4b18-87a3-094a97b26655",
+                "test": "block.response = \"Finish\""
+              }
+            ]
+          },
+          "tags": [],
+          "uuid": "a70f0651-1fde-5811-9640-4e503f353c34",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "option",
+              "config": {},
+              "test": "",
+              "uuid": "6dd79f14-b334-4cd3-ac4a-1d7ce5298d8e",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": "c25c61d8-cf4f-5233-869a-cda338c316d3"
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "buttons_metadata": {
+                      "footer": "this is the footer"
+                    },
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 3
+                      },
+                      "name": "Read",
+                      "uuid": "3a3d3e5a-17e4-5487-b1a2-62691d09bd87"
+                    },
+                    "card_item": {
+                      "button_block": {},
+                      "meta": {
+                        "column": 9,
+                        "line": 4
+                      },
+                      "type": "button_block"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "read_contact_update_option",
+          "type": "Core.SetContactProperty",
+          "config": {
+            "set_contact_property": {
+              "property_key": "option",
+              "property_value": "@option"
+            }
+          },
+          "tags": [],
+          "uuid": "c25c61d8-cf4f-5233-869a-cda338c316d3",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "read_contact_update_option",
+              "config": {},
+              "test": "",
+              "uuid": "e878971b-4388-4ff7-a4b0-493eb8e18c25",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": "23ab85ad-2af8-54d2-9c0d-fadf555042e6"
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 3
+                      },
+                      "name": "Read",
+                      "uuid": "3a3d3e5a-17e4-5487-b1a2-62691d09bd87"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 9,
+                        "line": 10
+                      },
+                      "type": "update_contact",
+                      "update_contact": {}
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "Routing for Read",
+          "type": "Core.Case",
+          "config": {},
+          "tags": [],
+          "uuid": "23ab85ad-2af8-54d2-9c0d-fadf555042e6",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": false,
+              "name": "Exit for End",
+              "config": {},
+              "test": "option.label == \"Finish\"",
+              "uuid": "429d69dc-f60c-4629-892c-51d20ef13b90",
+              "semantic_label": null,
+              "vendor_metadata": {},
+              "destination_block": "296b07a7-b83c-5d7d-bd67-ea4919a0fe6d"
+            },
+            {
+              "default": true,
+              "name": "Routing for Read",
+              "config": {},
+              "test": "",
+              "uuid": "bc83cf56-b741-48f1-b76b-c99912503352",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": null
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 3
+                      },
+                      "name": "Read",
+                      "uuid": "3a3d3e5a-17e4-5487-b1a2-62691d09bd87"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 9,
+                        "line": 12
+                      },
+                      "then": {},
+                      "type": "then"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "end_text",
+          "type": "MobilePrimitives.Message",
+          "config": {
+            "prompt": "55e6c963-29bc-4341-a06e-e1226f87beef"
+          },
+          "tags": [],
+          "uuid": "296b07a7-b83c-5d7d-bd67-ea4919a0fe6d",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "end_text",
+              "config": {},
+              "test": "",
+              "uuid": "0c0e44be-ad12-4bd1-8de5-ee248f08888f",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": null
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 19
+                      },
+                      "name": "End",
+                      "uuid": "135d85be-cce5-5d0c-af9e-fc591fdbaeca"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 9,
+                        "line": 20
+                      },
+                      "text": {},
+                      "type": "text"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "last_modified": "2024-07-22T06:08:41.795501Z",
+      "uuid": "1eddf6f0-83b8-42e1-acda-97ad77c66555",
+      "languages": [
+        {
+          "id": "e3987a06-3592-4e13-8935-e64c9b14a1fe",
+          "label": "English",
+          "variant": null,
+          "iso_639_3": "eng",
+          "bcp_47": null
+        }
+      ],
+      "first_block_id": "a70f0651-1fde-5811-9640-4e503f353c34",
+      "interaction_timeout": 300,
+      "vendor_metadata": {},
+      "supported_modes": [
+        "RICH_MESSAGING"
+      ],
+      "exit_block_id": ""
+    }
+  ],
+  "vendor_metadata": {},
+  "specification_version": "1.0.0-rc3"
+}

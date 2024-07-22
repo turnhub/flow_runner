@@ -1,0 +1,220 @@
+{
+  "name": "Default name",
+  "description": "Default description",
+  "uuid": "96ee2008-eb27-4145-869a-5ac362880f41",
+  "resources": [
+    {
+      "values": [
+        {
+          "value": "Thanks!",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "bfda44c4-555e-4b63-b81c-afc44f239fbd"
+        }
+      ],
+      "uuid": "a74b1ab9-1fe2-4ed8-8c75-8b9b6b3376c7"
+    },
+    {
+      "values": [
+        {
+          "value": "Please read carefully",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "bfda44c4-555e-4b63-b81c-afc44f239fbd"
+        },
+        {
+          "value": "https://example.org/document.pdf",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "application/pdf",
+          "language_id": "bfda44c4-555e-4b63-b81c-afc44f239fbd"
+        }
+      ],
+      "uuid": "e715696a-6ece-48b2-b61e-6b3bb25dd982"
+    },
+    {
+      "values": [
+        {
+          "value": "End",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "bfda44c4-555e-4b63-b81c-afc44f239fbd"
+        }
+      ],
+      "uuid": "72eda28e-42cf-4b88-96de-515d50ea84d2"
+    }
+  ],
+  "flows": [
+    {
+      "label": null,
+      "name": "stack",
+      "blocks": [
+        {
+          "label": null,
+          "name": "end_text",
+          "type": "MobilePrimitives.Message",
+          "config": {
+            "prompt": "a74b1ab9-1fe2-4ed8-8c75-8b9b6b3376c7"
+          },
+          "tags": [],
+          "uuid": "2648cb0e-fd9b-5bf6-857a-d28fb46a1c9a",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "end_text",
+              "config": {},
+              "test": "",
+              "uuid": "2b56af45-d25f-4690-be19-d8bc691f25f5",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": null
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 11
+                      },
+                      "name": "End",
+                      "uuid": "135d85be-cce5-5d0c-af9e-fc591fdbaeca"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 9,
+                        "line": 12
+                      },
+                      "text": {},
+                      "type": "text"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "read_document",
+          "type": "MobilePrimitives.SelectOneResponse",
+          "config": {
+            "prompt": "e715696a-6ece-48b2-b61e-6b3bb25dd982",
+            "choices": [
+              {
+                "name": "end",
+                "prompt": "72eda28e-42cf-4b88-96de-515d50ea84d2",
+                "test": "block.response = \"End\""
+              }
+            ]
+          },
+          "tags": [],
+          "uuid": "13642c36-2ccd-5ec2-a6ca-1e4e3ce856c2",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": null,
+              "name": "end",
+              "config": {},
+              "test": "block.value = \"end\"",
+              "uuid": "f2ee4cb9-7b7c-40b2-bb32-378664bf29c7",
+              "semantic_label": null,
+              "vendor_metadata": {},
+              "destination_block": "2648cb0e-fd9b-5bf6-857a-d28fb46a1c9a"
+            },
+            {
+              "default": true,
+              "name": "read_document",
+              "config": {},
+              "test": "",
+              "uuid": "7755bbba-7dfe-4ec6-ae63-00250d481c72",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": null
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "buttons_metadata": {
+                      "footer": "this is the footer"
+                    },
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 3
+                      },
+                      "name": "ReadDocument",
+                      "uuid": "9dd2b788-f87e-54b0-964e-574bcc018242"
+                    },
+                    "card_item": {
+                      "button_block": {},
+                      "meta": {
+                        "column": 9,
+                        "line": 4
+                      },
+                      "type": "button_block"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "last_modified": "2024-07-22T06:06:51.189256Z",
+      "uuid": "c0cc828d-353f-427d-98b3-33221f6b11dd",
+      "languages": [
+        {
+          "id": "bfda44c4-555e-4b63-b81c-afc44f239fbd",
+          "label": "English",
+          "variant": null,
+          "iso_639_3": "eng",
+          "bcp_47": null
+        }
+      ],
+      "first_block_id": "13642c36-2ccd-5ec2-a6ca-1e4e3ce856c2",
+      "interaction_timeout": 300,
+      "vendor_metadata": {},
+      "supported_modes": [
+        "RICH_MESSAGING"
+      ],
+      "exit_block_id": ""
+    }
+  ],
+  "vendor_metadata": {},
+  "specification_version": "1.0.0-rc3"
+}

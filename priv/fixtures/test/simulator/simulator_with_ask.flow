@@ -1,0 +1,392 @@
+{
+  "name": "Default name",
+  "description": "Default description",
+  "uuid": "77efdf77-f4bd-4c39-b917-c2b0a7011514",
+  "resources": [
+    {
+      "values": [
+        {
+          "value": "the end - c equals @c",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "d9989ac8-f93b-4e17-abd2-103540553134"
+        }
+      ],
+      "uuid": "0f6a5766-2623-4998-99c2-5ee38ad25862"
+    },
+    {
+      "values": [
+        {
+          "value": "hola",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "d9989ac8-f93b-4e17-abd2-103540553134"
+        }
+      ],
+      "uuid": "92a13754-5a7d-4779-baa5-d8b0ed4cffb0"
+    },
+    {
+      "values": [
+        {
+          "value": "Please enter some text",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "d9989ac8-f93b-4e17-abd2-103540553134"
+        }
+      ],
+      "uuid": "4ffeaee2-763f-44a6-b378-b1a3d6846b99"
+    }
+  ],
+  "flows": [
+    {
+      "label": null,
+      "name": "stack",
+      "blocks": [
+        {
+          "label": null,
+          "name": "card3_text",
+          "type": "MobilePrimitives.Message",
+          "config": {
+            "prompt": "0f6a5766-2623-4998-99c2-5ee38ad25862"
+          },
+          "tags": [],
+          "uuid": "9a192e04-25de-52fd-a265-edf944c56458",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "card3_text",
+              "config": {},
+              "test": "",
+              "uuid": "71e8e10c-2289-498f-9857-4ec2e82fcc54",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": null
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 16
+                      },
+                      "name": "Card3",
+                      "uuid": "fdb77a1b-5124-59f2-a32d-9e5a996112b2"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 9,
+                        "line": 17
+                      },
+                      "text": {},
+                      "type": "text"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "card2_case",
+          "type": "Core.Case",
+          "config": {},
+          "tags": [],
+          "uuid": "4dd53bda-c682-51a5-b35c-c8357bfde047",
+          "ui_metadata": {},
+          "exits": [
+            {
+              "default": false,
+              "name": "Exit for card2_case_condition_0",
+              "config": {},
+              "test": "a == \"hey\"",
+              "uuid": "aa8042dd-6725-42dc-a09a-8b2f8dabf5c1",
+              "semantic_label": null,
+              "vendor_metadata": {},
+              "destination_block": "aee1ad19-d548-5fae-953a-d9975e0a7f1c"
+            },
+            {
+              "default": true,
+              "name": "Exit for card2_case_condition_1",
+              "config": {},
+              "test": null,
+              "uuid": "2fcb31a4-cef7-42ef-930e-77e6dbbfd17b",
+              "semantic_label": null,
+              "vendor_metadata": {},
+              "destination_block": "85ad5b46-4feb-57d8-a760-c1aa0e415fb7"
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {}
+        },
+        {
+          "label": null,
+          "name": "card2_case_condition_1_text",
+          "type": "MobilePrimitives.Message",
+          "config": {
+            "prompt": "92a13754-5a7d-4779-baa5-d8b0ed4cffb0"
+          },
+          "tags": [],
+          "uuid": "85ad5b46-4feb-57d8-a760-c1aa0e415fb7",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "Default exit to \"Card3\"",
+              "config": {},
+              "test": "",
+              "uuid": "44f4a407-b6d4-4bd1-9488-ee5c2054e7fb",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": "9a192e04-25de-52fd-a265-edf944c56458"
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 12
+                      },
+                      "name": "Card2",
+                      "uuid": "33f9ee00-9b9f-5574-8c73-fc89a7350f81"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 9,
+                        "line": 13
+                      },
+                      "text": {},
+                      "type": "text"
+                    },
+                    "index": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "b",
+          "type": "Core.Case",
+          "config": {},
+          "tags": [],
+          "uuid": "aee1ad19-d548-5fae-953a-d9975e0a7f1c",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "\"foo\"",
+              "config": {},
+              "test": "",
+              "uuid": "2ee8a0e3-d8d7-4108-a47d-dfda1e2ad7f7",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": "300dfcad-0883-5d62-adba-b3e1913c7035"
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": "a == \"hey\"",
+                      "meta": {
+                        "column": 7,
+                        "line": 7
+                      },
+                      "name": "Card2",
+                      "uuid": "4dd53bda-c682-51a5-b35c-c8357bfde047"
+                    },
+                    "card_item": {
+                      "literal": {},
+                      "meta": {
+                        "column": 9,
+                        "line": 8
+                      },
+                      "type": "literal"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "c",
+          "type": "Core.Case",
+          "config": {},
+          "tags": [],
+          "uuid": "300dfcad-0883-5d62-adba-b3e1913c7035",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "1 + 1",
+              "config": {},
+              "test": "",
+              "uuid": "8f4e498f-d32b-42c0-962c-d6b488711cc9",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": "9a192e04-25de-52fd-a265-edf944c56458"
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": "a == \"hey\"",
+                      "meta": {
+                        "column": 7,
+                        "line": 7
+                      },
+                      "name": "Card2",
+                      "uuid": "4dd53bda-c682-51a5-b35c-c8357bfde047"
+                    },
+                    "card_item": {
+                      "expression": {},
+                      "meta": {
+                        "column": 9,
+                        "line": 9
+                      },
+                      "type": "expression"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "a",
+          "type": "MobilePrimitives.OpenResponse",
+          "config": {
+            "prompt": "4ffeaee2-763f-44a6-b378-b1a3d6846b99",
+            "max_response_characters": null
+          },
+          "tags": [],
+          "uuid": "78ab17e0-f8ce-5cf5-a4ab-1f50616f23e9",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "Default exit to \"Card2\"",
+              "config": {},
+              "test": "",
+              "uuid": "6ab5a95d-468a-46d5-8a8f-eb310bdedad5",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": "4dd53bda-c682-51a5-b35c-c8357bfde047"
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 3
+                      },
+                      "name": "Card1",
+                      "uuid": "215d154b-0ac7-5f37-90a5-0c0c2f0e77da"
+                    },
+                    "card_item": {
+                      "ask": {},
+                      "meta": {
+                        "column": 9,
+                        "line": 4
+                      },
+                      "type": "ask"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "last_modified": "2024-07-22T06:05:38.941090Z",
+      "uuid": "f8e27ce4-ff66-4d6f-bfc1-5cdaefc57239",
+      "languages": [
+        {
+          "id": "d9989ac8-f93b-4e17-abd2-103540553134",
+          "label": "English",
+          "variant": null,
+          "iso_639_3": "eng",
+          "bcp_47": null
+        }
+      ],
+      "first_block_id": "78ab17e0-f8ce-5cf5-a4ab-1f50616f23e9",
+      "interaction_timeout": 300,
+      "vendor_metadata": {},
+      "supported_modes": [
+        "RICH_MESSAGING"
+      ],
+      "exit_block_id": ""
+    }
+  ],
+  "vendor_metadata": {},
+  "specification_version": "1.0.0-rc3"
+}

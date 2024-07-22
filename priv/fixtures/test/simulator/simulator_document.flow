@@ -1,0 +1,115 @@
+{
+  "name": "Default name",
+  "description": "Default description",
+  "uuid": "4c04b695-7d69-429f-a058-33d6bb453a81",
+  "resources": [
+    {
+      "values": [
+        {
+          "value": "https://example.org/document.pdf",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "application/pdf",
+          "language_id": "455ed06c-0b4b-4fbe-8e3e-3121844c0d38"
+        },
+        {
+          "value": "document description",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "455ed06c-0b4b-4fbe-8e3e-3121844c0d38"
+        }
+      ],
+      "uuid": "8ab53ac5-c29b-47f3-a6dc-cd2d153c6375"
+    }
+  ],
+  "flows": [
+    {
+      "label": null,
+      "name": "stack",
+      "blocks": [
+        {
+          "label": null,
+          "name": "card_document",
+          "type": "MobilePrimitives.Message",
+          "config": {
+            "prompt": "8ab53ac5-c29b-47f3-a6dc-cd2d153c6375"
+          },
+          "tags": [],
+          "uuid": "72197d8f-b7d6-5534-a7cf-9f70a4fdd01e",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "card_document",
+              "config": {},
+              "test": "",
+              "uuid": "f3cbfea5-46c7-4202-9845-eedb78a22145",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": null
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 3
+                      },
+                      "name": "Card",
+                      "uuid": "4d692c00-9ba9-54f9-a873-e3900b9eb5db"
+                    },
+                    "card_item": {
+                      "document": {},
+                      "meta": {
+                        "column": 9,
+                        "line": 4
+                      },
+                      "type": "document"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "last_modified": "2024-07-22T06:25:50.447325Z",
+      "uuid": "57515f3e-8b1d-4d2d-9082-d66ef025285a",
+      "languages": [
+        {
+          "id": "455ed06c-0b4b-4fbe-8e3e-3121844c0d38",
+          "label": "English",
+          "variant": null,
+          "iso_639_3": "eng",
+          "bcp_47": null
+        }
+      ],
+      "first_block_id": "72197d8f-b7d6-5534-a7cf-9f70a4fdd01e",
+      "interaction_timeout": 300,
+      "vendor_metadata": {},
+      "supported_modes": [
+        "RICH_MESSAGING"
+      ],
+      "exit_block_id": ""
+    }
+  ],
+  "vendor_metadata": {},
+  "specification_version": "1.0.0-rc3"
+}

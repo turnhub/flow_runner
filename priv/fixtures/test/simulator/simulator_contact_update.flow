@@ -1,0 +1,221 @@
+{
+  "name": "Default name",
+  "description": "Default description",
+  "uuid": "66980030-a035-42da-97de-64814acbd834",
+  "resources": [],
+  "flows": [
+    {
+      "label": null,
+      "name": "stack",
+      "blocks": [
+        {
+          "label": null,
+          "name": "card_contact_update_name",
+          "type": "Core.SetContactProperty",
+          "config": {
+            "set_contact_property": {
+              "property_key": "name",
+              "property_value": "Foo"
+            }
+          },
+          "tags": [],
+          "uuid": "c180325c-c48c-5a18-a117-634366357b29",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "card_contact_update_name",
+              "config": {},
+              "test": "",
+              "uuid": "1318ac38-99ed-4f2f-b15f-5daf26ce3ece",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": "770fbcf2-1ac0-571f-bb7d-e31231fae3c1"
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 6
+                      },
+                      "name": "Card",
+                      "uuid": "4d692c00-9ba9-54f9-a873-e3900b9eb5db"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 9,
+                        "line": 7
+                      },
+                      "type": "update_contact",
+                      "update_contact": {}
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "card_contact_update_surname",
+          "type": "Core.SetContactProperty",
+          "config": {
+            "set_contact_property": {
+              "property_key": "surname",
+              "property_value": "Bar"
+            }
+          },
+          "tags": [],
+          "uuid": "770fbcf2-1ac0-571f-bb7d-e31231fae3c1",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "card_contact_update_surname",
+              "config": {},
+              "test": "",
+              "uuid": "e92d97d8-f5a2-44fa-97de-a2385fea879b",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": "cc6c3a15-f6b8-5056-adca-e2c5629f5fd7"
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 6
+                      },
+                      "name": "Card",
+                      "uuid": "4d692c00-9ba9-54f9-a873-e3900b9eb5db"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 9,
+                        "line": 7
+                      },
+                      "type": "update_contact",
+                      "update_contact": {}
+                    },
+                    "index": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "card_contact_update_language",
+          "type": "Core.SetContactProperty",
+          "config": {
+            "set_contact_property": {
+              "property_key": "language",
+              "property_value": "afr"
+            }
+          },
+          "tags": [],
+          "uuid": "cc6c3a15-f6b8-5056-adca-e2c5629f5fd7",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "card_contact_update_language",
+              "config": {},
+              "test": "",
+              "uuid": "026350db-bd1d-47f8-b2a7-6b4f1be67ee4",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": null
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 6
+                      },
+                      "name": "Card",
+                      "uuid": "4d692c00-9ba9-54f9-a873-e3900b9eb5db"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 9,
+                        "line": 7
+                      },
+                      "type": "update_contact",
+                      "update_contact": {}
+                    },
+                    "index": 2
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "last_modified": "2024-07-22T06:26:16.697293Z",
+      "uuid": "425d9020-4d40-456d-8dd1-d1d3734e648a",
+      "languages": [
+        {
+          "id": "61f302b9-960d-4df4-8d6e-6435fd704810",
+          "label": "English",
+          "variant": null,
+          "iso_639_3": "eng",
+          "bcp_47": null
+        },
+        {
+          "id": "2de06438-6606-47c0-b0b3-6c7922f633ac",
+          "label": "Afrikaans",
+          "variant": null,
+          "iso_639_3": "afr",
+          "bcp_47": null
+        }
+      ],
+      "first_block_id": "c180325c-c48c-5a18-a117-634366357b29",
+      "interaction_timeout": 300,
+      "vendor_metadata": {},
+      "supported_modes": [
+        "RICH_MESSAGING"
+      ],
+      "exit_block_id": ""
+    }
+  ],
+  "vendor_metadata": {},
+  "specification_version": "1.0.0-rc3"
+}

@@ -1,0 +1,416 @@
+{
+  "name": "Default name",
+  "description": "Default description",
+  "uuid": "febe9b67-d934-4fe0-adcb-3474f52c9520",
+  "resources": [
+    {
+      "values": [
+        {
+          "value": "Let's go!",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "30811248-1e8b-4199-af9b-ac274a8e9264"
+        }
+      ],
+      "uuid": "e67edbc4-c395-4fe3-9197-e1cf18e77962"
+    },
+    {
+      "values": [
+        {
+          "value": "this is the body",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "30811248-1e8b-4199-af9b-ac274a8e9264"
+        }
+      ],
+      "uuid": "754f47fb-0c74-455b-b6fa-fe30cb3a6919"
+    },
+    {
+      "values": [
+        {
+          "value": "Continue",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "30811248-1e8b-4199-af9b-ac274a8e9264"
+        }
+      ],
+      "uuid": "9c687d45-3758-4981-988d-c48a22ba12ce"
+    },
+    {
+      "values": [
+        {
+          "value": "Finish",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "30811248-1e8b-4199-af9b-ac274a8e9264"
+        }
+      ],
+      "uuid": "3bdb4a35-8526-4398-b026-dfe07a51df2c"
+    },
+    {
+      "values": [
+        {
+          "value": "Thanks!",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "30811248-1e8b-4199-af9b-ac274a8e9264"
+        }
+      ],
+      "uuid": "4a6adffe-18bb-4197-ab8c-3d2eceef278d"
+    }
+  ],
+  "flows": [
+    {
+      "label": null,
+      "name": "stack",
+      "blocks": [
+        {
+          "label": null,
+          "name": "next_text",
+          "type": "MobilePrimitives.Message",
+          "config": {
+            "prompt": "e67edbc4-c395-4fe3-9197-e1cf18e77962"
+          },
+          "tags": [],
+          "uuid": "1689ae51-28a3-5e9e-aac3-35aa7fcdd2d5",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "next_text",
+              "config": {},
+              "test": "",
+              "uuid": "ceb459af-540b-491b-9da9-d85dac7a7cca",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": null
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 15
+                      },
+                      "name": "Next",
+                      "uuid": "ae88cbf3-4039-53dd-9e9c-b0995a15d962"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 9,
+                        "line": 16
+                      },
+                      "text": {},
+                      "type": "text"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "option",
+          "type": "MobilePrimitives.SelectOneResponse",
+          "config": {
+            "prompt": "754f47fb-0c74-455b-b6fa-fe30cb3a6919",
+            "choices": [
+              {
+                "name": "Continue",
+                "prompt": "9c687d45-3758-4981-988d-c48a22ba12ce",
+                "test": "block.response = \"Continue\""
+              },
+              {
+                "name": "Finish",
+                "prompt": "3bdb4a35-8526-4398-b026-dfe07a51df2c",
+                "test": "block.response = \"Finish\""
+              }
+            ]
+          },
+          "tags": [],
+          "uuid": "a70f0651-1fde-5811-9640-4e503f353c34",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "option",
+              "config": {},
+              "test": "",
+              "uuid": "2a5adc38-2ff2-47f3-a5ee-9e0b1cc771c9",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": "c25c61d8-cf4f-5233-869a-cda338c316d3"
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "buttons_metadata": {
+                      "footer": "this is the footer"
+                    },
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 3
+                      },
+                      "name": "Read",
+                      "uuid": "3a3d3e5a-17e4-5487-b1a2-62691d09bd87"
+                    },
+                    "card_item": {
+                      "button_block": {},
+                      "meta": {
+                        "column": 9,
+                        "line": 4
+                      },
+                      "type": "button_block"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "read_contact_update_option",
+          "type": "Core.SetContactProperty",
+          "config": {
+            "set_contact_property": {
+              "property_key": "option",
+              "property_value": "@option"
+            }
+          },
+          "tags": [],
+          "uuid": "c25c61d8-cf4f-5233-869a-cda338c316d3",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "read_contact_update_option",
+              "config": {},
+              "test": "",
+              "uuid": "3ddc29d1-bb93-418b-a15a-e68bf78338ba",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": "23ab85ad-2af8-54d2-9c0d-fadf555042e6"
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 3
+                      },
+                      "name": "Read",
+                      "uuid": "3a3d3e5a-17e4-5487-b1a2-62691d09bd87"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 9,
+                        "line": 10
+                      },
+                      "type": "update_contact",
+                      "update_contact": {}
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "Routing for Read",
+          "type": "Core.Case",
+          "config": {},
+          "tags": [],
+          "uuid": "23ab85ad-2af8-54d2-9c0d-fadf555042e6",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": false,
+              "name": "Exit for End",
+              "config": {},
+              "test": "true",
+              "uuid": "a2562a4f-9f46-47c9-af2e-088db2daa8ad",
+              "semantic_label": null,
+              "vendor_metadata": {},
+              "destination_block": "296b07a7-b83c-5d7d-bd67-ea4919a0fe6d"
+            },
+            {
+              "default": true,
+              "name": "Routing for Read",
+              "config": {},
+              "test": "",
+              "uuid": "cc076e0b-cd62-4c3c-82f2-1930e992c4d0",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": null
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 3
+                      },
+                      "name": "Read",
+                      "uuid": "3a3d3e5a-17e4-5487-b1a2-62691d09bd87"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 9,
+                        "line": 12
+                      },
+                      "then": {},
+                      "type": "then"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "end_text",
+          "type": "MobilePrimitives.Message",
+          "config": {
+            "prompt": "4a6adffe-18bb-4197-ab8c-3d2eceef278d"
+          },
+          "tags": [],
+          "uuid": "296b07a7-b83c-5d7d-bd67-ea4919a0fe6d",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "end_text",
+              "config": {},
+              "test": "",
+              "uuid": "732a1e0c-f204-4efb-961e-733bd9be09a9",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": null
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 19
+                      },
+                      "name": "End",
+                      "uuid": "135d85be-cce5-5d0c-af9e-fc591fdbaeca"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 9,
+                        "line": 20
+                      },
+                      "text": {},
+                      "type": "text"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "last_modified": "2024-07-22T06:21:54.257112Z",
+      "uuid": "5cdd9793-9d22-41f2-a075-140247760093",
+      "languages": [
+        {
+          "id": "30811248-1e8b-4199-af9b-ac274a8e9264",
+          "label": "English",
+          "variant": null,
+          "iso_639_3": "eng",
+          "bcp_47": null
+        }
+      ],
+      "first_block_id": "a70f0651-1fde-5811-9640-4e503f353c34",
+      "interaction_timeout": 300,
+      "vendor_metadata": {},
+      "supported_modes": [
+        "RICH_MESSAGING"
+      ],
+      "exit_block_id": ""
+    }
+  ],
+  "vendor_metadata": {},
+  "specification_version": "1.0.0-rc3"
+}

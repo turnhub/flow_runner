@@ -1,0 +1,221 @@
+{
+  "name": "Default name",
+  "description": "Default description",
+  "uuid": "76ee7e4e-67d2-4766-aa7d-9de439df12a3",
+  "resources": [
+    {
+      "values": [
+        {
+          "value": "Please choose carefully",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "9d6b9992-36d8-4b41-9280-c693f9bd566c"
+        },
+        {
+          "value": "Options",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "9d6b9992-36d8-4b41-9280-c693f9bd566c"
+        }
+      ],
+      "uuid": "a18def62-0805-4d1d-bae2-cba1d3accfc4"
+    },
+    {
+      "values": [
+        {
+          "value": "End",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "9d6b9992-36d8-4b41-9280-c693f9bd566c"
+        }
+      ],
+      "uuid": "01245600-2de3-40d7-a014-b65d882cd74e"
+    },
+    {
+      "values": [
+        {
+          "value": "Thanks!",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "9d6b9992-36d8-4b41-9280-c693f9bd566c"
+        }
+      ],
+      "uuid": "a6d56019-51e3-4021-8379-dc1962841b8a"
+    }
+  ],
+  "flows": [
+    {
+      "label": null,
+      "name": "stack",
+      "blocks": [
+        {
+          "label": null,
+          "name": "choose",
+          "type": "MobilePrimitives.SelectOneResponse",
+          "config": {
+            "prompt": "a18def62-0805-4d1d-bae2-cba1d3accfc4",
+            "choices": [
+              {
+                "name": "end",
+                "prompt": "01245600-2de3-40d7-a014-b65d882cd74e",
+                "test": "block.response = \"End\""
+              }
+            ]
+          },
+          "tags": [],
+          "uuid": "d2bbcd99-ae13-57c1-adea-f92f01ff64de",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": null,
+              "name": "end",
+              "config": {},
+              "test": "block.value = \"end\"",
+              "uuid": "a6abee4b-0aa3-4ba2-a29e-3fcc7b5946d4",
+              "semantic_label": null,
+              "vendor_metadata": {},
+              "destination_block": "2648cb0e-fd9b-5bf6-857a-d28fb46a1c9a"
+            },
+            {
+              "default": true,
+              "name": "choose",
+              "config": {},
+              "test": "",
+              "uuid": "4769c271-0db7-4d29-b367-200eeb3d77a0",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": null
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 3
+                      },
+                      "name": "Choose",
+                      "uuid": "f8ba2482-d5c3-5190-8c8b-904e9ed20524"
+                    },
+                    "card_item": {
+                      "list_block": {},
+                      "meta": {
+                        "column": 9,
+                        "line": 4
+                      },
+                      "type": "list_block"
+                    },
+                    "index": 0,
+                    "list_metadata": {
+                      "footer": "this is the footer",
+                      "header": "this is the header"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "end_text",
+          "type": "MobilePrimitives.Message",
+          "config": {
+            "prompt": "a6d56019-51e3-4021-8379-dc1962841b8a"
+          },
+          "tags": [],
+          "uuid": "2648cb0e-fd9b-5bf6-857a-d28fb46a1c9a",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "end_text",
+              "config": {},
+              "test": "",
+              "uuid": "42d940be-5c81-494d-9ae7-ff4f56a01d12",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": null
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 11
+                      },
+                      "name": "End",
+                      "uuid": "135d85be-cce5-5d0c-af9e-fc591fdbaeca"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 9,
+                        "line": 12
+                      },
+                      "text": {},
+                      "type": "text"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "last_modified": "2024-07-22T06:24:49.641775Z",
+      "uuid": "623682b0-9263-428d-b43c-dbd9c1ac66fc",
+      "languages": [
+        {
+          "id": "9d6b9992-36d8-4b41-9280-c693f9bd566c",
+          "label": "English",
+          "variant": null,
+          "iso_639_3": "eng",
+          "bcp_47": null
+        }
+      ],
+      "first_block_id": "d2bbcd99-ae13-57c1-adea-f92f01ff64de",
+      "interaction_timeout": 300,
+      "vendor_metadata": {},
+      "supported_modes": [
+        "RICH_MESSAGING"
+      ],
+      "exit_block_id": ""
+    }
+  ],
+  "vendor_metadata": {},
+  "specification_version": "1.0.0-rc3"
+}

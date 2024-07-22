@@ -20,7 +20,15 @@ defmodule FlowRunner.Blocks do
       "MobilePrimitives.SelectOneResponse" => FlowRunner.Spec.Blocks.SelectOneResponse,
       "MobilePrimitives.Message" => FlowRunner.Spec.Blocks.Message,
       "MobilePrimitives.NumericResponse" => FlowRunner.Spec.Blocks.NumericResponse,
-      "MobilePrimitives.OpenResponse" => FlowRunner.Spec.Blocks.OpenResponse
+      "MobilePrimitives.OpenResponse" => FlowRunner.Spec.Blocks.OpenResponse,
+      "Io.Turn.DynamicSelectOneResponse" => FlowRunner.CustomBlocks.DynamicSelectOneResponse,
+      "Io.Turn.ScheduleFlow" => FlowRunner.CustomBlocks.ScheduleFlow,
+      "Io.Turn.SendContentMessage" => FlowRunner.CustomBlocks.SendContentMessage,
+      "Io.Turn.SetChatProperty" => FlowRunner.CustomBlocks.SetChatProperty,
+      "Io.Turn.SetMessageProperty" => FlowRunner.CustomBlocks.SetMessageProperty,
+      "Io.Turn.UpdateDictionary" => FlowRunner.CustomBlocks.UpdateDictionary,
+      "Io.Turn.WhatsAppSendFlow" => FlowRunner.CustomBlocks.WhatsAppSendFlow,
+      "Io.Turn.WhatsAppTemplateMessage" => FlowRunner.CustomBlocks.WhatsAppTemplateMessage
     }
   end
 end
