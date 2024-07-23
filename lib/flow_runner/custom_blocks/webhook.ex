@@ -2,12 +2,15 @@ defmodule FlowRunner.CustomBlocks.Webhook do
   @moduledoc """
   A custom Webhook block type for Turn's Build functionality.
 
-  The FLOIP spec does not specify a Webhook block and so we have
+  The FLOIP spec originally did not specify a Webhook block and so we had
   to roll our own until it does.
 
-  Because of historical RapidPro context, there's an assumption for
-  some systems that the `webhook` key in the context's variables always
-  contains the last called webhook response.
+  Since rc4 it does Turn had already implemented this. We'll look at moving
+  to rc4 at some stage but not right now.
+
+  Because of historical RapidPro context informing the FLOIP design, there's
+  an assumption for some systems that the `webhook` key in the context's
+  variables always contains the last called webhook response.
 
   This may be useful as a default when a FLOIP only does a single webhook call but it
   ends up being confusing when there are multiple webhook calls that can happen.
