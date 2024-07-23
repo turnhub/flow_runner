@@ -1,0 +1,318 @@
+{
+  "name": "Default name",
+  "description": "Default description",
+  "uuid": "81869849-9ef0-4f1a-a163-501b434b17a6",
+  "resources": [
+    {
+      "values": [
+        {
+          "value": "You pressed the second button",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "c8a738ea-71f6-4266-ab63-d307af78c547"
+        }
+      ],
+      "uuid": "eae8e84e-8b69-48c9-aee5-f9a90e11b7b5"
+    },
+    {
+      "values": [
+        {
+          "value": "You pressed the first button",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "c8a738ea-71f6-4266-ab63-d307af78c547"
+        }
+      ],
+      "uuid": "38f1432f-ca40-43e0-9f1e-5d2a53836010"
+    },
+    {
+      "values": [
+        {
+          "value": "https://via.placeholder.com/800/F00/000",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "IMAGE",
+          "mime_type": "application/octet-stream",
+          "language_id": "c8a738ea-71f6-4266-ab63-d307af78c547"
+        },
+        {
+          "value": "Hello!",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "c8a738ea-71f6-4266-ab63-d307af78c547"
+        }
+      ],
+      "uuid": "42542ab9-7298-4fac-8c3b-83d8010eabee"
+    },
+    {
+      "values": [
+        {
+          "value": "1",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "c8a738ea-71f6-4266-ab63-d307af78c547"
+        }
+      ],
+      "uuid": "ddc2ff16-9fa9-4400-9f00-3f0daf735e31"
+    },
+    {
+      "values": [
+        {
+          "value": "2",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "c8a738ea-71f6-4266-ab63-d307af78c547"
+        }
+      ],
+      "uuid": "235b43e6-7371-4993-a4c3-fbe2cbde9050"
+    }
+  ],
+  "flows": [
+    {
+      "label": null,
+      "name": "stack",
+      "blocks": [
+        {
+          "label": null,
+          "name": "second_text",
+          "type": "MobilePrimitives.Message",
+          "config": {
+            "prompt": "eae8e84e-8b69-48c9-aee5-f9a90e11b7b5"
+          },
+          "tags": [],
+          "uuid": "39f4c751-f76c-587f-a515-387a97061b9a",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "Default exit to \"Start\"",
+              "config": {},
+              "test": "",
+              "uuid": "a2b9991b-ed01-4829-a0ca-2ac8906d4841",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": "ddbb11db-b872-5168-83d0-127b124a497c"
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 9,
+                        "line": 14
+                      },
+                      "name": "Second",
+                      "uuid": "0a6be72d-7f28-589d-ab74-033debcea4fd"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 11,
+                        "line": 15
+                      },
+                      "text": {},
+                      "type": "text"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "first_text",
+          "type": "MobilePrimitives.Message",
+          "config": {
+            "prompt": "38f1432f-ca40-43e0-9f1e-5d2a53836010"
+          },
+          "tags": [],
+          "uuid": "e2144728-950f-5a0c-89cf-0bb2ff4fdb2a",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "Default exit to \"Start\"",
+              "config": {},
+              "test": "",
+              "uuid": "7fe66cb9-7d23-4096-92f4-fe52aa234d2c",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": "ddbb11db-b872-5168-83d0-127b124a497c"
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 9,
+                        "line": 10
+                      },
+                      "name": "First",
+                      "uuid": "9cad662b-d985-52d0-94a7-aae39f3fd824"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 11,
+                        "line": 11
+                      },
+                      "text": {},
+                      "type": "text"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "start",
+          "type": "MobilePrimitives.SelectOneResponse",
+          "config": {
+            "prompt": "42542ab9-7298-4fac-8c3b-83d8010eabee",
+            "choices": [
+              {
+                "name": "first",
+                "prompt": "ddc2ff16-9fa9-4400-9f00-3f0daf735e31",
+                "test": "block.response = 1"
+              },
+              {
+                "name": "second",
+                "prompt": "235b43e6-7371-4993-a4c3-fbe2cbde9050",
+                "test": "block.response = 2"
+              }
+            ]
+          },
+          "tags": [],
+          "uuid": "ddbb11db-b872-5168-83d0-127b124a497c",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": null,
+              "name": "first",
+              "config": {},
+              "test": "block.value = \"first\"",
+              "uuid": "b692cf5a-2824-4b44-a965-f9f99d9ac269",
+              "semantic_label": null,
+              "vendor_metadata": {},
+              "destination_block": "e2144728-950f-5a0c-89cf-0bb2ff4fdb2a"
+            },
+            {
+              "default": null,
+              "name": "second",
+              "config": {},
+              "test": "block.value = \"second\"",
+              "uuid": "7b6f24f3-7487-4e39-a5db-93ded368fca8",
+              "semantic_label": null,
+              "vendor_metadata": {},
+              "destination_block": "39f4c751-f76c-587f-a515-387a97061b9a"
+            },
+            {
+              "default": true,
+              "name": "start",
+              "config": {},
+              "test": "",
+              "uuid": "8f45554b-34a5-4807-8f3d-fd611850374b",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": null
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "buttons_metadata": {},
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 9,
+                        "line": 3
+                      },
+                      "name": "Start",
+                      "uuid": "d13a5c78-821f-5eca-adac-d8ee6c46553d"
+                    },
+                    "card_item": {
+                      "button_block": {},
+                      "meta": {
+                        "column": 11,
+                        "line": 4
+                      },
+                      "type": "button_block"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "last_modified": "2024-07-22T06:26:37.979682Z",
+      "uuid": "3106b9eb-6669-4c7a-b611-7034df6f446c",
+      "languages": [
+        {
+          "id": "c8a738ea-71f6-4266-ab63-d307af78c547",
+          "label": "English",
+          "variant": null,
+          "iso_639_3": "eng",
+          "bcp_47": null
+        }
+      ],
+      "first_block_id": "ddbb11db-b872-5168-83d0-127b124a497c",
+      "interaction_timeout": 300,
+      "vendor_metadata": {},
+      "supported_modes": [
+        "RICH_MESSAGING"
+      ],
+      "exit_block_id": ""
+    }
+  ],
+  "vendor_metadata": {},
+  "specification_version": "1.0.0-rc3"
+}

@@ -1,0 +1,179 @@
+{
+  "name": "Default name",
+  "description": "Default description",
+  "uuid": "1c40eca3-84c8-4b7a-9518-2afd4179d9b2",
+  "resources": [
+    {
+      "values": [
+        {
+          "value": "Foo or Bar?\n\n1. Foo\n2. Bar\n",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "ca379edc-328b-49a2-8abd-560c36a1e6a2"
+        }
+      ],
+      "uuid": "a2f45b83-6b59-463f-919b-572d22435bbd"
+    },
+    {
+      "values": [
+        {
+          "value": "Foo or Bar?\n\n1. Foo\n2. Bar\n",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "ca379edc-328b-49a2-8abd-560c36a1e6a2"
+        }
+      ],
+      "uuid": "ec5b1677-f79a-4242-af38-df294cc638cb"
+    }
+  ],
+  "flows": [
+    {
+      "label": null,
+      "name": "stack",
+      "blocks": [
+        {
+          "label": null,
+          "name": "one",
+          "type": "MobilePrimitives.OpenResponse",
+          "config": {
+            "prompt": "a2f45b83-6b59-463f-919b-572d22435bbd",
+            "max_response_characters": null
+          },
+          "tags": [],
+          "uuid": "dc507952-abae-5f3b-9f84-341dea56450b",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "one",
+              "config": {},
+              "test": "",
+              "uuid": "6103099f-c3ec-43a9-8df6-357a77b6ea65",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": "9bcb116f-4c18-5829-9637-9803670a88a4"
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 3,
+                        "line": 2
+                      },
+                      "name": "Card",
+                      "uuid": "4d692c00-9ba9-54f9-a873-e3900b9eb5db"
+                    },
+                    "card_item": {
+                      "ask": {},
+                      "meta": {
+                        "column": 5,
+                        "line": 3
+                      },
+                      "type": "ask"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "two",
+          "type": "MobilePrimitives.OpenResponse",
+          "config": {
+            "prompt": "ec5b1677-f79a-4242-af38-df294cc638cb",
+            "max_response_characters": null
+          },
+          "tags": [],
+          "uuid": "9bcb116f-4c18-5829-9637-9803670a88a4",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "two",
+              "config": {},
+              "test": "",
+              "uuid": "5d81dadf-c891-413a-bd48-99f57e0df64c",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": null
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 3,
+                        "line": 2
+                      },
+                      "name": "Card",
+                      "uuid": "4d692c00-9ba9-54f9-a873-e3900b9eb5db"
+                    },
+                    "card_item": {
+                      "ask": {},
+                      "meta": {
+                        "column": 5,
+                        "line": 8
+                      },
+                      "type": "ask"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "last_modified": "2024-07-22T06:02:55.899470Z",
+      "uuid": "35d6a78a-418a-4de4-b5c0-9ddd66d1b6f8",
+      "languages": [
+        {
+          "id": "ca379edc-328b-49a2-8abd-560c36a1e6a2",
+          "label": "English",
+          "variant": null,
+          "iso_639_3": "eng",
+          "bcp_47": null
+        }
+      ],
+      "first_block_id": "dc507952-abae-5f3b-9f84-341dea56450b",
+      "interaction_timeout": 300,
+      "vendor_metadata": {},
+      "supported_modes": [
+        "RICH_MESSAGING"
+      ],
+      "exit_block_id": ""
+    }
+  ],
+  "vendor_metadata": {},
+  "specification_version": "1.0.0-rc3"
+}

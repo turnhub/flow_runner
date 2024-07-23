@@ -1,0 +1,115 @@
+{
+  "name": "Default name",
+  "description": "Default description",
+  "uuid": "06cd9d5e-3732-43cc-bd5d-e0472609a528",
+  "resources": [
+    {
+      "values": [
+        {
+          "value": "https://example.org/video.mpg",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "VIDEO",
+          "mime_type": "video/mp4",
+          "language_id": "77eee5f3-f4b4-41c5-9a37-33c4309629ca"
+        },
+        {
+          "value": "video description",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "77eee5f3-f4b4-41c5-9a37-33c4309629ca"
+        }
+      ],
+      "uuid": "82b8b51e-9db2-46ac-81c0-123e5f2355a8"
+    }
+  ],
+  "flows": [
+    {
+      "label": null,
+      "name": "stack",
+      "blocks": [
+        {
+          "label": null,
+          "name": "card_video",
+          "type": "MobilePrimitives.Message",
+          "config": {
+            "prompt": "82b8b51e-9db2-46ac-81c0-123e5f2355a8"
+          },
+          "tags": [],
+          "uuid": "267b0e84-04ca-5199-8efd-e4fb5de9affb",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "card_video",
+              "config": {},
+              "test": "",
+              "uuid": "5c472f57-4e8c-4e48-a33d-7d0cfd1c27b3",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": null
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 3
+                      },
+                      "name": "Card",
+                      "uuid": "4d692c00-9ba9-54f9-a873-e3900b9eb5db"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 9,
+                        "line": 4
+                      },
+                      "type": "video",
+                      "video": {}
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "last_modified": "2024-07-22T06:25:08.603556Z",
+      "uuid": "f9cedf78-580b-4e2e-850d-705d2d1c9f97",
+      "languages": [
+        {
+          "id": "77eee5f3-f4b4-41c5-9a37-33c4309629ca",
+          "label": "English",
+          "variant": null,
+          "iso_639_3": "eng",
+          "bcp_47": null
+        }
+      ],
+      "first_block_id": "267b0e84-04ca-5199-8efd-e4fb5de9affb",
+      "interaction_timeout": 300,
+      "vendor_metadata": {},
+      "supported_modes": [
+        "RICH_MESSAGING"
+      ],
+      "exit_block_id": ""
+    }
+  ],
+  "vendor_metadata": {},
+  "specification_version": "1.0.0-rc3"
+}

@@ -1,0 +1,536 @@
+{
+  "name": "Default name",
+  "description": "Default description",
+  "uuid": "82d134b2-efa0-48ae-92b3-3fe575cb504c",
+  "resources": [
+    {
+      "values": [
+        {
+          "value": "You pressed the second button",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "1c0b5ced-da8a-4b0a-8b10-53fb6f117582"
+        }
+      ],
+      "uuid": "ade328ad-4826-48d3-9122-9f7ca7e4c10a"
+    },
+    {
+      "values": [
+        {
+          "value": "You pressed the first button",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "1c0b5ced-da8a-4b0a-8b10-53fb6f117582"
+        }
+      ],
+      "uuid": "93d70aec-4dd8-48c9-a30c-2dcee9860c18"
+    },
+    {
+      "values": [
+        {
+          "value": "Hello!",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "1c0b5ced-da8a-4b0a-8b10-53fb6f117582"
+        }
+      ],
+      "uuid": "89ffd346-73be-462f-a7e2-a3b3488cc163"
+    },
+    {
+      "values": [
+        {
+          "value": "1",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "1c0b5ced-da8a-4b0a-8b10-53fb6f117582"
+        }
+      ],
+      "uuid": "22ad3a52-940f-4d04-8c72-0a130ea6df10"
+    },
+    {
+      "values": [
+        {
+          "value": "2",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "1c0b5ced-da8a-4b0a-8b10-53fb6f117582"
+        }
+      ],
+      "uuid": "ffeab242-66d6-45b1-9534-3275c46d97c1"
+    }
+  ],
+  "flows": [
+    {
+      "label": null,
+      "name": "stack",
+      "blocks": [
+        {
+          "label": null,
+          "name": "pressed_card_result",
+          "type": "Core.Case",
+          "config": {},
+          "tags": [],
+          "uuid": "77325c62-f4de-502e-bf7a-1a7a1f7f493c",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "concatenate(\"Pressed card\", \": \", option.name)",
+              "config": {},
+              "test": "",
+              "uuid": "0058e6f6-e6c9-4fa6-ba5f-c631bee53bd5",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": "6aa98d1e-fd52-5a7a-b4a2-635c82d11994"
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 17
+                      },
+                      "name": "Second",
+                      "uuid": "0a6be72d-7f28-589d-ab74-033debcea4fd"
+                    },
+                    "card_item": {
+                      "expression": {},
+                      "meta": {
+                        "column": 9,
+                        "line": 18
+                      },
+                      "type": "expression"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "option",
+          "type": "Core.Output",
+          "config": {
+            "value": "pressed_card_result"
+          },
+          "tags": [],
+          "uuid": "6aa98d1e-fd52-5a7a-b4a2-635c82d11994",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "option",
+              "config": {},
+              "test": "",
+              "uuid": "c1bfe09e-17a9-4bb3-95e7-cc81145281f2",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": "296b07a7-b83c-5d7d-bd67-ea4919a0fe6d"
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 17
+                      },
+                      "name": "Second",
+                      "uuid": "0a6be72d-7f28-589d-ab74-033debcea4fd"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 9,
+                        "line": 19
+                      },
+                      "type": "write_result",
+                      "write_result": {}
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "second_text",
+          "type": "MobilePrimitives.Message",
+          "config": {
+            "prompt": "ade328ad-4826-48d3-9122-9f7ca7e4c10a"
+          },
+          "tags": [],
+          "uuid": "296b07a7-b83c-5d7d-bd67-ea4919a0fe6d",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "Default exit to \"Start\"",
+              "config": {},
+              "test": "",
+              "uuid": "71aef597-80c0-48f3-a764-1fb34c88c435",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": "9b2ec5da-9861-59be-b0a9-0b6809209503"
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 17
+                      },
+                      "name": "Second",
+                      "uuid": "0a6be72d-7f28-589d-ab74-033debcea4fd"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 9,
+                        "line": 20
+                      },
+                      "text": {},
+                      "type": "text"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "pressed_card_result",
+          "type": "Core.Case",
+          "config": {},
+          "tags": [],
+          "uuid": "5f163985-8140-5609-b06d-262eeba8a613",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "concatenate(\"Pressed card\", \": \", option.name)",
+              "config": {},
+              "test": "",
+              "uuid": "09a1b2d2-b89d-4feb-99db-fae7a139391a",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": "07a31d85-a159-5cf5-96a1-1e833440414e"
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 11
+                      },
+                      "name": "First",
+                      "uuid": "9cad662b-d985-52d0-94a7-aae39f3fd824"
+                    },
+                    "card_item": {
+                      "expression": {},
+                      "meta": {
+                        "column": 9,
+                        "line": 12
+                      },
+                      "type": "expression"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "option",
+          "type": "Core.Output",
+          "config": {
+            "value": "pressed_card_result"
+          },
+          "tags": [],
+          "uuid": "07a31d85-a159-5cf5-96a1-1e833440414e",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "option",
+              "config": {},
+              "test": "",
+              "uuid": "46b562fc-3755-4293-a5f7-5d014c83cfe4",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": "b9695c78-e4d6-529a-8655-26f56a04f988"
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 11
+                      },
+                      "name": "First",
+                      "uuid": "9cad662b-d985-52d0-94a7-aae39f3fd824"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 9,
+                        "line": 13
+                      },
+                      "type": "write_result",
+                      "write_result": {}
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "first_text",
+          "type": "MobilePrimitives.Message",
+          "config": {
+            "prompt": "93d70aec-4dd8-48c9-a30c-2dcee9860c18"
+          },
+          "tags": [],
+          "uuid": "b9695c78-e4d6-529a-8655-26f56a04f988",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "Default exit to \"Start\"",
+              "config": {},
+              "test": "",
+              "uuid": "00659f65-afa3-4fbb-9f7b-48b949beae75",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": "9b2ec5da-9861-59be-b0a9-0b6809209503"
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 11
+                      },
+                      "name": "First",
+                      "uuid": "9cad662b-d985-52d0-94a7-aae39f3fd824"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 9,
+                        "line": 14
+                      },
+                      "text": {},
+                      "type": "text"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "option",
+          "type": "MobilePrimitives.SelectOneResponse",
+          "config": {
+            "prompt": "89ffd346-73be-462f-a7e2-a3b3488cc163",
+            "choices": [
+              {
+                "name": "first",
+                "prompt": "22ad3a52-940f-4d04-8c72-0a130ea6df10",
+                "test": "block.response = 1"
+              },
+              {
+                "name": "second",
+                "prompt": "ffeab242-66d6-45b1-9534-3275c46d97c1",
+                "test": "block.response = 2"
+              }
+            ]
+          },
+          "tags": [],
+          "uuid": "9b2ec5da-9861-59be-b0a9-0b6809209503",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": null,
+              "name": "first",
+              "config": {},
+              "test": "block.value = \"first\"",
+              "uuid": "54831d72-3544-4576-bd88-c342714c3609",
+              "semantic_label": null,
+              "vendor_metadata": {},
+              "destination_block": "5f163985-8140-5609-b06d-262eeba8a613"
+            },
+            {
+              "default": null,
+              "name": "second",
+              "config": {},
+              "test": "block.value = \"second\"",
+              "uuid": "7ff06e51-76cd-478c-a1ef-4ff589425580",
+              "semantic_label": null,
+              "vendor_metadata": {},
+              "destination_block": "77325c62-f4de-502e-bf7a-1a7a1f7f493c"
+            },
+            {
+              "default": true,
+              "name": "option",
+              "config": {},
+              "test": "",
+              "uuid": "1d6e8373-34cc-4801-b803-d70dbfb3ddea",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": null
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "buttons_metadata": {
+                      "footer": "this is the footer",
+                      "header": "this is the header"
+                    },
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 2
+                      },
+                      "name": "Start",
+                      "uuid": "d13a5c78-821f-5eca-adac-d8ee6c46553d"
+                    },
+                    "card_item": {
+                      "button_block": {},
+                      "meta": {
+                        "column": 9,
+                        "line": 3
+                      },
+                      "type": "button_block"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "last_modified": "2024-07-22T06:27:14.318511Z",
+      "uuid": "7c811df8-b8db-5f3e-ba45-5eb6cb60ddd9",
+      "languages": [
+        {
+          "id": "1c0b5ced-da8a-4b0a-8b10-53fb6f117582",
+          "label": "English",
+          "variant": null,
+          "iso_639_3": "eng",
+          "bcp_47": null
+        }
+      ],
+      "first_block_id": "9b2ec5da-9861-59be-b0a9-0b6809209503",
+      "interaction_timeout": 300,
+      "vendor_metadata": {},
+      "supported_modes": [
+        "RICH_MESSAGING"
+      ],
+      "exit_block_id": ""
+    }
+  ],
+  "vendor_metadata": {},
+  "specification_version": "1.0.0-rc3"
+}

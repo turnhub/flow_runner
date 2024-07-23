@@ -1,0 +1,437 @@
+{
+  "name": "Default name",
+  "description": "Default description",
+  "uuid": "25758978-355b-4e42-b80d-012aed0d7449",
+  "resources": [
+    {
+      "values": [
+        {
+          "value": "activity card",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "52b83651-d6a0-4453-9a0f-6edf9a65fb76"
+        }
+      ],
+      "uuid": "6593dde8-db41-43e8-95d5-bd50f97ec923"
+    },
+    {
+      "values": [
+        {
+          "value": "@generic_error",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "52b83651-d6a0-4453-9a0f-6edf9a65fb76"
+        }
+      ],
+      "uuid": "cb88d171-e93d-4969-8906-958421b2e537"
+    },
+    {
+      "values": [
+        {
+          "value": "_When would practicing stress management skills help you the most?_",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "52b83651-d6a0-4453-9a0f-6edf9a65fb76"
+        }
+      ],
+      "uuid": "f4250579-2a37-4b53-b497-18b901c730a4"
+    },
+    {
+      "values": [
+        {
+          "value": "SaveTime",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "52b83651-d6a0-4453-9a0f-6edf9a65fb76"
+        }
+      ],
+      "uuid": "f53f1763-3740-423c-b691-a3cae1392a22"
+    }
+  ],
+  "flows": [
+    {
+      "label": null,
+      "name": "stack",
+      "blocks": [
+        {
+          "label": null,
+          "name": "activity_text",
+          "type": "MobilePrimitives.Message",
+          "config": {
+            "prompt": "6593dde8-db41-43e8-95d5-bd50f97ec923"
+          },
+          "tags": [],
+          "uuid": "296b07a7-b83c-5d7d-bd67-ea4919a0fe6d",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "activity_text",
+              "config": {},
+              "test": "",
+              "uuid": "ba049dc0-979d-4f1a-8b0b-71e75f89b468",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": null
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 19
+                      },
+                      "name": "Activity",
+                      "uuid": "3db5c739-a6d2-5d19-a567-739ee72a71f4"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 9,
+                        "line": 20
+                      },
+                      "text": {},
+                      "type": "text"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "time",
+          "type": "Core.Output",
+          "config": {
+            "value": "time"
+          },
+          "tags": [],
+          "uuid": "0da2ace2-d127-59b5-8685-34649a19f0d0",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "time",
+              "config": {},
+              "test": "",
+              "uuid": "9b1fd68d-7dce-4e21-82e2-40f856e6b16f",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": "9e4bacde-46da-5e31-8266-ef58786a28b3"
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 10
+                      },
+                      "name": "SaveTime",
+                      "uuid": "2933e1a5-0676-5913-baeb-3d579f715f33"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 9,
+                        "line": 11
+                      },
+                      "type": "write_result",
+                      "write_result": {}
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "save_time_contact_update_time",
+          "type": "Core.SetContactProperty",
+          "config": {
+            "set_contact_property": {
+              "property_key": "time",
+              "property_value": "@time"
+            }
+          },
+          "tags": [],
+          "uuid": "9e4bacde-46da-5e31-8266-ef58786a28b3",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "Default exit to \"Activity\"",
+              "config": {},
+              "test": "",
+              "uuid": "ec464286-0d2f-4770-8dff-20e56d96cd35",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": "296b07a7-b83c-5d7d-bd67-ea4919a0fe6d"
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 10
+                      },
+                      "name": "SaveTime",
+                      "uuid": "2933e1a5-0676-5913-baeb-3d579f715f33"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 9,
+                        "line": 12
+                      },
+                      "type": "update_contact",
+                      "update_contact": {}
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "time_error_text",
+          "type": "MobilePrimitives.Message",
+          "config": {
+            "prompt": "cb88d171-e93d-4969-8906-958421b2e537"
+          },
+          "tags": [],
+          "uuid": "1689ae51-28a3-5e9e-aac3-35aa7fcdd2d5",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "Default exit to \"Time\"",
+              "config": {},
+              "test": "",
+              "uuid": "0f806a2f-a6ea-4a4a-9e4b-2a730e34e08f",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": "8be96a45-458c-50f9-8d46-2cc852755e93"
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 15
+                      },
+                      "name": "TimeError",
+                      "uuid": "c835bfc6-6632-57f6-b549-fc81434a254e"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 9,
+                        "line": 16
+                      },
+                      "text": {},
+                      "type": "text"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "times",
+          "type": "Core.Case",
+          "config": {},
+          "tags": [],
+          "uuid": "8be96a45-458c-50f9-8d46-2cc852755e93",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "[\"Morning\", \"Afternoon\", \"Evening\"]",
+              "config": {},
+              "test": "",
+              "uuid": "4dbf2f2c-1fa6-4f0c-b933-03d641ea5e5f",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": "7d363b3f-fa6d-5b09-899a-84a62b46527c"
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 3
+                      },
+                      "name": "Time",
+                      "uuid": "8ec455cd-0744-58f3-9e64-f245324a166b"
+                    },
+                    "card_item": {
+                      "literal": {},
+                      "meta": {
+                        "column": 9,
+                        "line": 4
+                      },
+                      "type": "literal"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "time",
+          "type": "Io.Turn.DynamicSelectOneResponse",
+          "config": {
+            "prompt": "f4250579-2a37-4b53-b497-18b901c730a4",
+            "choices": [],
+            "destination_block": "0da2ace2-d127-59b5-8685-34649a19f0d0",
+            "choice_expression": "map(times, &[&1, &1])"
+          },
+          "tags": [],
+          "uuid": "7d363b3f-fa6d-5b09-899a-84a62b46527c",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "Default exit to \"TimeError\"",
+              "config": {},
+              "test": "",
+              "uuid": "74a47c74-7638-4275-9780-94921740f07b",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": "1689ae51-28a3-5e9e-aac3-35aa7fcdd2d5"
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 3
+                      },
+                      "name": "Time",
+                      "uuid": "8ec455cd-0744-58f3-9e64-f245324a166b"
+                    },
+                    "card_item": {
+                      "dynamic_button": {},
+                      "meta": {
+                        "column": 9,
+                        "line": 5
+                      },
+                      "type": "dynamic_button"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "last_modified": "2024-07-22T06:22:35.406348Z",
+      "uuid": "c1c673ab-5abd-518b-b97f-be7ce97e86bd",
+      "languages": [
+        {
+          "id": "52b83651-d6a0-4453-9a0f-6edf9a65fb76",
+          "label": "English",
+          "variant": null,
+          "iso_639_3": "eng",
+          "bcp_47": null
+        }
+      ],
+      "first_block_id": "8be96a45-458c-50f9-8d46-2cc852755e93",
+      "interaction_timeout": 300,
+      "vendor_metadata": {},
+      "supported_modes": [
+        "RICH_MESSAGING"
+      ],
+      "exit_block_id": ""
+    }
+  ],
+  "vendor_metadata": {},
+  "specification_version": "1.0.0-rc3"
+}

@@ -1,0 +1,161 @@
+{
+  "name": "Default name",
+  "description": "Default description",
+  "uuid": "774ea40c-9304-4747-be95-d05f9d5061d1",
+  "resources": [
+    {
+      "values": [
+        {
+          "value": "@my_var",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "792ad54a-aa8e-4a17-b90c-18962e386ca7"
+        }
+      ],
+      "uuid": "9014b4c6-8838-44c9-b0e2-fb118fc5df3a"
+    }
+  ],
+  "flows": [
+    {
+      "label": null,
+      "name": "stack",
+      "blocks": [
+        {
+          "label": null,
+          "name": "my_var",
+          "type": "Core.Case",
+          "config": {},
+          "tags": [],
+          "uuid": "6a6337a1-49e2-58b0-874b-6ea35dafa3ac",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "\"@if(1 == 0, \\\"Yes\\\", \\\"No\\\")\"",
+              "config": {},
+              "test": "",
+              "uuid": "1c445b87-b737-4664-89ae-4f505795b3b9",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": "3db2d8a3-0b4e-5ef4-8808-e9a2104698e8"
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 1,
+                        "line": 1
+                      },
+                      "name": "MyCard",
+                      "uuid": "1d4931d2-8f16-5384-b023-99f84eace52c"
+                    },
+                    "card_item": {
+                      "literal": {},
+                      "meta": {
+                        "column": 3,
+                        "line": 2
+                      },
+                      "type": "literal"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "my_card_text",
+          "type": "MobilePrimitives.Message",
+          "config": {
+            "prompt": "9014b4c6-8838-44c9-b0e2-fb118fc5df3a"
+          },
+          "tags": [],
+          "uuid": "3db2d8a3-0b4e-5ef4-8808-e9a2104698e8",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "my_card_text",
+              "config": {},
+              "test": "",
+              "uuid": "e3b435ea-35ce-437a-9b9a-ea8e1d74abb2",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": null
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 1,
+                        "line": 1
+                      },
+                      "name": "MyCard",
+                      "uuid": "1d4931d2-8f16-5384-b023-99f84eace52c"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 3,
+                        "line": 3
+                      },
+                      "text": {},
+                      "type": "text"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "last_modified": "2024-07-22T06:02:17.436601Z",
+      "uuid": "4f810404-3200-4d98-889b-a532c23596ec",
+      "languages": [
+        {
+          "id": "792ad54a-aa8e-4a17-b90c-18962e386ca7",
+          "label": "English",
+          "variant": null,
+          "iso_639_3": "eng",
+          "bcp_47": null
+        }
+      ],
+      "first_block_id": "6a6337a1-49e2-58b0-874b-6ea35dafa3ac",
+      "interaction_timeout": 300,
+      "vendor_metadata": {},
+      "supported_modes": [
+        "RICH_MESSAGING"
+      ],
+      "exit_block_id": ""
+    }
+  ],
+  "vendor_metadata": {},
+  "specification_version": "1.0.0-rc3"
+}

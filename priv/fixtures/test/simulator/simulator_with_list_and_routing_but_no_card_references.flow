@@ -1,0 +1,336 @@
+{
+  "name": "Default name",
+  "description": "Default description",
+  "uuid": "3b9090ae-942d-43c9-8eb2-630813b85cdb",
+  "resources": [
+    {
+      "values": [
+        {
+          "value": "Please choose carefully",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "413f37b4-d5c2-4781-a96e-40efe09f2ab6"
+        },
+        {
+          "value": "Options",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "413f37b4-d5c2-4781-a96e-40efe09f2ab6"
+        }
+      ],
+      "uuid": "7a3aa774-eedf-467c-a702-1ae1bed39587"
+    },
+    {
+      "values": [
+        {
+          "value": "End",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "413f37b4-d5c2-4781-a96e-40efe09f2ab6"
+        }
+      ],
+      "uuid": "f79b9231-7d45-4eed-af50-ae3c4d566fba"
+    },
+    {
+      "values": [
+        {
+          "value": "Thanks!",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "413f37b4-d5c2-4781-a96e-40efe09f2ab6"
+        }
+      ],
+      "uuid": "64fe5f85-01c2-41a1-baf4-acd6aabcaa59"
+    }
+  ],
+  "flows": [
+    {
+      "label": null,
+      "name": "stack",
+      "blocks": [
+        {
+          "label": null,
+          "name": "option",
+          "type": "MobilePrimitives.SelectOneResponse",
+          "config": {
+            "prompt": "7a3aa774-eedf-467c-a702-1ae1bed39587",
+            "choices": [
+              {
+                "name": "End",
+                "prompt": "f79b9231-7d45-4eed-af50-ae3c4d566fba",
+                "test": "block.response = \"End\""
+              }
+            ]
+          },
+          "tags": [],
+          "uuid": "99d036f4-9d4f-5989-8000-2ff6c6f6982c",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "option",
+              "config": {},
+              "test": "",
+              "uuid": "14f1f458-4839-45ab-b6ed-263dae53aeea",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": "445288b7-06d6-536f-8d45-cf5f01a31538"
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 3
+                      },
+                      "name": "Choose",
+                      "uuid": "f8ba2482-d5c3-5190-8c8b-904e9ed20524"
+                    },
+                    "card_item": {
+                      "list_block": {},
+                      "meta": {
+                        "column": 9,
+                        "line": 4
+                      },
+                      "type": "list_block"
+                    },
+                    "index": 0,
+                    "list_metadata": {
+                      "footer": "this is the footer",
+                      "header": "this is the header"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "choose_contact_update_option",
+          "type": "Core.SetContactProperty",
+          "config": {
+            "set_contact_property": {
+              "property_key": "option",
+              "property_value": "@option"
+            }
+          },
+          "tags": [],
+          "uuid": "445288b7-06d6-536f-8d45-cf5f01a31538",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "choose_contact_update_option",
+              "config": {},
+              "test": "",
+              "uuid": "9f7a2431-b3ac-4cbd-8683-16243d704a35",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": "29a4687b-5f17-52f2-98e2-29f49be77db6"
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 3
+                      },
+                      "name": "Choose",
+                      "uuid": "f8ba2482-d5c3-5190-8c8b-904e9ed20524"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 9,
+                        "line": 11
+                      },
+                      "type": "update_contact",
+                      "update_contact": {}
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "Routing for Choose",
+          "type": "Core.Case",
+          "config": {},
+          "tags": [],
+          "uuid": "29a4687b-5f17-52f2-98e2-29f49be77db6",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": false,
+              "name": "Exit for End",
+              "config": {},
+              "test": "option.index == 0",
+              "uuid": "b7ed5d06-ac5e-43ed-b3c8-2ef687f8154f",
+              "semantic_label": null,
+              "vendor_metadata": {},
+              "destination_block": "9a192e04-25de-52fd-a265-edf944c56458"
+            },
+            {
+              "default": true,
+              "name": "Routing for Choose",
+              "config": {},
+              "test": "",
+              "uuid": "698856b2-3428-4b13-841d-a84287687f60",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": null
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 3
+                      },
+                      "name": "Choose",
+                      "uuid": "f8ba2482-d5c3-5190-8c8b-904e9ed20524"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 9,
+                        "line": 13
+                      },
+                      "then": {},
+                      "type": "then"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "end_text",
+          "type": "MobilePrimitives.Message",
+          "config": {
+            "prompt": "64fe5f85-01c2-41a1-baf4-acd6aabcaa59"
+          },
+          "tags": [],
+          "uuid": "9a192e04-25de-52fd-a265-edf944c56458",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "end_text",
+              "config": {},
+              "test": "",
+              "uuid": "45329d4c-1ba9-4e6b-8011-630f205e056f",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": null
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 16
+                      },
+                      "name": "End",
+                      "uuid": "135d85be-cce5-5d0c-af9e-fc591fdbaeca"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 9,
+                        "line": 17
+                      },
+                      "text": {},
+                      "type": "text"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "last_modified": "2024-07-22T06:24:18.334742Z",
+      "uuid": "4c153f21-e213-4e78-a307-b2b0d21fe21e",
+      "languages": [
+        {
+          "id": "413f37b4-d5c2-4781-a96e-40efe09f2ab6",
+          "label": "English",
+          "variant": null,
+          "iso_639_3": "eng",
+          "bcp_47": null
+        }
+      ],
+      "first_block_id": "99d036f4-9d4f-5989-8000-2ff6c6f6982c",
+      "interaction_timeout": 300,
+      "vendor_metadata": {},
+      "supported_modes": [
+        "RICH_MESSAGING"
+      ],
+      "exit_block_id": ""
+    }
+  ],
+  "vendor_metadata": {},
+  "specification_version": "1.0.0-rc3"
+}

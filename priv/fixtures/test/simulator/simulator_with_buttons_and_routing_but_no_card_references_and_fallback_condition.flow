@@ -1,0 +1,739 @@
+{
+  "name": "Default name",
+  "description": "Default description",
+  "uuid": "074fa505-5d9d-41a2-991b-24317e79dc4f",
+  "resources": [
+    {
+      "values": [
+        {
+          "value": "Let's go!",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "18ef3314-a889-41be-beea-5fececd55119"
+        }
+      ],
+      "uuid": "053c4dab-efbe-4b40-970a-9d501f6d5cbf"
+    },
+    {
+      "values": [
+        {
+          "value": "this is the body",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "18ef3314-a889-41be-beea-5fececd55119"
+        }
+      ],
+      "uuid": "16dfa9ec-acd6-4965-98ed-a342105db086"
+    },
+    {
+      "values": [
+        {
+          "value": "Continue",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "18ef3314-a889-41be-beea-5fececd55119"
+        }
+      ],
+      "uuid": "207726ac-b213-4d8e-b380-dc5ba512df79"
+    },
+    {
+      "values": [
+        {
+          "value": "Finish",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "18ef3314-a889-41be-beea-5fececd55119"
+        }
+      ],
+      "uuid": "549ea4cb-70f1-4124-b018-06feda992828"
+    },
+    {
+      "values": [
+        {
+          "value": "Some message at the end",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "18ef3314-a889-41be-beea-5fececd55119"
+        }
+      ],
+      "uuid": "6775d862-efaa-41b3-9a5b-87b65aabcb59"
+    },
+    {
+      "values": [
+        {
+          "value": "Thanks!",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "18ef3314-a889-41be-beea-5fececd55119"
+        }
+      ],
+      "uuid": "a77d5ee7-950b-4226-92ca-3519fe58ee7e"
+    }
+  ],
+  "flows": [
+    {
+      "label": null,
+      "name": "stack",
+      "blocks": [
+        {
+          "label": null,
+          "name": "next_text",
+          "type": "MobilePrimitives.Message",
+          "config": {
+            "prompt": "053c4dab-efbe-4b40-970a-9d501f6d5cbf"
+          },
+          "tags": [],
+          "uuid": "dfda9ad2-0e11-54ed-be41-cc2d4c028a85",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "next_text",
+              "config": {},
+              "test": "",
+              "uuid": "9eaf9dad-4937-4e8b-b6df-8e2a472628e5",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": null
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 26
+                      },
+                      "name": "Next",
+                      "uuid": "ae88cbf3-4039-53dd-9e9c-b0995a15d962"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 9,
+                        "line": 27
+                      },
+                      "text": {},
+                      "type": "text"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "fallback",
+          "type": "Core.Case",
+          "config": {},
+          "tags": [],
+          "uuid": "8be96a45-458c-50f9-8d46-2cc852755e93",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "\"end\"",
+              "config": {},
+              "test": "",
+              "uuid": "a46e7e28-caf3-41a5-9b79-4d7af79fa68b",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": "d02378bc-3ae5-5498-a1c4-b0938357444e"
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 3
+                      },
+                      "name": "Read",
+                      "uuid": "3a3d3e5a-17e4-5487-b1a2-62691d09bd87"
+                    },
+                    "card_item": {
+                      "literal": {},
+                      "meta": {
+                        "column": 9,
+                        "line": 4
+                      },
+                      "type": "literal"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "Routing for Read",
+          "type": "Core.Case",
+          "config": {},
+          "tags": [],
+          "uuid": "d02378bc-3ae5-5498-a1c4-b0938357444e",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": false,
+              "name": "Exit for Next",
+              "config": {},
+              "test": "fallback == \"next\"",
+              "uuid": "6ad3d03f-ee88-426b-80fe-70d0501273b4",
+              "semantic_label": null,
+              "vendor_metadata": {},
+              "destination_block": "dfda9ad2-0e11-54ed-be41-cc2d4c028a85"
+            },
+            {
+              "default": true,
+              "name": "Routing for Read",
+              "config": {},
+              "test": "",
+              "uuid": "86fb26d8-316b-40e1-85fa-895a001fd33a",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": "1c6ff58d-a129-5e41-8fd2-10f1010d3623"
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 3
+                      },
+                      "name": "Read",
+                      "uuid": "3a3d3e5a-17e4-5487-b1a2-62691d09bd87"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 9,
+                        "line": 6
+                      },
+                      "then": {},
+                      "type": "then"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "option",
+          "type": "MobilePrimitives.SelectOneResponse",
+          "config": {
+            "prompt": "16dfa9ec-acd6-4965-98ed-a342105db086",
+            "choices": [
+              {
+                "name": "Continue",
+                "prompt": "207726ac-b213-4d8e-b380-dc5ba512df79",
+                "test": "block.response = \"Continue\""
+              },
+              {
+                "name": "Finish",
+                "prompt": "549ea4cb-70f1-4124-b018-06feda992828",
+                "test": "block.response = \"Finish\""
+              }
+            ]
+          },
+          "tags": [],
+          "uuid": "1c6ff58d-a129-5e41-8fd2-10f1010d3623",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "option",
+              "config": {},
+              "test": "",
+              "uuid": "f102fd5f-d64c-4fed-ac5e-fd40d56dab6b",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": "9193735b-95e5-5577-a784-bc977697a5bb"
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "buttons_metadata": {
+                      "footer": "this is the footer"
+                    },
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 3
+                      },
+                      "name": "Read",
+                      "uuid": "3a3d3e5a-17e4-5487-b1a2-62691d09bd87"
+                    },
+                    "card_item": {
+                      "button_block": {},
+                      "meta": {
+                        "column": 9,
+                        "line": 8
+                      },
+                      "type": "button_block"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "option",
+          "type": "Core.Output",
+          "config": {
+            "value": "option"
+          },
+          "tags": [],
+          "uuid": "9193735b-95e5-5577-a784-bc977697a5bb",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "option",
+              "config": {},
+              "test": "",
+              "uuid": "ecc476d9-909b-4f9f-a0a8-2bdbce098918",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": "fdf390ac-4dde-53be-b9a9-0a9481c0b324"
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 3
+                      },
+                      "name": "Read",
+                      "uuid": "3a3d3e5a-17e4-5487-b1a2-62691d09bd87"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 9,
+                        "line": 14
+                      },
+                      "type": "write_result",
+                      "write_result": {}
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "Routing for Read",
+          "type": "Core.Case",
+          "config": {},
+          "tags": [],
+          "uuid": "fdf390ac-4dde-53be-b9a9-0a9481c0b324",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": false,
+              "name": "Exit for Next",
+              "config": {},
+              "test": "option == \"Continue\"",
+              "uuid": "3ca79122-d18f-459f-a32f-0f4f1b99de8b",
+              "semantic_label": null,
+              "vendor_metadata": {},
+              "destination_block": "dfda9ad2-0e11-54ed-be41-cc2d4c028a85"
+            },
+            {
+              "default": false,
+              "name": "Exit for End",
+              "config": {},
+              "test": "option == \"Finish\"",
+              "uuid": "60db3310-f9a6-45c5-8b2a-017ee6c9322c",
+              "semantic_label": null,
+              "vendor_metadata": {},
+              "destination_block": "b0859480-2435-5c41-b572-3e525b62a723"
+            },
+            {
+              "default": true,
+              "name": "Routing for Read",
+              "config": {},
+              "test": "",
+              "uuid": "42019a2c-b2be-49ae-9ac7-cfc4548f5dd8",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": "ab085117-8a10-5bf5-aa7f-29391ddb04e4"
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 3
+                      },
+                      "name": "Read",
+                      "uuid": "3a3d3e5a-17e4-5487-b1a2-62691d09bd87"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 9,
+                        "line": 16
+                      },
+                      "then": {},
+                      "type": "then"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "read_contact_update_option",
+          "type": "Core.SetContactProperty",
+          "config": {
+            "set_contact_property": {
+              "property_key": "option",
+              "property_value": "none"
+            }
+          },
+          "tags": [],
+          "uuid": "ab085117-8a10-5bf5-aa7f-29391ddb04e4",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "read_contact_update_option",
+              "config": {},
+              "test": "",
+              "uuid": "c06f7d79-bc92-4598-8d2d-ab76a5a37f91",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": "fb88f9a8-82ba-5f74-aa91-f9c0a8f1797d"
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 3
+                      },
+                      "name": "Read",
+                      "uuid": "3a3d3e5a-17e4-5487-b1a2-62691d09bd87"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 9,
+                        "line": 19
+                      },
+                      "type": "update_contact",
+                      "update_contact": {}
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "Routing for Read",
+          "type": "Core.Case",
+          "config": {},
+          "tags": [],
+          "uuid": "fb88f9a8-82ba-5f74-aa91-f9c0a8f1797d",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": false,
+              "name": "Exit for End",
+              "config": {},
+              "test": "or(has_phrase(fallback, \"end\"), has_phrase(option, \"next\"))",
+              "uuid": "7e5d40c1-c2f3-413e-bedc-c8dd8fe28ac9",
+              "semantic_label": null,
+              "vendor_metadata": {},
+              "destination_block": "b0859480-2435-5c41-b572-3e525b62a723"
+            },
+            {
+              "default": true,
+              "name": "Routing for Read",
+              "config": {},
+              "test": "",
+              "uuid": "7da6c2dc-fa43-48b2-90d5-75997323d515",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": "5b41c42f-0643-501a-971d-937e59f7d4f5"
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 3
+                      },
+                      "name": "Read",
+                      "uuid": "3a3d3e5a-17e4-5487-b1a2-62691d09bd87"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 9,
+                        "line": 21
+                      },
+                      "then": {},
+                      "type": "then"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "read_text",
+          "type": "MobilePrimitives.Message",
+          "config": {
+            "prompt": "6775d862-efaa-41b3-9a5b-87b65aabcb59"
+          },
+          "tags": [],
+          "uuid": "5b41c42f-0643-501a-971d-937e59f7d4f5",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "read_text",
+              "config": {},
+              "test": "",
+              "uuid": "1fd117b8-5bee-49d9-867c-d51c72308113",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": null
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 3
+                      },
+                      "name": "Read",
+                      "uuid": "3a3d3e5a-17e4-5487-b1a2-62691d09bd87"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 9,
+                        "line": 23
+                      },
+                      "text": {},
+                      "type": "text"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "end_text",
+          "type": "MobilePrimitives.Message",
+          "config": {
+            "prompt": "a77d5ee7-950b-4226-92ca-3519fe58ee7e"
+          },
+          "tags": [],
+          "uuid": "b0859480-2435-5c41-b572-3e525b62a723",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "end_text",
+              "config": {},
+              "test": "",
+              "uuid": "b1e15682-b2dd-4669-8390-5c1bed6f1551",
+              "semantic_label": "",
+              "vendor_metadata": {},
+              "destination_block": null
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "column": 7,
+                        "line": 30
+                      },
+                      "name": "End",
+                      "uuid": "135d85be-cce5-5d0c-af9e-fc591fdbaeca"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 9,
+                        "line": 31
+                      },
+                      "text": {},
+                      "type": "text"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "last_modified": "2024-07-22T06:21:01.887659Z",
+      "uuid": "03ca0e2d-95c6-553c-a80f-981f8528d396",
+      "languages": [
+        {
+          "id": "18ef3314-a889-41be-beea-5fececd55119",
+          "label": "English",
+          "variant": null,
+          "iso_639_3": "eng",
+          "bcp_47": null
+        }
+      ],
+      "first_block_id": "8be96a45-458c-50f9-8d46-2cc852755e93",
+      "interaction_timeout": 300,
+      "vendor_metadata": {},
+      "supported_modes": [
+        "RICH_MESSAGING"
+      ],
+      "exit_block_id": ""
+    }
+  ],
+  "vendor_metadata": {},
+  "specification_version": "1.0.0-rc3"
+}
