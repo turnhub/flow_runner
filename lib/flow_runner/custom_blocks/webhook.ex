@@ -194,12 +194,13 @@ defmodule FlowRunner.CustomBlocks.Webhook do
     callbacks_module =
       Application.get_env(
         :flow_runner,
-        :expression_callbacks_module
+        :expression_callbacks_module,
+        Expression.Callbacks.Standard
       )
 
     evaluate_as_string! =
       &Expression.evaluate_as_string!(
-        to_string(&1) || "",
+        to_string(&1),
         privileged_context,
         callbacks_module
       )
