@@ -46,10 +46,17 @@ by adding `flow_runner` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:flow_runner, "~> 5.14.0"}
+    {:flow_runner, "~> 5.15.0"}
   ]
 end
 ```
+
+## Doing releases
+
+Use the Github UI to create a new release and publish it. Make sure to update the
+`mix.exs` and `README.md` version references _before_ publishing otherwise hex.pm
+will complain and prevent you from publishing over an already existing released
+version.
 
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
