@@ -124,12 +124,15 @@ defmodule FlowRunner.Simulator do
   defp has_template_buttons?(_sim), do: false
 
   defp get_button_index(sim, user_input) do
-    sim.block.config.template.components
-    |> Enum.filter(fn component -> component[:type] == "button" end)
-    # credo:disable-for-next-line Credo.Check.Refactor.FilterFilter
-    |> Enum.filter(fn %{parameters: [parameter]} -> parameter[:payload] == user_input end)
-    |> List.first()
-    |> Map.get(:index)
+    option =
+      sim.block.config.template.components
+      |> Enum.filter(fn
+        %{parameters: [parameter], type: "button"} -> parameter[:payload] == user_input
+        _other -> false
+      end)
+      |> List.first()
+
+    if option, do: Map.get(option, :index), else: -1
   end
 
   def resource_value_output(
