@@ -27,7 +27,7 @@ defmodule FlowRunner.Spec.Blocks.SetGroupMembership do
   end
 
   @impl true
-  @decorate trace("FlowRunner.Blocks.SetGroupMembership.evaluate_incoming")
+  @decorate with_span("FlowRunner.Blocks.SetGroupMembership.evaluate_incoming")
   def evaluate_incoming(
         %Container{} = container,
         %Flow{} = flow,

@@ -72,7 +72,10 @@ defmodule FlowRunner.Simulator do
     }
   end
 
-  @spec next(t(), String.t() | nil, list) :: {:end, t(), list} | {:waiting, t(), list}
+  @spec next(t(), String.t() | nil, list) ::
+          {:end, t(), list}
+          | {:waiting, t(), list}
+          | {:error, reason :: String.t()}
   def next(sim, user_input \\ nil, acc \\ []) do
     # The use of templates with buttons that lead to different cards in the simulator is
     # a bit complex. Because while we want to show the name of the destination card as
@@ -110,6 +113,9 @@ defmodule FlowRunner.Simulator do
         sim = %{sim | container: container, flow: flow, context: context}
         sim = track_output(sim, last_block)
         {:end, sim, Enum.reverse(acc)}
+
+      {:error, reason} when is_binary(reason) ->
+        {:error, reason}
     end
   end
 
@@ -652,7 +658,7 @@ defmodule FlowRunner.Simulator do
 
   Multiple blocks may be output
   """
-  @spec track_output(t, FlowRunner.Spec.Block.t()) :: t
+  @spec track_output(t, FlowRunner.Spec.Block.t() | nil) :: t
   def track_output(%{history: []} = sim, output),
     do: %{sim | history: [{sim.last_user_input, [output]}]}
 

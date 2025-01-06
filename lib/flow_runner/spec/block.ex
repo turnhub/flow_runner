@@ -174,10 +174,15 @@ defmodule FlowRunner.Spec.Block do
     {:error, "unexpectedly received user input: #{inspect(user_input)}"}
   end
 
-  @decorate trace("FlowRunner.Spec.Block.evaluate_incoming",
-              include: [[:block, :type], [:block, :name], [:block, :uuid], [:block, :config]]
-            )
+  @decorate with_span("FlowRunner.Spec.Block.evaluate_incoming")
   def evaluate_incoming(container, flow, %Block{type: type} = block, context) do
+    O11y.set_attributes(
+      block_type: block.type,
+      block_name: block.name,
+      block_uuid: block.uuid,
+      block_config: block.config
+    )
+
     if implementation = get_block(FlowRunner.blocks_module(), type) do
       implementation.evaluate_incoming(container, flow, block, context)
     else
@@ -185,9 +190,7 @@ defmodule FlowRunner.Spec.Block do
     end
   end
 
-  @decorate trace("FlowRunner.Spec.Block.evaluate_outgoing",
-              include: [[:block, :type], [:block, :name], [:block, :uuid], [:block, :config]]
-            )
+  @decorate with_span("FlowRunner.Spec.Block.evaluate_outgoing")
   @spec evaluate_outgoing(Container.t(), Flow.t(), Block.t(), Context.t(), user_input :: any) ::
           {:ok, Context.t(), Block.t()} | {:invalid, reason :: String.t()}
   def evaluate_outgoing(
@@ -197,6 +200,13 @@ defmodule FlowRunner.Spec.Block do
         %Context{} = context,
         user_input
       ) do
+    O11y.set_attributes(
+      block_type: block.type,
+      block_name: block.name,
+      block_uuid: block.uuid,
+      block_config: block.config
+    )
+
     # Give the block an opportunity to evaluate the input. If it returns :ok,
     # we go ahead and store the user input, evaluate the exit and then move
     # onto the next block.
@@ -268,10 +278,15 @@ defmodule FlowRunner.Spec.Block do
 
   @spec evaluate_exits(Block.t(), Context.t()) ::
           {:ok, Exit.t()} | {:error, any()}
-  @decorate trace("FlowRunner.Spec.Block.evalute_exits",
-              include: [[:block, :type], [:block, :name], [:block, :uuid], [:block, :config]]
-            )
+  @decorate with_span("FlowRunner.Spec.Block.evaluate_exits")
   def evaluate_exits(%Block{exits: exits} = block, %Context{} = context) do
+    O11y.set_attributes(
+      block_type: block.type,
+      block_name: block.name,
+      block_uuid: block.uuid,
+      block_config: block.config
+    )
+
     truthy_exits =
       exits
       |> Enum.reject(&(&1.default == true))

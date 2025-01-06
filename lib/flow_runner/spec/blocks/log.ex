@@ -22,7 +22,7 @@ defmodule FlowRunner.Spec.Blocks.Log do
   end
 
   @impl true
-  @decorate trace("FlowRunner.Blocks.Log.evaluate_incoming")
+  @decorate with_span("FlowRunner.Blocks.Log.evaluate_incoming")
   def evaluate_incoming(
         %Container{} = container,
         %Flow{} = flow,

@@ -232,7 +232,7 @@ defmodule FlowRunner.CustomBlocks.Webhook do
   end
 
   @impl true
-  @decorate trace("build.blocks.webhook.evaluate_incoming")
+  @decorate with_span("build.blocks.webhook.evaluate_incoming")
   def evaluate_incoming(container, flow, block, context) do
     webhook_parameters = evaluate_webhook_parameters(block, context)
 

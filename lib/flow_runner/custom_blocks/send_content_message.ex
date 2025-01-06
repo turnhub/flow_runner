@@ -22,7 +22,7 @@ defmodule FlowRunner.CustomBlocks.SendContentMessage do
   end
 
   @impl true
-  @decorate trace("DSL.Blocks.SendContentMessage.evaluate_incoming")
+  @decorate with_span("DSL.Blocks.SendContentMessage.evaluate_incoming")
   def evaluate_incoming(container, flow, block, context) do
     # if the config's wait_for_input resolves to true, we need to wait for user input
 

@@ -38,7 +38,7 @@ defmodule FlowRunner.CustomBlocks.ScheduleFlow do
   def validate_config!(%{"flow_id" => flow_id}), do: %{flow_id: flow_id}
 
   @impl true
-  @decorate trace("DSL.Blocks.ScheduleFlow.evaluate_incoming")
+  @decorate with_span("DSL.Blocks.ScheduleFlow.evaluate_incoming")
   def evaluate_incoming(container, flow, block, context) do
     {:ok, container, flow, block,
      %{context | waiting_for_user_input: false, last_block_uuid: block.uuid}}
