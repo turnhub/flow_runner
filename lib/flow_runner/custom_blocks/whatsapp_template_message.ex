@@ -57,7 +57,7 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
     do: %{type: "payload", payload: payload_resource_uuid}
 
   @impl true
-  @decorate trace("DSL.Blocks.WhatsAppTemplateMessage.evaluate_incoming")
+  @decorate with_span("DSL.Blocks.WhatsAppTemplateMessage.evaluate_incoming")
   def evaluate_incoming(container, flow, block, context) do
     context = %{
       context

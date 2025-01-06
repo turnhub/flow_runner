@@ -17,7 +17,7 @@ defmodule FlowRunner.Spec.Blocks.SetContactProperty do
   end
 
   @impl true
-  @decorate trace("FlowRunner.Blocks.SetContactProperty.evaluate_incoming")
+  @decorate with_span("FlowRunner.Blocks.SetContactProperty.evaluate_incoming")
   def evaluate_incoming(
         %Container{} = container,
         %Flow{} = flow,

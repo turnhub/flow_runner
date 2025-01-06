@@ -24,7 +24,7 @@ defmodule FlowRunner.Spec.Blocks.Message do
   end
 
   @impl true
-  @decorate trace("FlowRunner.Blocks.Message.evaluate_incoming")
+  @decorate with_span("FlowRunner.Blocks.Message.evaluate_incoming")
   def evaluate_incoming(container, %Flow{} = flow, %Block{} = block, context) do
     {
       :ok,

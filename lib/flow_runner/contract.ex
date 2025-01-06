@@ -35,6 +35,7 @@ defmodule FlowRunner.Contract do
   """
   @callback next_block(Container.t(), Context.t(), user_input :: nil | String.t()) ::
               {:ok, Container.t(), Flow.t(), Block.t() | nil, Context.t()}
+              | {:end, Container.t(), Flow.t(), Block.t() | nil, Context.t()}
               | {:error, reason :: String.t()}
 
   @doc """

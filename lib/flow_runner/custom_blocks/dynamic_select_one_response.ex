@@ -99,7 +99,7 @@ defmodule FlowRunner.CustomBlocks.DynamicSelectOneResponse do
   end
 
   @impl true
-  @decorate trace("DSL.Blocks.DynamicSelectOneResponse.evaluate_incoming")
+  @decorate with_span("DSL.Blocks.DynamicSelectOneResponse.evaluate_incoming")
   def evaluate_incoming(container, flow, block, context) do
     {:ok, container, flow, block, context} = update_config(container, flow, block, context)
 
@@ -108,7 +108,7 @@ defmodule FlowRunner.CustomBlocks.DynamicSelectOneResponse do
   end
 
   @impl true
-  @decorate trace("DSL.Blocks.DynamicSelectOneResponse.evaluate_outgoing")
+  @decorate with_span("DSL.Blocks.DynamicSelectOneResponse.evaluate_outgoing")
   def evaluate_outgoing(container, flow, block, context, user_input) do
     matched_option =
       Enum.find(block.config.choices, fn

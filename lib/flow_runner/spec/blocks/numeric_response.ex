@@ -34,7 +34,7 @@ defmodule FlowRunner.Spec.Blocks.NumericResponse do
   end
 
   @impl true
-  @decorate trace("FlowRunner.Blocks.NumericResponse.evaluate_incoming")
+  @decorate with_span("FlowRunner.Blocks.NumericResponse.evaluate_incoming")
   def evaluate_incoming(container, flow, block, context) do
     {
       :ok,

@@ -16,8 +16,8 @@ defmodule FlowRunner.Spec.Blocks.Case do
     %{}
   end
 
-  @impl true
-  @decorate trace("FlowRunner.Case.Log.evaluate_incoming")
+  @impl FlowRunner.Spec.Block
+  @decorate with_span("FlowRunner.Case.Log.evaluate_incoming")
   def evaluate_incoming(
         %Container{} = container,
         %Flow{} = flow,
@@ -27,7 +27,7 @@ defmodule FlowRunner.Spec.Blocks.Case do
     {:ok, container, flow, block, %Context{context | last_block_uuid: block.uuid}}
   end
 
-  @impl true
+  @impl FlowRunner.Spec.Block
   def evaluate_outgoing(_container, _flow, block, context, nil) do
     {:ok, block_exit} = Block.evaluate_exits(block, context)
 

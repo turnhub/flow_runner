@@ -92,7 +92,7 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
       {:error, [{:error, :choices, nil, "\"name\", \"test\", and \"prompt\" are all required."}]}
 
   @impl true
-  @decorate trace("FlowRunner.Blocks.SelectOneResponse.evaluate_incoming")
+  @decorate with_span("FlowRunner.Blocks.SelectOneResponse.evaluate_incoming")
   def evaluate_incoming(container, flow, block, context) do
     {
       :ok,

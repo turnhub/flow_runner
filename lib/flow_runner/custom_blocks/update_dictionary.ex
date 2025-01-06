@@ -16,7 +16,7 @@ defmodule FlowRunner.CustomBlocks.UpdateDictionary do
     do: %{reference: reference, key: key, value: value}
 
   @impl true
-  @decorate trace("DSL.Blocks.UpdateDictionary.evaluate_incoming")
+  @decorate with_span("DSL.Blocks.UpdateDictionary.evaluate_incoming")
   def evaluate_incoming(container, flow, block, context) do
     context = %FlowRunner.Context{
       context
