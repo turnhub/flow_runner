@@ -14,9 +14,9 @@ jobs:
     strategy:
       matrix:
         include:
-          - elixir-version: "1.16"
-            otp-version: "26"
           - elixir-version: "1.17"
+            otp-version: "27"
+          - elixir-version: "1.18"
             otp-version: "27"
 
     steps:
