@@ -12,8 +12,8 @@ defmodule FlowRunner.Spec.Language do
           id: String.t(),
           iso_639_3: String.t(),
           label: String.t(),
-          variant: String.t(),
-          bcp_47: String.t()
+          variant: String.t() | nil,
+          bcp_47: String.t() | nil
         }
 
   validates(:id, presence: true)
