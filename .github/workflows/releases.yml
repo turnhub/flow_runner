@@ -20,6 +20,8 @@ jobs:
           mix local.hex --force
           mix deps.get
           mix compile
+      - name: Install Git
+        run: sudo apt-get update && sudo apt-get install -y git
       - name: Publish package to hex.pm
         uses: wesleimp/action-publish-hex@v1
         env:
