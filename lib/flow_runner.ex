@@ -50,33 +50,23 @@ defmodule FlowRunner do
   @impl FlowRunner.Contract
   def next_block(container, context, user_input \\ nil)
 
-  def next_block(
-        %Container{},
-        %Context{} = context,
-        user_input
-      )
+  def next_block(%Container{}, %Context{} = context, user_input)
       when context.waiting_for_user_input and user_input == nil do
     {:error, "waiting for user input but did not receive it"}
   end
 
-  def next_block(
-        %Container{} = container,
-        %Context{} = context,
-        user_input
-      ) do
+  def next_block(%Container{} = container, %Context{} = context, user_input) do
     # Identify the block we are transitioning to and then evaluate incoming block rules.
     with {:ok, container, flow} <-
            fetch_flow_by_uuid(container, context.current_flow_uuid),
          {:ok, context, current_block, next_block} <-
            find_next_block(container, flow, context, user_input) do
-      cond do
-        # If we have a next block, automatically evaluate it
-        not is_nil(next_block) ->
-          evaluate_next_block(container, flow, next_block, context)
-
+      if is_nil(next_block) do
         # if we don't have a next block then we've reached our end
-        is_nil(next_block) ->
-          {:end, container, flow, current_block, context}
+        {:end, container, flow, current_block, context}
+      else
+        # If we have a next block, automatically evaluate it
+        evaluate_next_block(container, flow, next_block, context)
       end
     end
   end
@@ -173,13 +163,10 @@ defmodule FlowRunner do
       ) do
     # Fetch the previous block we were at and then evaluate the
     # exits to identify the next block.
-    with {:ok, previous_block} <-
-           Flow.fetch_block(flow, last_block_uuid),
+    with {:ok, previous_block} <- Flow.fetch_block(flow, last_block_uuid),
          {:ok, context, next_block} <-
            Block.evaluate_outgoing(container, flow, previous_block, context, user_input) do
       {:ok, context, previous_block, next_block}
-    else
-      err -> err
     end
   end
 end
