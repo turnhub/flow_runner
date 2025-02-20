@@ -72,17 +72,26 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
   @impl true
   def evaluate_outgoing(_container, _flow, _block, _context, nil), do: {:ok, nil}
 
-  def evaluate_outgoing(_container, _flow, %{exits: exits} = block, _context, user_input) do
-    if has_reply_button?(block.config.template.components) do
-      # This is needed to keep backward compatibility with old blocks that don't have the prefix
-      is_button_prefixed? = Enum.any?(exits, &String.contains?(&1.test, "template-btn-idx-"))
+  @template_button_indices Enum.map(0..9, &to_string/1)
+  def evaluate_outgoing(_container, _flow, block, _context, "template-btn-idx-" <> index)
+      when index in @template_button_indices do
+    value =
+      if has_reply_button?(block.config.template.components) do
+        # This is needed to keep backward compatibility with
+        # old blocks whose exits don't have the prefix "template-btn-idx-".
+        is_button_prefixed? =
+          Enum.any?(block.exits, &String.contains?(&1.test, "template-btn-idx-"))
 
-      value = if is_button_prefixed?, do: "template-btn-idx-#{user_input}", else: user_input
+        if is_button_prefixed?, do: "template-btn-idx-" <> index, else: index
+      else
+        index
+      end
 
-      {:ok, %{"__value__" => value, "index" => user_input}}
-    else
-      {:ok, %{"__value__" => user_input, "index" => nil}}
-    end
+    {:ok, %{"__value__" => value, "index" => index}}
+  end
+
+  def evaluate_outgoing(_container, _flow, _block, _context, user_input) do
+    {:ok, %{"__value__" => user_input, "index" => nil}}
   end
 
   defp has_reply_button?(components),

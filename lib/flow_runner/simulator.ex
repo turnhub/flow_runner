@@ -83,7 +83,13 @@ defmodule FlowRunner.Simulator do
     # index, so at this point we have to convert the user input to the index of the
     # button they selected.
     user_input =
-      if has_template_buttons?(sim), do: get_button_index(sim, user_input), else: user_input
+      if has_template_buttons?(sim) do
+        index = get_button_index(sim, user_input)
+
+        "template-btn-idx-#{index}"
+      else
+        user_input
+      end
 
     sim = track_input(sim, user_input)
 
