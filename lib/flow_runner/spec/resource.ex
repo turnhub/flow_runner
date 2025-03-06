@@ -33,8 +33,8 @@ defmodule FlowRunner.Spec.Resource do
       )
 
     # Filter resources by language and mode.
-    matching_source? = fn x ->
-      x.language_id == language.id && ResourceValue.supports_mode(x, mode)
+    matching_source? = fn resource ->
+      resource.language_id == language.id && ResourceValue.supports_mode(resource, mode)
     end
 
     resource_values = Enum.filter(resources, matching_source?)
