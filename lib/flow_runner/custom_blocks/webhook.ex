@@ -89,7 +89,7 @@ defmodule FlowRunner.CustomBlocks.Webhook do
       # We also include a floor of a 10the of a second so that we handle unreasonably
       # low wait times as well.
       timeout: max(min(timeout, @maximum_timeout), 100),
-      cache_ttl: Map.get(webhook, "cache_ttl") || @default_cache_ttl,
+      cache_ttl: Map.get(webhook, "cache_ttl", @default_cache_ttl),
       mode: mode
     }
     |> Map.from_struct()
@@ -117,7 +117,7 @@ defmodule FlowRunner.CustomBlocks.Webhook do
   defp group_by_key(enumerable) do
     Enum.reduce(enumerable, %{}, fn {key, value}, acc ->
       string_key = to_string(key)
-      value_list = Map.get(acc, string_key) || []
+      value_list = Map.get(acc, string_key, [])
       Map.put(acc, string_key, [value | value_list])
     end)
   end

@@ -121,8 +121,7 @@ defmodule FlowRunner do
           FlowRunner.Spec.Language.t()
   def language_for_context(flow, context),
     do:
-      Enum.find(flow.languages, &(&1.iso_639_3 == context.language)) ||
-        default_flow_language(flow)
+      Enum.find(flow.languages, default_flow_language(flow), &(&1.iso_639_3 == context.language))
 
   @doc """
   Get the default language for a flow.

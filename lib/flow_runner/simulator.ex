@@ -44,10 +44,13 @@ defmodule FlowRunner.Simulator do
 
   def update_context(sim, vars \\ %{}, language_code \\ "eng", mode \\ "RICH_MESSAGING") do
     [first_flow | _] = sim.container.flows
-    [first_language | _] = first_flow.languages
 
     # get the language for the language_code, fallback to the first_language if none match
-    language = Enum.find(first_flow.languages, first_language, &(&1.iso_639_3 == language_code))
+    language =
+      FlowRunner.language_for_context(
+        first_flow,
+        sim.context || %FlowRunner.Context{language: language_code}
+      )
 
     {:ok, context} =
       if sim.context,
