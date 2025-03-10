@@ -32,15 +32,14 @@ defmodule FlowRunner.Spec.Resource do
         %FlowRunner.Context{language: language}
       )
 
-    # Filter resources by language and mode.
+    # Find resource by language and mode.
     matching_source? = fn resource ->
       resource.language_id == language.id && ResourceValue.supports_mode(resource, mode)
     end
 
-    resource_values = Enum.filter(resources, matching_source?)
+    resource_value = Enum.find(resources, matching_source?)
 
-    if length(resource_values) > 0 do
-      [resource_value | _] = resource_values
+    if resource_value do
       {:ok, resource_value}
     else
       {:error, "no matching resource"}
