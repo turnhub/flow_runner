@@ -33,6 +33,13 @@ defmodule FlowRunner.Simulator do
     @moduledoc """
     The output of a state in simulator step
     """
+    @type t :: %__MODULE__{
+            content_type: String.t() | nil,
+            mime_type: String.t() | nil,
+            raw_value: String.t() | nil,
+            value: String.t() | nil,
+            event_value: String.t() | nil
+          }
     defstruct content_type: nil, mime_type: nil, raw_value: nil, value: nil, event_value: nil
   end
 
@@ -601,13 +608,6 @@ defmodule FlowRunner.Simulator do
       }) do
     message_resource = fetch_resource_by_uuid!(sim, prompt)
 
-    button_resource_outputs =
-      if type == "Io.Turn.DynamicSelectOneResponse" do
-        generate_choices_for_dynamic_quick_replies(sim, choices)
-      else
-        generate_choices_for_static_quick_replies(sim, choices)
-      end
-
     resource_outputs =
       Enum.reduce(["IMAGE", "VIDEO", "TEXT"], [], fn type, resources_acc ->
         resource_outputs =
@@ -619,12 +619,18 @@ defmodule FlowRunner.Simulator do
         resources_acc ++ resource_outputs
       end)
 
+    button_resource_outputs =
+      if type == "Io.Turn.DynamicSelectOneResponse" do
+        generate_choices_for_dynamic_quick_replies(sim, choices)
+      else
+        generate_choices_for_static_quick_replies(sim, choices)
+      end
+
     buttons_metadata = get_vendor(vendor_metadata, "buttons_metadata") || %{}
 
     metadata_outputs = get_interactive_metadata_resource_outputs(sim, buttons_metadata)
 
-    outputs =
-      [{:button, button_resource_outputs} | resource_outputs ++ metadata_outputs]
+    outputs = [{:button, button_resource_outputs} | resource_outputs ++ metadata_outputs]
 
     {{:interactive, outputs}, sim}
   end
