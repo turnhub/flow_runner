@@ -23,11 +23,23 @@ defmodule FlowRunner.Simulator do
             callbacks_module: Expression.Callbacks.Standard
 
   @type t :: %__MODULE__{}
+  @type quick_reply_choice :: %{
+          required(:name) => String.t(),
+          required(:test) => String.t(),
+          required(:prompt) => String.t()
+        }
 
   defmodule Output do
     @moduledoc """
     The output of a state in simulator step
     """
+    @type t :: %__MODULE__{
+            content_type: String.t() | nil,
+            mime_type: String.t() | nil,
+            raw_value: String.t() | nil,
+            value: String.t() | nil,
+            event_value: String.t() | nil
+          }
     defstruct content_type: nil, mime_type: nil, raw_value: nil, value: nil, event_value: nil
   end
 
@@ -561,7 +573,36 @@ defmodule FlowRunner.Simulator do
     get_in(vendor_metadata, ["io", "turn", "stacks_dsl", "0.1.0"] ++ keys)
   end
 
+  @doc """
+  Generate the list of options available for a static quick reply block.
+
+  *IMPORTANT*: We use the button labels as the values here.
+  """
+  @spec generate_choices_for_static_quick_replies(t(), [quick_reply_choice]) :: [Output.t()]
+  def generate_choices_for_static_quick_replies(sim, choices) do
+    Enum.map(choices, fn %{prompt: prompt} ->
+      resource = fetch_resource_by_uuid!(sim, prompt)
+      [resource_value] = fetch_resource_values(sim, resource, "TEXT")
+      resource_value_output(sim, resource_value, resource_value.value)
+    end)
+  end
+
+  @doc """
+  Generate the list of options available for a dynamic quick reply block.
+
+  *IMPORTANT*: We use the button name as the values here.
+  """
+  @spec generate_choices_for_dynamic_quick_replies(t(), [quick_reply_choice]) :: [Output.t()]
+  def generate_choices_for_dynamic_quick_replies(sim, choices) do
+    Enum.map(choices, fn %{name: name, prompt: prompt} ->
+      resource = fetch_resource_by_uuid!(sim, prompt)
+      [resource_value] = fetch_resource_values(sim, resource, "TEXT")
+      resource_value_output(sim, resource_value, name)
+    end)
+  end
+
   def output_quickreply_block(sim, %{
+        type: type,
         config: %{prompt: prompt, choices: choices},
         vendor_metadata: vendor_metadata
       }) do
@@ -579,11 +620,11 @@ defmodule FlowRunner.Simulator do
       end)
 
     button_resource_outputs =
-      Enum.map(choices, fn %{prompt: prompt} ->
-        resource = fetch_resource_by_uuid!(sim, prompt)
-        [resource_value] = fetch_resource_values(sim, resource, "TEXT")
-        resource_value_output(sim, resource_value, resource_value.value)
-      end)
+      if type == "Io.Turn.DynamicSelectOneResponse" do
+        generate_choices_for_dynamic_quick_replies(sim, choices)
+      else
+        generate_choices_for_static_quick_replies(sim, choices)
+      end
 
     buttons_metadata = get_vendor(vendor_metadata, "buttons_metadata") || %{}
 
