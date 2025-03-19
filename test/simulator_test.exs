@@ -517,6 +517,29 @@ defmodule FlowRunner.SimulatorTest do
     assert sim.block.name == "activity_text"
   end
 
+  @tag :current
+  test "simulator with dynamic buttons" do
+    sim = Simulator.new(read_floip!("simulator_with_dynamic_buttons"))
+
+    {:waiting, sim, outputs} = Simulator.start(sim)
+
+    assert outputs
+           |> get_in([:interactive, :text])
+           |> with_content_type("TEXT")
+           |> has_value("click a button")
+
+    assert sim.block.name == "d"
+
+    {:waiting, sim, outputs} = Simulator.next(sim, "one")
+
+    assert outputs
+           |> get_in([:interactive, :text])
+           |> with_content_type("TEXT")
+           |> has_value("you clicked one")
+
+    assert sim.block.name == "destination"
+  end
+
   test "simulator with list and routing" do
     sim = Simulator.new(read_floip!("simulator_with_list_and_routing"))
 
