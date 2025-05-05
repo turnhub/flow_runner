@@ -129,4 +129,39 @@ defmodule BlockTest do
     assert {:ok, %Context{}, _no_destination_block = nil} =
              Block.fetch_default_block(block, %Flow{}, context)
   end
+
+  test "fetch next block" do
+    # 1. With NO default exit
+    context = %Context{
+      vars: %{"block" => %{"value" => 10}}
+    }
+
+    block = %Block{
+      exits: [
+        %Exit{
+          uuid: "b586afa7-0097-4805-9951-f6d3156c08db",
+          test: "block.value = 5"
+        }
+      ]
+    }
+
+    assert {:error, "No default exit available"} = Block.fetch_next_block(block, %Flow{}, context)
+
+    # 2. With default exit
+    block = %Block{
+      exits: [
+        %Exit{
+          uuid: "cbf4382f-0ce0-426b-9a3c-40cbe84dd081",
+          default: true
+        },
+        %Exit{
+          uuid: "b586afa7-0097-4805-9951-f6d3156c08db",
+          test: "block.value = 5"
+        }
+      ]
+    }
+
+    assert {:ok, %Context{}, _no_destination_block = nil} =
+             Block.fetch_next_block(block, %Flow{}, context)
+  end
 end
