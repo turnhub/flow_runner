@@ -229,7 +229,7 @@ defmodule FlowRunner.Spec.Block do
   end
 
   @spec fetch_default_block(Block.t(), Flow.t(), Context.t()) ::
-          {:error, iodata} | {:ok, Context.t(), Block.t() | nil}
+          {:error, String.t()} | {:ok, Context.t(), Block.t() | nil}
   def fetch_default_block(block, %Flow{} = flow, %Context{} = context) do
     case evaluate_default_exit(block) do
       {:ok, %Exit{destination_block: destination_block}}
