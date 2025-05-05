@@ -264,7 +264,7 @@ defmodule FlowRunner.Spec.Block do
     end
   end
 
-  @spec evaluate_exits(Block.t(), Context.t()) :: {:ok, Exit.t()} | {:error, any()}
+  @spec evaluate_exits(Block.t(), Context.t()) :: {:ok, Exit.t()} | {:error, String.t()}
   @decorate with_span("FlowRunner.Spec.Block.evaluate_exits")
   def evaluate_exits(%Block{exits: exits} = block, %Context{} = context) do
     O11y.set_attributes(
