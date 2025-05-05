@@ -111,9 +111,7 @@ defmodule FlowRunner.Spec.Block do
     %{set_contact_property: %{property_key: property_key, property_value: property_value}}
   end
 
-  def load_config_for_set_contact_property!(%{
-        "set_contact_property" => _
-      }) do
+  def load_config_for_set_contact_property!(%{"set_contact_property" => _}) do
     raise "set_contact_property! requires 'property_key' and 'property_value' fields."
   end
 
@@ -126,7 +124,7 @@ defmodule FlowRunner.Spec.Block do
       if implementation = get_block(blocks_module, type) do
         implementation.validate_config!(config)
       else
-        raise("unknown block type '#{type}'")
+        raise "unknown block type '#{type}'"
       end
 
     # All blocks can optionally have a set_contact_property config. Let's
@@ -136,8 +134,7 @@ defmodule FlowRunner.Spec.Block do
 
   @spec evaluate_user_input(Block.t(), Context.t(), iodata()) ::
           {:ok, Context.t()}
-  def evaluate_user_input(_block, context, nil)
-      when context.waiting_for_user_input == true do
+  def evaluate_user_input(_block, context, nil) when context.waiting_for_user_input == true do
     {:ok, context}
   end
 
@@ -149,9 +146,7 @@ defmodule FlowRunner.Spec.Block do
         block.name => user_input
       })
 
-    context = %Context{context | vars: vars, waiting_for_user_input: false}
-
-    {:ok, context}
+    {:ok, %Context{context | vars: vars, waiting_for_user_input: false}}
   end
 
   def evaluate_user_input(%{type: "Core.Case"} = block, context, user_input) do
@@ -161,9 +156,7 @@ defmodule FlowRunner.Spec.Block do
         block.name => user_input
       })
 
-    context = %Context{context | vars: vars}
-
-    {:ok, context}
+    {:ok, %Context{context | vars: vars}}
   end
 
   def evaluate_user_input(_block, context, nil) do
@@ -222,62 +215,56 @@ defmodule FlowRunner.Spec.Block do
     with {:ok, user_input} <-
            block_module.evaluate_outgoing(container, flow, block, context, user_input),
          # Process any user input we have been given.
-         {:ok, context} <-
-           Block.evaluate_user_input(
-             block,
-             context,
-             user_input
-           ),
-         {:ok, context, block} <-
-           Block.fetch_next_block(block, flow, context) do
+         {:ok, context} <- evaluate_user_input(block, context, user_input),
+         {:ok, context, block} <- fetch_next_block(block, flow, context) do
       {:ok, context, block}
     else
       {:invalid, reason} ->
         Logger.info("Fetching default block because #{reason}")
-        {:ok, context} = Block.evaluate_user_input(block, context, user_input)
-        Block.fetch_default_block(block, flow, context)
 
-      err ->
-        err
+        {:ok, context} = evaluate_user_input(block, context, user_input)
+
+        fetch_default_block(block, flow, context)
     end
   end
 
+  @spec fetch_default_block(Block.t(), Flow.t(), Context.t()) ::
+          {:error, iodata} | {:ok, Context.t(), Block.t() | nil}
   def fetch_default_block(block, %Flow{} = flow, %Context{} = context) do
-    {:ok, %Exit{destination_block: destination_block}} =
-      Block.evaluate_default_exit(block, context)
+    case evaluate_default_exit(block) do
+      {:ok, %Exit{destination_block: destination_block}}
+      when is_nil(destination_block) or destination_block == "" ->
+        {:ok, %Context{context | finished: true}, nil}
 
-    if destination_block == "" || destination_block == nil do
-      {:ok, %Context{context | finished: true}, nil}
-    else
-      case Flow.fetch_block(flow, destination_block) do
-        {:ok, next_block} -> {:ok, context, next_block}
-        {:error, reason} -> {:error, reason}
-      end
+      {:ok, %Exit{destination_block: destination_block}} ->
+        with {:ok, next_block} <- Flow.fetch_block(flow, destination_block) do
+          {:ok, context, next_block}
+        end
+
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 
-  @spec fetch_next_block(
-          Block.t(),
-          Flow.t(),
-          Context.t()
-        ) ::
-          {:error, iodata}
-          | {:ok, Context.t(), Block.t()}
+  @spec fetch_next_block(Block.t(), Flow.t(), Context.t()) ::
+          {:error, iodata} | {:ok, Context.t(), Block.t()}
   def fetch_next_block(block, %Flow{} = flow, %Context{} = context) do
-    {:ok, %Exit{destination_block: destination_block}} = Block.evaluate_exits(block, context)
+    case evaluate_exits(block, context) do
+      {:ok, %Exit{destination_block: destination_block}}
+      when is_nil(destination_block) or destination_block == "" ->
+        {:ok, %Context{context | finished: true}, nil}
 
-    if destination_block == "" || destination_block == nil do
-      {:ok, %Context{context | finished: true}, nil}
-    else
-      case Flow.fetch_block(flow, destination_block) do
-        {:ok, next_block} -> {:ok, context, next_block}
-        {:error, reason} -> {:error, reason}
-      end
+      {:ok, %Exit{destination_block: destination_block}} ->
+        with {:ok, next_block} <- Flow.fetch_block(flow, destination_block) do
+          {:ok, context, next_block}
+        end
+
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 
-  @spec evaluate_exits(Block.t(), Context.t()) ::
-          {:ok, Exit.t()} | {:error, any()}
+  @spec evaluate_exits(Block.t(), Context.t()) :: {:ok, Exit.t()} | {:error, any()}
   @decorate with_span("FlowRunner.Spec.Block.evaluate_exits")
   def evaluate_exits(%Block{exits: exits} = block, %Context{} = context) do
     O11y.set_attributes(
@@ -295,13 +282,12 @@ defmodule FlowRunner.Spec.Block do
     if length(truthy_exits) > 0 do
       {:ok, Enum.at(truthy_exits, 0)}
     else
-      evaluate_default_exit(block, context)
+      evaluate_default_exit(block)
     end
   end
 
-  @spec evaluate_default_exit(Block.t(), Context.t()) ::
-          {:error, String.t()} | {:ok, Exit.t()}
-  def evaluate_default_exit(%Block{exits: exits}, %Context{} = _context) do
+  @spec evaluate_default_exit(Block.t()) :: {:error, String.t()} | {:ok, Exit.t()}
+  def evaluate_default_exit(%Block{exits: exits}) do
     case Enum.filter(exits, &(&1.default == true)) do
       [first_default_exit | _] -> {:ok, first_default_exit}
       _ -> {:error, "No default exit available"}
