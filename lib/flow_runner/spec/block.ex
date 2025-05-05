@@ -247,7 +247,7 @@ defmodule FlowRunner.Spec.Block do
   end
 
   @spec fetch_next_block(Block.t(), Flow.t(), Context.t()) ::
-          {:error, iodata} | {:ok, Context.t(), Block.t()}
+          {:error, String.t()} | {:ok, Context.t(), Block.t()}
   def fetch_next_block(block, %Flow{} = flow, %Context{} = context) do
     case evaluate_exits(block, context) do
       {:ok, %Exit{destination_block: destination_block}}
