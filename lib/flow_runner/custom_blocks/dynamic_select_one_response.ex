@@ -39,7 +39,7 @@ defmodule FlowRunner.CustomBlocks.DynamicSelectOneResponse do
       |> Enum.map(fn
         # Handle the specific case of a two-element list where options are time formatted
         # i.e. list("cta", NextCard, map(times_formatted_options_list, &[&1,&1]))
-        [option_a, _option_b] = option when is_struct(option_a, Time) ->
+        [option_a, _option_b] when is_struct(option_a, Time) ->
           time_string = Time.to_string(option_a)
           [time_string, time_string]
 
