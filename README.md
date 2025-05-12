@@ -43,7 +43,6 @@ This Flow Runnner only supports the TEXT, RICH_MESSAGING modes.
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 by adding `flow_runner` to your list of dependencies in `mix.exs`:
 
-
 ```elixir
 def deps do
   [
