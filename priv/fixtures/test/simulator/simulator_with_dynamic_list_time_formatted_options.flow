@@ -1,0 +1,387 @@
+{
+  "description": "Default description",
+  "flows": [
+    {
+      "blocks": [
+        {
+          "config": {},
+          "exits": [
+            {
+              "config": {},
+              "default": false,
+              "destination_block": "327029ac-9362-5275-937c-4ede23346461",
+              "name": "Exit for destination_case_condition_0",
+              "semantic_label": "",
+              "test": "has_phrase(\"@option_picked\", \"11\")",
+              "uuid": "3d23d2b7-0097-4afc-b601-dd49c310298a",
+              "vendor_metadata": {}
+            },
+            {
+              "config": {},
+              "default": false,
+              "destination_block": "fe7b245b-4841-5cd2-9bc7-3f858e9ef365",
+              "name": "Exit for destination_case_condition_1",
+              "semantic_label": "",
+              "test": "has_phrase(\"@option_picked\", \"22\")",
+              "uuid": "84f825bc-47d5-476e-88bc-5f84f41f09ee",
+              "vendor_metadata": {}
+            },
+            {
+              "config": {},
+              "default": true,
+              "destination_block": "26339ef0-d56b-5cb8-925b-83179e4460fd",
+              "name": "Exit for destination_case_condition_2",
+              "semantic_label": "",
+              "test": "",
+              "uuid": "81d7c25f-67b4-4525-b395-e07dc80cdfa1",
+              "vendor_metadata": {}
+            }
+          ],
+          "label": "",
+          "name": "destination_case",
+          "semantic_label": "",
+          "tags": [],
+          "type": "Core.Case",
+          "ui_metadata": {"canvas_coordinates": {"x": 0, "y": 0}},
+          "uuid": "a9738e07-c4b6-5b5f-876d-968e59989d31",
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "code_generator": "",
+                      "condition": "has_phrase(\"@option_picked\", \"11\")",
+                      "meta": {"line": 13},
+                      "name": "Destination",
+                      "uuid": "a9738e07-c4b6-5b5f-876d-968e59989d31",
+                      "version": ""
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "config": {"prompt": "a8c919c1-b2ac-49a2-bbdc-bba8727938c3"},
+          "exits": [
+            {
+              "config": {},
+              "default": true,
+              "destination_block": "",
+              "name": "destination_case_condition_2_text",
+              "semantic_label": "",
+              "test": "",
+              "uuid": "a8406dda-90f3-49a2-80e1-786e7980bd82",
+              "vendor_metadata": {}
+            }
+          ],
+          "label": "",
+          "name": "destination_case_condition_2_text",
+          "semantic_label": "",
+          "tags": [],
+          "type": "MobilePrimitives.Message",
+          "ui_metadata": {"canvas_coordinates": {"x": 0, "y": 0}},
+          "uuid": "26339ef0-d56b-5cb8-925b-83179e4460fd",
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "code_generator": "",
+                      "condition": "",
+                      "meta": {"line": 21},
+                      "name": "Destination",
+                      "uuid": "742025c2-3ca7-5ca3-b382-fe0db9cd1bec",
+                      "version": ""
+                    },
+                    "card_item": {
+                      "meta": {"line": 22},
+                      "text": {},
+                      "type": "text"
+                    },
+                    "index": 2
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "config": {"prompt": "d52466f9-4a92-4ac6-809c-d99ce6e4f70f"},
+          "exits": [
+            {
+              "config": {},
+              "default": true,
+              "destination_block": "",
+              "name": "destination_case_condition_1_text",
+              "semantic_label": "",
+              "test": "",
+              "uuid": "a5bf4f69-f01d-4a94-8659-80c64a938377",
+              "vendor_metadata": {}
+            }
+          ],
+          "label": "",
+          "name": "destination_case_condition_1_text",
+          "semantic_label": "",
+          "tags": [],
+          "type": "MobilePrimitives.Message",
+          "ui_metadata": {"canvas_coordinates": {"x": 0, "y": 0}},
+          "uuid": "fe7b245b-4841-5cd2-9bc7-3f858e9ef365",
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "code_generator": "",
+                      "condition": "has_phrase(\"@option_picked\", \"22\")",
+                      "meta": {"line": 17},
+                      "name": "Destination",
+                      "uuid": "38a360c5-f17e-5995-bb79-58c7119b1097",
+                      "version": ""
+                    },
+                    "card_item": {
+                      "meta": {"line": 18},
+                      "text": {},
+                      "type": "text"
+                    },
+                    "index": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "config": {"prompt": "f523d4bb-d44f-42ea-98c3-59f53ad2780f"},
+          "exits": [
+            {
+              "config": {},
+              "default": true,
+              "destination_block": "",
+              "name": "destination_case_condition_0_text",
+              "semantic_label": "",
+              "test": "",
+              "uuid": "3358730b-3c1b-444a-9b76-7fb22a47daee",
+              "vendor_metadata": {}
+            }
+          ],
+          "label": "",
+          "name": "destination_case_condition_0_text",
+          "semantic_label": "",
+          "tags": [],
+          "type": "MobilePrimitives.Message",
+          "ui_metadata": {"canvas_coordinates": {"x": 0, "y": 0}},
+          "uuid": "327029ac-9362-5275-937c-4ede23346461",
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "code_generator": "",
+                      "condition": "has_phrase(\"@option_picked\", \"11\")",
+                      "meta": {"line": 13},
+                      "name": "Destination",
+                      "uuid": "a9738e07-c4b6-5b5f-876d-968e59989d31",
+                      "version": ""
+                    },
+                    "card_item": {
+                      "meta": {"line": 14},
+                      "text": {},
+                      "type": "text"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "config": {},
+          "exits": [
+            {
+              "config": {},
+              "default": true,
+              "destination_block": "765f8fa5-e5f7-5836-9852-86cba9e89d92",
+              "name": "[\"11:00:00\", \"22:00:00\"]",
+              "semantic_label": "",
+              "test": "",
+              "uuid": "e2526da0-1f1e-41a4-84ec-fb364befdbd6",
+              "vendor_metadata": {}
+            }
+          ],
+          "label": "",
+          "name": "options_list",
+          "semantic_label": "",
+          "tags": [],
+          "type": "Core.Case",
+          "ui_metadata": {"canvas_coordinates": {"x": 0, "y": 0}},
+          "uuid": "4e6fe644-1981-52c4-8bea-8254d0ea5119",
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "code_generator": "",
+                      "condition": "",
+                      "meta": {"line": 2},
+                      "name": "List",
+                      "uuid": "f8e6b44c-7085-57a7-b43c-5312cac88047",
+                      "version": ""
+                    },
+                    "card_item": {
+                      "literal": {},
+                      "meta": {"line": 3},
+                      "type": "literal"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "config": {
+            "choice_expression": "map(options_list, &[&1, &1])",
+            "choices": [],
+            "destination_block": "a9738e07-c4b6-5b5f-876d-968e59989d31",
+            "prompt": "9dedd209-c773-4dcb-b9ed-5a1e18cefef1"
+          },
+          "exits": [
+            {
+              "config": {},
+              "default": true,
+              "destination_block": "",
+              "name": "option_picked",
+              "semantic_label": "",
+              "test": "",
+              "uuid": "826393cf-5154-479f-a691-6aa9d1c1a9fe",
+              "vendor_metadata": {}
+            }
+          ],
+          "label": "",
+          "name": "option_picked",
+          "semantic_label": "",
+          "tags": [],
+          "type": "Io.Turn.DynamicSelectOneResponse",
+          "ui_metadata": {"canvas_coordinates": {"x": 0, "y": 0}},
+          "uuid": "765f8fa5-e5f7-5836-9852-86cba9e89d92",
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "code_generator": "",
+                      "condition": "",
+                      "meta": {"line": 2},
+                      "name": "List",
+                      "uuid": "f8e6b44c-7085-57a7-b43c-5312cac88047",
+                      "version": ""
+                    },
+                    "card_item": {
+                      "dynamic_list": {},
+                      "meta": {"line": 5},
+                      "type": "dynamic_list"
+                    },
+                    "index": 0,
+                    "list_metadata": {
+                      "footer": "This is the footer!",
+                      "header": "This is the header!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "exit_block_id": "",
+      "first_block_id": "4e6fe644-1981-52c4-8bea-8254d0ea5119",
+      "interaction_timeout": 300,
+      "label": "",
+      "languages": [
+        {
+          "bcp_47": "",
+          "id": "1439a0f6-0b75-4c33-a974-b938585624e5",
+          "iso_639_3": "eng",
+          "label": "English",
+          "variant": ""
+        }
+      ],
+      "last_modified": "2025-05-12T15:21:37.489804Z",
+      "name": "stack",
+      "supported_modes": ["RICH_MESSAGING"],
+      "uuid": "dc97e720-19ec-4b8f-a9c8-701bf091e435",
+      "vendor_metadata": {}
+    }
+  ],
+  "name": "Default name",
+  "resources": [
+    {
+      "uuid": "a8c919c1-b2ac-49a2-bbdc-bba8727938c3",
+      "values": [
+        {
+          "content_type": "TEXT",
+          "language_id": "1439a0f6-0b75-4c33-a974-b938585624e5",
+          "mime_type": "text/plain",
+          "modes": ["RICH_MESSAGING"],
+          "value": "Default"
+        }
+      ]
+    },
+    {
+      "uuid": "d52466f9-4a92-4ac6-809c-d99ce6e4f70f",
+      "values": [
+        {
+          "content_type": "TEXT",
+          "language_id": "1439a0f6-0b75-4c33-a974-b938585624e5",
+          "mime_type": "text/plain",
+          "modes": ["RICH_MESSAGING"],
+          "value": "22"
+        }
+      ]
+    },
+    {
+      "uuid": "f523d4bb-d44f-42ea-98c3-59f53ad2780f",
+      "values": [
+        {
+          "content_type": "TEXT",
+          "language_id": "1439a0f6-0b75-4c33-a974-b938585624e5",
+          "mime_type": "text/plain",
+          "modes": ["RICH_MESSAGING"],
+          "value": "11"
+        }
+      ]
+    },
+    {
+      "uuid": "9dedd209-c773-4dcb-b9ed-5a1e18cefef1",
+      "values": [
+        {
+          "content_type": "TEXT",
+          "language_id": "1439a0f6-0b75-4c33-a974-b938585624e5",
+          "mime_type": "text/plain",
+          "modes": ["RICH_MESSAGING"],
+          "value": "Pick an option!"
+        },
+        {
+          "content_type": "TEXT",
+          "language_id": "1439a0f6-0b75-4c33-a974-b938585624e5",
+          "mime_type": "text/plain",
+          "modes": ["RICH_MESSAGING"],
+          "value": "Call to action"
+        }
+      ]
+    }
+  ],
+  "specification_version": "1.0.0-rc3",
+  "uuid": "7fe23e1a-c979-4dad-b421-9c512fac9f3e",
+  "vendor_metadata": {}
+}

@@ -517,6 +517,26 @@ defmodule FlowRunner.SimulatorTest do
     assert sim.block.name == "activity_text"
   end
 
+  test "simulator with time formatted options" do
+    sim = Simulator.new(read_floip!("simulator_with_dynamic_list_time_formatted_options"))
+
+    {:waiting, sim, outputs} = Simulator.start(sim)
+
+    assert outputs
+           |> get_in([:interactive, :list])
+           |> with_content_type("TEXT")
+           |> has_value("11:00:00")
+
+    assert outputs
+           |> get_in([:interactive, :text])
+           |> with_content_type("TEXT")
+           |> has_value("Pick an option!")
+
+    assert sim.block.name == "option_picked"
+
+    {:end, _sim, _outputs} = Simulator.next(sim, "11:00:00")
+  end
+
   @tag :current
   test "simulator with dynamic buttons" do
     sim = Simulator.new(read_floip!("simulator_with_dynamic_buttons"))
