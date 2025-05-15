@@ -37,7 +37,11 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
       }
 
   def parse_parameter(%{"type" => "text", "text" => text} = component, template_language),
-    do: %{type: "text", text: text, language: component["language"] || template_language}
+    do: %{
+      type: "text",
+      text: text,
+      language: component["language"] || Expression.evaluate_block!(template_language)
+    }
 
   def parse_parameter(
         %{"type" => "document", "document" => %{"link" => link} = document},
