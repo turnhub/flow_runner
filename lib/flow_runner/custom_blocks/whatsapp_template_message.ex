@@ -5,7 +5,7 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
 
   @behaviour FlowRunner.Spec.Block
   use OpenTelemetryDecorator
-  @impl true
+  @impl FlowRunner.Spec.Block
   def validate_config!(%{
         "template" =>
           %{
@@ -33,8 +33,8 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
       parameters: Enum.map(parameters, &parse_parameter/1)
     }
 
-  def parse_parameter(%{"type" => "text", "text" => text}),
-    do: %{type: "text", text: text}
+  def parse_parameter(%{"type" => "text", "text" => text} = component),
+    do: %{type: "text", text: text, language: component["language"]}
 
   def parse_parameter(%{"type" => "document", "document" => %{"link" => link} = document}) do
     document =
@@ -56,7 +56,7 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
   def parse_parameter(%{"type" => "payload", "payload" => payload_resource_uuid}),
     do: %{type: "payload", payload: payload_resource_uuid}
 
-  @impl true
+  @impl FlowRunner.Spec.Block
   @decorate with_span("DSL.Blocks.WhatsAppTemplateMessage.evaluate_incoming")
   def evaluate_incoming(container, flow, block, context) do
     context = %{
@@ -69,7 +69,7 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
     {:ok, container, flow, block, context}
   end
 
-  @impl true
+  @impl FlowRunner.Spec.Block
   def evaluate_outgoing(_container, _flow, _block, _context, nil), do: {:ok, nil}
 
   @template_button_indices Enum.map(0..9, &to_string/1)
