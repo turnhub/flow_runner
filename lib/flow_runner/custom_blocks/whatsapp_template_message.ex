@@ -24,17 +24,35 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
     }
   end
 
-  def parse_component(
-        %{"type" => type, "parameters" => parameters} = component,
-        template_language
-      ),
-      do: %{
-        type: type,
-        index: component["index"],
-        # required only for buttons
-        sub_type: component["sub_type"],
-        parameters: Enum.map(parameters, &parse_parameter(&1, template_language))
-      }
+  @spec parse_component(
+          %{
+            required(String.t()) => String.t(),
+            required(String.t()) => list(%{String.t() => String.t()})
+          },
+          String.t()
+        ) :: %{
+          type: String.t(),
+          index: String.t() | nil,
+          sub_type: String.t() | nil,
+          parameters:
+            list(%{
+              required(:type) => String.t(),
+              optional(:text) => String.t(),
+              optional(:payload) => String.t(),
+              optional(:language) => String.t()
+            })
+        }
+  defp parse_component(
+         %{"type" => type, "parameters" => parameters} = component,
+         template_language
+       ),
+       do: %{
+         type: type,
+         index: component["index"],
+         # required only for buttons
+         sub_type: component["sub_type"],
+         parameters: Enum.map(parameters, &parse_parameter(&1, template_language))
+       }
 
   def parse_parameter(%{"type" => "text", "text" => text} = component, template_language),
     do: %{
