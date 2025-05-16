@@ -54,17 +54,17 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
          parameters: Enum.map(parameters, &parse_parameter(&1, template_language))
        }
 
-  def parse_parameter(%{"type" => "text", "text" => text} = component, template_language),
+  defp parse_parameter(%{"type" => "text", "text" => text} = component, template_language),
     do: %{
       type: "text",
       text: text,
       language: component["language"] || Expression.evaluate_block!(template_language)
     }
 
-  def parse_parameter(
-        %{"type" => "document", "document" => %{"link" => link} = document},
-        _default_language
-      ) do
+  defp parse_parameter(
+         %{"type" => "document", "document" => %{"link" => link} = document},
+         _default_language
+       ) do
     document =
       if filename = document["filename"] do
         %{link: link, filename: filename}
@@ -75,17 +75,17 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
     %{type: "document", document: document}
   end
 
-  def parse_parameter(%{"type" => "video", "video" => %{"link" => link}}, _default_language),
+  defp parse_parameter(%{"type" => "video", "video" => %{"link" => link}}, _default_language),
     do: %{type: "video", video: %{link: link}}
 
-  def parse_parameter(%{"type" => "image", "image" => %{"link" => link}}, _default_language),
+  defp parse_parameter(%{"type" => "image", "image" => %{"link" => link}}, _default_language),
     do: %{type: "image", image: %{link: link}}
 
-  def parse_parameter(
-        %{"type" => "payload", "payload" => payload_resource_uuid},
-        _default_language
-      ),
-      do: %{type: "payload", payload: payload_resource_uuid}
+  defp parse_parameter(
+         %{"type" => "payload", "payload" => payload_resource_uuid},
+         _default_language
+       ),
+       do: %{type: "payload", payload: payload_resource_uuid}
 
   @impl FlowRunner.Spec.Block
   @decorate with_span("DSL.Blocks.WhatsAppTemplateMessage.evaluate_incoming")
