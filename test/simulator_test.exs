@@ -3,24 +3,24 @@ defmodule FlowRunner.SimulatorTest do
   alias FlowRunner.Simulator
 
   @spec read_floip!(name :: String.t()) :: FlowRunner.Spec.Container.t()
-  def read_floip!(name) do
+  defp read_floip!(name) do
     "priv/fixtures/test/simulator/#{name}.flow"
     |> File.read!()
     |> Jason.decode!()
     |> FlowRunner.compile!()
   end
 
-  def with_content_type(resource_value_outputs, content_type) do
+  defp with_content_type(resource_value_outputs, content_type) do
     resource_value_outputs
     |> Enum.filter(&(&1.content_type == content_type))
   end
 
-  def has_value(resource_value_outputs, value) do
+  defp has_value(resource_value_outputs, value) do
     Enum.any?(resource_value_outputs, &(&1.value =~ value)) ||
       flunk("Did not find #{inspect(value)} in #{inspect(resource_value_outputs)}")
   end
 
-  def has_values(resource_value_outputs, values) do
+  defp has_values(resource_value_outputs, values) do
     values
     |> Enum.reduce(resource_value_outputs, fn value, resource_values_outputs ->
       Enum.reject(resource_values_outputs, &(&1.value =~ value))
@@ -714,6 +714,28 @@ defmodule FlowRunner.SimulatorTest do
            |> get_in([:message, :text])
            |> with_content_type("TEXT")
            |> has_value("This is card 1")
+  end
+
+  test "whatsapp template message with translations using default language" do
+    sim = Simulator.new(read_floip!("whatsapp_template_message_with_translations"))
+
+    {:end, sim, outputs} = Simulator.start(sim)
+
+    assert outputs
+           |> get_in([:message, :text])
+           |> with_content_type("TEXT")
+           |> has_value("Body parameters: [Jane, My Journey]")
+  end
+
+  test "whatsapp template message using translations" do
+    sim = Simulator.new(read_floip!("whatsapp_template_message_with_translations"))
+
+    {:end, sim, outputs} = Simulator.start(sim, %{}, "bel")
+
+    assert outputs
+           |> get_in([:message, :text])
+           |> with_content_type("TEXT")
+           |> has_value("Body parameters: [Мінае, завуч, Мінае]")
   end
 
   test "whatsapp template message with buttons not matching user input" do
