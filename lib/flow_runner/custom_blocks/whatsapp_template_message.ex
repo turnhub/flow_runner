@@ -5,7 +5,7 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
 
   @behaviour FlowRunner.Spec.Block
   use OpenTelemetryDecorator
-  @impl true
+  @impl FlowRunner.Spec.Block
   def validate_config!(%{
         "template" =>
           %{
@@ -18,25 +18,53 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
       template: %{
         name: name,
         language: %{code: code},
-        components: Enum.map(components, &parse_component/1),
+        components: Enum.map(components, &parse_component(&1, code)),
         tracking: Map.get(template, "tracking")
       }
     }
   end
 
-  def parse_component(%{"type" => type, "parameters" => parameters} = component),
+  @spec parse_component(
+          %{
+            required(String.t()) => String.t(),
+            required(String.t()) => list(%{String.t() => String.t()})
+          },
+          String.t()
+        ) :: %{
+          type: String.t(),
+          index: String.t() | nil,
+          sub_type: String.t() | nil,
+          parameters:
+            list(%{
+              required(:type) => String.t(),
+              optional(:text) => String.t(),
+              optional(:payload) => String.t(),
+              optional(:language) => String.t()
+            })
+        }
+  defp parse_component(
+         %{"type" => type, "parameters" => parameters} = component,
+         template_language
+       ),
+       do: %{
+         type: type,
+         index: component["index"],
+         # required only for buttons
+         sub_type: component["sub_type"],
+         parameters: Enum.map(parameters, &parse_parameter(&1, template_language))
+       }
+
+  defp parse_parameter(%{"type" => "text", "text" => text} = component, template_language),
     do: %{
-      type: type,
-      index: component["index"],
-      # required only for buttons
-      sub_type: component["sub_type"],
-      parameters: Enum.map(parameters, &parse_parameter/1)
+      type: "text",
+      text: text,
+      language: component["language"] || Expression.evaluate_block!(template_language)
     }
 
-  def parse_parameter(%{"type" => "text", "text" => text}),
-    do: %{type: "text", text: text}
-
-  def parse_parameter(%{"type" => "document", "document" => %{"link" => link} = document}) do
+  defp parse_parameter(
+         %{"type" => "document", "document" => %{"link" => link} = document},
+         _default_language
+       ) do
     document =
       if filename = document["filename"] do
         %{link: link, filename: filename}
@@ -47,16 +75,19 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
     %{type: "document", document: document}
   end
 
-  def parse_parameter(%{"type" => "video", "video" => %{"link" => link}}),
+  defp parse_parameter(%{"type" => "video", "video" => %{"link" => link}}, _default_language),
     do: %{type: "video", video: %{link: link}}
 
-  def parse_parameter(%{"type" => "image", "image" => %{"link" => link}}),
+  defp parse_parameter(%{"type" => "image", "image" => %{"link" => link}}, _default_language),
     do: %{type: "image", image: %{link: link}}
 
-  def parse_parameter(%{"type" => "payload", "payload" => payload_resource_uuid}),
-    do: %{type: "payload", payload: payload_resource_uuid}
+  defp parse_parameter(
+         %{"type" => "payload", "payload" => payload_resource_uuid},
+         _default_language
+       ),
+       do: %{type: "payload", payload: payload_resource_uuid}
 
-  @impl true
+  @impl FlowRunner.Spec.Block
   @decorate with_span("DSL.Blocks.WhatsAppTemplateMessage.evaluate_incoming")
   def evaluate_incoming(container, flow, block, context) do
     context = %{
@@ -69,7 +100,7 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
     {:ok, container, flow, block, context}
   end
 
-  @impl true
+  @impl FlowRunner.Spec.Block
   def evaluate_outgoing(_container, _flow, _block, _context, nil), do: {:ok, nil}
 
   @template_button_indices Enum.map(0..9, &to_string/1)

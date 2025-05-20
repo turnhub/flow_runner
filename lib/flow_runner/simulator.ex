@@ -412,6 +412,9 @@ defmodule FlowRunner.Simulator do
       template_components
       |> Enum.find(%{}, &(&1.type == "body"))
       |> Map.get(:parameters, [])
+      |> Enum.filter(fn parameter ->
+        parameter[:language] == sim.language.iso_639_3
+      end)
       |> Enum.map_join(", ", fn %{text: param} ->
         param
         |> Expression.evaluate_block!(context_vars, sim.callbacks_module)

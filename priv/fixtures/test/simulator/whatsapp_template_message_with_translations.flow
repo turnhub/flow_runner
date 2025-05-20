@@ -1,0 +1,140 @@
+{
+  "name": "My Journey",
+  "description": "Default description",
+  "uuid": "2359d81e-596a-4551-b6b7-5301c5d3a45b",
+  "resources": [],
+  "flows": [
+    {
+      "label": null,
+      "name": "stack",
+      "blocks": [
+        {
+          "label": null,
+          "name": "card_whatsapp_template_message",
+          "type": "Io.Turn.WhatsAppTemplateMessage",
+          "config": {
+            "template": {
+              "name": "\"hello_template\"",
+              "language": {
+                "code": "\"eng\""
+              },
+              "components": [
+                {
+                  "index": null,
+                  "type": "body",
+                  "parameters": [
+                    {
+                      "type": "text",
+                      "text": "\"Jane\"",
+                      "language": "eng"
+                    },
+                    {
+                      "type": "text",
+                      "text": "\"My Journey\"",
+                      "language": "eng"
+                    },
+                    {
+                      "type": "text",
+                      "text": "\"Мінае\"",
+                      "language": "bel"
+                    },
+                    {
+                      "type": "text",
+                      "text": "\"завуч\"",
+                      "language": "bel"
+                    },
+                    {
+                      "type": "text",
+                      "text": "\"Мінае\"",
+                      "language": "bel"
+                    }
+                  ],
+                  "sub_type": null
+                }
+              ],
+              "tracking": null
+            }
+          },
+          "tags": [],
+          "uuid": "70d4e9f9-457b-5dc0-b02e-064fb5af518e",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "card_whatsapp_template_message",
+              "config": {},
+              "test": "",
+              "uuid": "3a0816a6-4ee2-45d2-8143-541b1a49f973",
+              "destination_block": null,
+              "semantic_label": "",
+              "vendor_metadata": {}
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "code_generator": null,
+                      "condition": null,
+                      "meta": {
+                        "column": 3,
+                        "line": 2
+                      },
+                      "name": "Card",
+                      "uuid": "4d692c00-9ba9-54f9-a873-e3900b9eb5db",
+                      "version": null
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 5,
+                        "line": 3
+                      },
+                      "type": "whatsapp_template_message",
+                      "whatsapp_template_message": {}
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "last_modified": "2025-05-20T01:10:15.397484Z",
+      "uuid": "97bb8384-30d4-4f16-8c85-4ef443bd6bab",
+      "languages": [
+        {
+          "id": "41c4a46b-baa5-45fb-b574-1cd8c6419eab",
+          "label": "English",
+          "variant": null,
+          "iso_639_3": "eng",
+          "bcp_47": null
+        },
+	{
+          "id": "41c4a46b-baa5-45fb-b574-1cd8c6419eab",
+          "label": "Belarusian",
+          "variant": null,
+          "iso_639_3": "bel",
+          "bcp_47": null
+        }
+      ],
+      "first_block_id": "70d4e9f9-457b-5dc0-b02e-064fb5af518e",
+      "interaction_timeout": 300,
+      "vendor_metadata": {},
+      "supported_modes": [
+        "RICH_MESSAGING"
+      ],
+      "exit_block_id": ""
+    }
+  ],
+  "vendor_metadata": {},
+  "specification_version": "1.0.0-rc3"
+}
