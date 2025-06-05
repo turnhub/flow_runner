@@ -79,25 +79,35 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
     }
   end
 
-  defp parse_parameter(%{"type" => "video", "video" => %{"link" => link}}, default_language),
-    do: %{
-      type: "video",
-      video: %{link: link},
-      language: link["language"] || Expression.evaluate_block!(default_language)
-    }
-
-  defp parse_parameter(%{"type" => "image", "image" => %{"link" => link}}, default_language),
-    do: %{
-      type: "image",
-      image: %{link: link},
-      language: link["language"] || Expression.evaluate_block!(default_language)
-    }
+  defp parse_parameter(
+         %{"type" => "video", "video" => %{"link" => link}} = video,
+         default_language
+       ),
+       do: %{
+         type: "video",
+         video: %{link: link},
+         language: video["language"] || Expression.evaluate_block!(default_language)
+       }
 
   defp parse_parameter(
-         %{"type" => "payload", "payload" => payload_resource_uuid},
-         _default_language
+         %{"type" => "image", "image" => %{"link" => link}} = image,
+         default_language
        ),
-       do: %{type: "payload", payload: payload_resource_uuid}
+       do: %{
+         type: "image",
+         image: %{link: link},
+         language: image["language"] || Expression.evaluate_block!(default_language)
+       }
+
+  defp parse_parameter(
+         %{"type" => "payload", "payload" => payload_resource_uuid} = payload,
+         default_language
+       ),
+       do: %{
+         type: "payload",
+         payload: payload_resource_uuid,
+         language: payload["language"] || Expression.evaluate_block!(default_language)
+       }
 
   @impl FlowRunner.Spec.Block
   @decorate with_span("DSL.Blocks.WhatsAppTemplateMessage.evaluate_incoming")
