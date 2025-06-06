@@ -5,15 +5,24 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessageTest do
 
   describe "validate_config!/1 for document parameter" do
     test "returns document with filename when present" do
-      config = %{"template" => %{
-        "name" => "foo",
-        "language" => %{"code" => "en"},
-        "components" => [
-          %{"type" => "body", "parameters" => [
-            %{"type" => "document", "document" => %{"link" => "http://file", "filename" => "file.pdf"}}
-          ]}
-        ]
-      }}
+      config = %{
+        "template" => %{
+          "name" => "foo",
+          "language" => %{"code" => "en"},
+          "components" => [
+            %{
+              "type" => "body",
+              "parameters" => [
+                %{
+                  "type" => "document",
+                  "document" => %{"link" => "http://file", "filename" => "file.pdf"}
+                }
+              ]
+            }
+          ]
+        }
+      }
+
       result = WhatsAppTemplateMessage.validate_config!(config)
       [%{parameters: [param]}] = result.template.components
       assert param.type == "document"
@@ -21,15 +30,21 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessageTest do
     end
 
     test "returns document without filename when not present" do
-      config = %{"template" => %{
-        "name" => "foo",
-        "language" => %{"code" => "en"},
-        "components" => [
-          %{"type" => "body", "parameters" => [
-            %{"type" => "document", "document" => %{"link" => "http://file"}}
-          ]}
-        ]
-      }}
+      config = %{
+        "template" => %{
+          "name" => "foo",
+          "language" => %{"code" => "en"},
+          "components" => [
+            %{
+              "type" => "body",
+              "parameters" => [
+                %{"type" => "document", "document" => %{"link" => "http://file"}}
+              ]
+            }
+          ]
+        }
+      }
+
       result = WhatsAppTemplateMessage.validate_config!(config)
       [%{parameters: [param]}] = result.template.components
       assert param.type == "document"
@@ -39,15 +54,21 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessageTest do
 
   describe "validate_config!/1 for video and image parameters" do
     test "returns video with link and language from parameter" do
-      config = %{"template" => %{
-        "name" => "foo",
-        "language" => %{"code" => "en"},
-        "components" => [
-          %{"type" => "body", "parameters" => [
-            %{"type" => "video", "video" => %{"link" => "http://video", "language" => "es"}}
-          ]}
-        ]
-      }}
+      config = %{
+        "template" => %{
+          "name" => "foo",
+          "language" => %{"code" => "en"},
+          "components" => [
+            %{
+              "type" => "body",
+              "parameters" => [
+                %{"type" => "video", "video" => %{"link" => "http://video", "language" => "es"}}
+              ]
+            }
+          ]
+        }
+      }
+
       result = WhatsAppTemplateMessage.validate_config!(config)
       [%{parameters: [param]}] = result.template.components
       assert param.type == "video"
@@ -57,15 +78,21 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessageTest do
     end
 
     test "returns video with link and default language if not present" do
-      config = %{"template" => %{
-        "name" => "foo",
-        "language" => %{"code" => "en"},
-        "components" => [
-          %{"type" => "body", "parameters" => [
-            %{"type" => "video", "video" => %{"link" => "http://video"}}
-          ]}
-        ]
-      }}
+      config = %{
+        "template" => %{
+          "name" => "foo",
+          "language" => %{"code" => "en"},
+          "components" => [
+            %{
+              "type" => "body",
+              "parameters" => [
+                %{"type" => "video", "video" => %{"link" => "http://video"}}
+              ]
+            }
+          ]
+        }
+      }
+
       result = WhatsAppTemplateMessage.validate_config!(config)
       [%{parameters: [param]}] = result.template.components
       assert param.type == "video"
@@ -75,15 +102,21 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessageTest do
     end
 
     test "returns image with link and language from parameter" do
-      config = %{"template" => %{
-        "name" => "foo",
-        "language" => %{"code" => "en"},
-        "components" => [
-          %{"type" => "body", "parameters" => [
-            %{"type" => "image", "image" => %{"link" => "http://image", "language" => "fr"}}
-          ]}
-        ]
-      }}
+      config = %{
+        "template" => %{
+          "name" => "foo",
+          "language" => %{"code" => "en"},
+          "components" => [
+            %{
+              "type" => "body",
+              "parameters" => [
+                %{"type" => "image", "image" => %{"link" => "http://image", "language" => "fr"}}
+              ]
+            }
+          ]
+        }
+      }
+
       result = WhatsAppTemplateMessage.validate_config!(config)
       [%{parameters: [param]}] = result.template.components
       assert param.type == "image"
@@ -92,15 +125,21 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessageTest do
     end
 
     test "returns image with link and default language if not present" do
-      config = %{"template" => %{
-        "name" => "foo",
-        "language" => %{"code" => "en"},
-        "components" => [
-          %{"type" => "body", "parameters" => [
-            %{"type" => "image", "image" => %{"link" => "http://image"}}
-          ]}
-        ]
-      }}
+      config = %{
+        "template" => %{
+          "name" => "foo",
+          "language" => %{"code" => "en"},
+          "components" => [
+            %{
+              "type" => "body",
+              "parameters" => [
+                %{"type" => "image", "image" => %{"link" => "http://image"}}
+              ]
+            }
+          ]
+        }
+      }
+
       result = WhatsAppTemplateMessage.validate_config!(config)
       [%{parameters: [param]}] = result.template.components
       assert param.type == "image"
