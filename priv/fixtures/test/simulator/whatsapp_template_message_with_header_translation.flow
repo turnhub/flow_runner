@@ -1,0 +1,142 @@
+{
+  "description": "Default description",
+  "flows": [
+    {
+      "blocks": [
+        {
+          "config": {
+            "template": {
+              "components": [
+                {
+                  "index": null,
+                  "parameters": [
+                    {
+                      "language": "eng",
+                      "text": "\"John\"",
+                      "type": "text"
+                    },
+	       	    {
+                      "language": "por_BR",
+                      "text": "\"João\"",
+                      "type": "text"
+                    }
+                  ],
+                  "sub_type": null,
+                  "type": "header"
+                },
+                {
+                  "index": null,
+                  "parameters": [
+                    {
+                      "language": "eng",
+                      "text": "\"John\"",
+                      "type": "text"
+                    },
+                    {
+                      "language": "eng",
+                      "text": "\"about templates\"",
+                      "type": "text"
+                    }
+                  ],
+                  "sub_type": null,
+                  "type": "body"
+                }
+              ],
+              "language": {
+                "code": "\"en\""
+              },
+              "name": "\"new_feature\"",
+              "tracking": null
+            }
+          },
+          "exits": [
+            {
+              "config": {},
+              "default": true,
+              "destination_block": null,
+              "name": "ref_Template_16e3ad",
+              "semantic_label": "",
+              "test": "",
+              "uuid": "ba231a55-a3a1-4abe-b0cf-f09b41993fb0",
+              "vendor_metadata": {}
+            }
+          ],
+          "label": null,
+          "name": "ref_Template_16e3ad",
+          "semantic_label": null,
+          "tags": [],
+          "type": "Io.Turn.WhatsAppTemplateMessage",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "uuid": "aa2640a1-e18b-5c04-8783-8d1d8a3bf699",
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "code_generator": "WHATSAPP_TEMPLATE_MESSAGE",
+                      "condition": null,
+                      "meta": {
+                        "column": 1,
+                        "line": 1
+                      },
+                      "name": "Template_16e3ad",
+                      "uuid": "70d1b1b0-b445-4841-8170-ecdad06e75be",
+                      "version": "1"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 3,
+                        "line": 5
+                      },
+                      "type": "whatsapp_template_message",
+                      "whatsapp_template_message": {}
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "exit_block_id": "",
+      "first_block_id": "aa2640a1-e18b-5c04-8783-8d1d8a3bf699",
+      "interaction_timeout": 300,
+      "label": null,
+      "languages": [
+        {
+          "bcp_47": null,
+          "id": "303b9143-087d-4b1f-af57-c98910945d8e",
+          "iso_639_3": "eng",
+          "label": "English",
+          "variant": null
+        },
+	{
+          "bcp_47": null,
+          "id": "43c4a46b-baa5-45fb-b574-1cd8c6419eab",
+          "iso_639_3": "por_BR",
+          "label": "Portuguese (BR)",
+          "variant": null
+        }
+      ],
+      "last_modified": "2025-06-06T02:24:13.815004Z",
+      "name": "stack",
+      "supported_modes": [
+        "RICH_MESSAGING"
+      ],
+      "uuid": "7a62d7fe-7a9e-4d0e-b89d-16eb9dedd20a",
+      "vendor_metadata": {}
+    }
+  ],
+  "name": "template_with_header_params",
+  "resources": [],
+  "specification_version": "1.0.0-rc3",
+  "uuid": "a15ea348-1d3b-41ca-8f6e-121d3dbe9766",
+  "vendor_metadata": {}
+}

@@ -716,7 +716,7 @@ defmodule FlowRunner.SimulatorTest do
            |> has_value("This is card 1")
   end
 
-  test "whatsapp template message with translations using default language" do
+  test "whatsapp template message with body params with translations using default language" do
     sim = Simulator.new(read_floip!("whatsapp_template_message_with_translations"))
 
     {:end, _sim, outputs} = Simulator.start(sim)
@@ -727,7 +727,7 @@ defmodule FlowRunner.SimulatorTest do
            |> has_value("Body parameters: [Jane, My Journey]")
   end
 
-  test "whatsapp template message using translations" do
+  test "whatsapp template message with body params using translations" do
     sim = Simulator.new(read_floip!("whatsapp_template_message_with_translations"))
 
     {:end, _sim, outputs} = Simulator.start(sim, %{}, "bel")
@@ -736,6 +736,28 @@ defmodule FlowRunner.SimulatorTest do
            |> get_in([:message, :text])
            |> with_content_type("TEXT")
            |> has_value("Body parameters: [Мінае, завуч, Мінае]")
+  end
+
+  test "whatsapp template message with header params with translations using default language" do
+    sim = Simulator.new(read_floip!("whatsapp_template_message_with_header_translation"))
+
+    {:end, _sim, outputs} = Simulator.start(sim)
+
+    assert outputs
+           |> get_in([:message, :text])
+           |> with_content_type("TEXT")
+           |> has_value("Header parameters: [John]")
+  end
+
+  test "whatsapp template message with header params with translations using translation" do
+    sim = Simulator.new(read_floip!("whatsapp_template_message_with_header_translation"))
+
+    {:end, _sim, outputs} = Simulator.start(sim, %{}, "por_BR")
+
+    assert outputs
+           |> get_in([:message, :text])
+           |> with_content_type("TEXT")
+           |> has_value("Header parameters: [João]")
   end
 
   test "whatsapp template message with buttons not matching user input" do
