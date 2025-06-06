@@ -562,13 +562,7 @@ defmodule FlowRunner.Simulator do
       template_components
       |> Enum.filter(&(&1.type == "button"))
       |> Enum.map(fn button -> Map.get(button, :parameters, []) end)
-      |> Enum.filter(fn
-        [%{language: language} | _] ->
-          language == sim.language.iso_639_3
-
-        parameter ->
-          parameter
-      end)
+      |> Enum.filter(fn [%{language: language} | _] -> language == sim.language.iso_639_3 end)
       |> Enum.reverse()
       |> List.flatten()
       |> Enum.map(fn %{payload: payload} -> payload end)
