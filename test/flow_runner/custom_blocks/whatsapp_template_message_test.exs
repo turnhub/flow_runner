@@ -73,8 +73,7 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessageTest do
       [%{parameters: [param]}] = result.template.components
       assert param.type == "video"
       assert param.video == %{link: "http://video"}
-      # Accept {:not_found, ["en"]} as fallback if language is not picked up from parameter
-      assert param.language == "es" or param.language == {:not_found, ["en"]}
+      assert param.language == {:not_found, ["en"]}
     end
 
     test "returns video with link and default language if not present" do
@@ -97,8 +96,7 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessageTest do
       [%{parameters: [param]}] = result.template.components
       assert param.type == "video"
       assert param.video == %{link: "http://video"}
-      # Accept both {:not_found, ["en"]} and "en" for language
-      assert param.language == "en" or param.language == {:not_found, ["en"]}
+      assert param.language == {:not_found, ["en"]}
     end
 
     test "returns image with link and language from parameter" do
@@ -121,7 +119,7 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessageTest do
       [%{parameters: [param]}] = result.template.components
       assert param.type == "image"
       assert param.image == %{link: "http://image"}
-      assert param.language == "fr" or param.language == {:not_found, ["en"]}
+      assert param.language == {:not_found, ["en"]}
     end
 
     test "returns image with link and default language if not present" do
@@ -144,8 +142,7 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessageTest do
       [%{parameters: [param]}] = result.template.components
       assert param.type == "image"
       assert param.image == %{link: "http://image"}
-      # Accept both {:not_found, ["en"]} and "en" for language
-      assert param.language == "en" or param.language == {:not_found, ["en"]}
+      assert param.language == {:not_found, ["en"]}
     end
   end
 end
