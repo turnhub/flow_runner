@@ -430,9 +430,7 @@ defmodule FlowRunner.Simulator do
       template_components
       |> Enum.find(%{}, &(&1.type == "header"))
       |> Map.get(:parameters, [])
-      |> Enum.filter(fn parameter ->
-        parameter[:language] == sim.language.iso_639_3
-      end)
+      |> Enum.filter(&(&1[:language] == sim.language.iso_639_3))
 
     header_text_params =
       header_params
