@@ -47,6 +47,11 @@ defmodule FlowRunner.SimulatorTest do
     {:end, _sim, _outputs} = Simulator.next(sim, "2")
   end
 
+  test "simulator with infinite recursion" do
+    assert "infinite_recursion" |> read_floip!() |> Simulator.new() |> Simulator.start() ==
+             {:error, "Exceeded max recursion calls allowed (1000)"}
+  end
+
   test "simulator with log output" do
     sim = Simulator.new(read_floip!("simulator_with_log_output"))
     {:end, _sim, outputs} = Simulator.start(sim)
