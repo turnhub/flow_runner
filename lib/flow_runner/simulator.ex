@@ -88,11 +88,11 @@ defmodule FlowRunner.Simulator do
   @spec next(t(), String.t() | nil, list, non_neg_integer) ::
           {:end, t(), list}
           | {:waiting, t(), list}
-          | {:error, reason :: String.t()}
+          | {:error, t(), reason :: String.t()}
   def next(sim, user_input \\ nil, acc \\ [], recursion \\ 0)
 
-  def next(_sim, _user_input, _acc, recursion) when recursion > @max_recursion do
-    {:error, "Exceeded max recursion calls allowed (#{@max_recursion})"}
+  def next(sim, _user_input, _acc, recursion) when recursion > @max_recursion do
+    {:error, sim, "Exceeded max recursion calls allowed (#{@max_recursion})"}
   end
 
   def next(sim, user_input, acc, recursion) do
@@ -140,7 +140,7 @@ defmodule FlowRunner.Simulator do
         {:end, sim, Enum.reverse(acc)}
 
       {:error, reason} when is_binary(reason) ->
-        {:error, reason}
+        {:error, sim, reason}
     end
   end
 

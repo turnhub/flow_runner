@@ -48,8 +48,10 @@ defmodule FlowRunner.SimulatorTest do
   end
 
   test "simulator with infinite recursion" do
-    assert "infinite_recursion" |> read_floip!() |> Simulator.new() |> Simulator.start() ==
-             {:error, "Exceeded max recursion calls allowed (1000)"}
+    assert {:error, sim, "Exceeded max recursion calls allowed (1000)"} =
+             "infinite_recursion" |> read_floip!() |> Simulator.new() |> Simulator.start()
+
+    assert sim.context.last_block_uuid
   end
 
   test "simulator with log output" do
