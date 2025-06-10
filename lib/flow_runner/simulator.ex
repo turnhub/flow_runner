@@ -437,10 +437,11 @@ defmodule FlowRunner.Simulator do
       template_components
       |> Enum.find(%{}, &(&1.type == "header"))
       |> Map.get(:parameters, [])
+      |> Enum.filter(&(&1[:language] == sim.language.iso_639_3))
 
     header_text_params =
       header_params
-      |> Enum.filter(&(&1.type == "text"))
+      |> Enum.filter(&(&1.type == "text" && &1.language == sim.language.iso_639_3))
       |> Enum.map_join(", ", fn %{text: param} ->
         param
         |> Expression.evaluate_block!(context_vars, sim.callbacks_module)
@@ -452,7 +453,11 @@ defmodule FlowRunner.Simulator do
         do: debug_value <> "\nHeader parameters: [#{header_text_params}]",
         else: debug_value
 
-    header_media_param = Enum.find(header_params, &(&1.type in ["document", "video", "image"]))
+    header_media_param =
+      Enum.find(header_params, fn param ->
+        param.type in ["document", "video", "image"] and
+          param.language == sim.language.iso_639_3
+      end)
 
     media_link =
       if header_media_param do
@@ -469,7 +474,7 @@ defmodule FlowRunner.Simulator do
         do: debug_value <> "\nMedia link: #{media_link}",
         else: debug_value
 
-    button_params = extract_buttons(template_components)
+    button_params = extract_buttons(template_components, sim)
 
     if button_params do
       debug_value =
@@ -555,13 +560,14 @@ defmodule FlowRunner.Simulator do
     {nil, sim}
   end
 
-  defp extract_buttons(template_components) do
+  defp extract_buttons(template_components, sim) do
     buttons = Enum.filter(template_components, &(&1.type == "button" and &1.sub_type != "url"))
 
     if buttons != [] do
       template_components
       |> Enum.filter(&(&1.type == "button"))
       |> Enum.map(fn button -> Map.get(button, :parameters, []) end)
+      |> Enum.filter(fn [%{language: language} | _] -> language == sim.language.iso_639_3 end)
       |> Enum.reverse()
       |> List.flatten()
       |> Enum.map(fn %{payload: payload} -> payload end)
