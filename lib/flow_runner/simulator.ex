@@ -448,8 +448,8 @@ defmodule FlowRunner.Simulator do
 
     header_media_param =
       Enum.find(header_params, fn param ->
-        param.type in ["document", "video", "image"]
-          and param.language == sim.language.iso_639_3
+        param.type in ["document", "video", "image"] and
+          param.language == sim.language.iso_639_3
       end)
 
     media_link =
