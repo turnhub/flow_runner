@@ -84,11 +84,18 @@ defmodule FlowRunner.Simulator do
     }
   end
 
-  @spec next(t(), String.t() | nil, list) ::
+  @max_recursion 1_000
+  @spec next(t(), String.t() | nil, list, non_neg_integer) ::
           {:end, t(), list}
           | {:waiting, t(), list}
           | {:error, reason :: String.t()}
-  def next(sim, user_input \\ nil, acc \\ []) do
+  def next(sim, user_input \\ nil, acc \\ [], recursion \\ 0)
+
+  def next(_sim, _user_input, _acc, recursion) when recursion > @max_recursion do
+    {:error, "Exceeded max recursion calls allowed (#{@max_recursion})"}
+  end
+
+  def next(sim, user_input, acc, recursion) do
     # The use of templates with buttons that lead to different cards in the simulator is
     # a bit complex. Because while we want to show the name of the destination card as
     # the text of the button, what we really need to select the correct button is its
@@ -124,7 +131,7 @@ defmodule FlowRunner.Simulator do
         if context.waiting_for_user_input do
           {:waiting, track_output(sim, block), Enum.reverse(acc)}
         else
-          next(sim, nil, acc)
+          next(sim, nil, acc, recursion + 1)
         end
 
       {:end, container, flow, last_block, context} ->

@@ -1,0 +1,455 @@
+{
+  "name": "Default name",
+  "description": "Default description",
+  "uuid": "6e5f3f04-9433-4632-a7b8-2038348ade3f",
+  "flows": [
+    {
+      "label": null,
+      "name": "stack",
+      "blocks": [
+        {
+          "label": null,
+          "name": "text_c9d849_text",
+          "type": "MobilePrimitives.Message",
+          "config": {
+            "prompt": "2d59c290-1605-4f6c-b805-182b5aeaf726"
+          },
+          "tags": [],
+          "uuid": "8726dddd-d28d-5f61-8e9c-7239eff24d36",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "text_c9d849_text",
+              "config": {},
+              "test": "",
+              "uuid": "28c769d6-1997-4dff-acfd-f3f338e65305",
+              "destination_block": "b9f08502-92fd-5d2e-9ba3-65835255142a",
+              "semantic_label": "",
+              "vendor_metadata": {}
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "code_generator": "TEXT_MESSAGE",
+                      "condition": null,
+                      "meta": {
+                        "column": 1,
+                        "line": 17
+                      },
+                      "name": "Text_c9d849",
+                      "uuid": "437fcdf3-542b-465f-a96d-f03313b865bf",
+                      "version": "1"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 3,
+                        "line": 21
+                      },
+                      "text": {},
+                      "type": "text"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "Routing for Text_c9d849",
+          "type": "Core.Case",
+          "config": {},
+          "tags": [],
+          "uuid": "b9f08502-92fd-5d2e-9ba3-65835255142a",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": false,
+              "name": "Exit for Text_1",
+              "config": {},
+              "test": "true",
+              "uuid": "1a3ff7cb-6287-44c1-9e62-0ec52eb24115",
+              "destination_block": "510dc4ac-c881-5cfa-9141-d408bd455a03",
+              "semantic_label": null,
+              "vendor_metadata": {}
+            },
+            {
+              "default": true,
+              "name": "Routing for Text_c9d849",
+              "config": {},
+              "test": "",
+              "uuid": "3a8171f9-f7b9-468d-8251-84c3a61516ac",
+              "destination_block": null,
+              "semantic_label": "",
+              "vendor_metadata": {}
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "code_generator": "TEXT_MESSAGE",
+                      "condition": null,
+                      "meta": {
+                        "column": 1,
+                        "line": 17
+                      },
+                      "name": "Text_c9d849",
+                      "uuid": "437fcdf3-542b-465f-a96d-f03313b865bf",
+                      "version": "1"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 3,
+                        "line": 22
+                      },
+                      "then": {},
+                      "type": "then"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "text_003732_text",
+          "type": "MobilePrimitives.Message",
+          "config": {
+            "prompt": "689ba0bd-4550-4b30-ad98-232191874eed"
+          },
+          "tags": [],
+          "uuid": "e8dcfb9c-3c9b-5c24-9a70-5e10d845d434",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "text_003732_text",
+              "config": {},
+              "test": "",
+              "uuid": "a798a8c9-bda2-467f-8adb-0fe1cf982bee",
+              "destination_block": "137f500a-bd4e-55fa-8006-6d3d88472e60",
+              "semantic_label": "",
+              "vendor_metadata": {}
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "code_generator": "TEXT_MESSAGE",
+                      "condition": null,
+                      "meta": {
+                        "column": 1,
+                        "line": 9
+                      },
+                      "name": "Text_003732",
+                      "uuid": "1ffc65e0-82c4-442d-8c96-cbc4624471b8",
+                      "version": "1"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 3,
+                        "line": 13
+                      },
+                      "text": {},
+                      "type": "text"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "Routing for Text_003732",
+          "type": "Core.Case",
+          "config": {},
+          "tags": [],
+          "uuid": "137f500a-bd4e-55fa-8006-6d3d88472e60",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": false,
+              "name": "Exit for Text_c9d849",
+              "config": {},
+              "test": "true",
+              "uuid": "ef037b3c-0946-4dc4-9699-22660687da57",
+              "destination_block": "8726dddd-d28d-5f61-8e9c-7239eff24d36",
+              "semantic_label": null,
+              "vendor_metadata": {}
+            },
+            {
+              "default": true,
+              "name": "Routing for Text_003732",
+              "config": {},
+              "test": "",
+              "uuid": "e137c0b2-b6db-4898-a7af-d7e4af2b61ab",
+              "destination_block": null,
+              "semantic_label": "",
+              "vendor_metadata": {}
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "code_generator": "TEXT_MESSAGE",
+                      "condition": null,
+                      "meta": {
+                        "column": 1,
+                        "line": 9
+                      },
+                      "name": "Text_003732",
+                      "uuid": "1ffc65e0-82c4-442d-8c96-cbc4624471b8",
+                      "version": "1"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 3,
+                        "line": 14
+                      },
+                      "then": {},
+                      "type": "then"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "text_1_text",
+          "type": "MobilePrimitives.Message",
+          "config": {
+            "prompt": "a8619611-6e02-469d-b3aa-47fa96690ec4"
+          },
+          "tags": [],
+          "uuid": "510dc4ac-c881-5cfa-9141-d408bd455a03",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "text_1_text",
+              "config": {},
+              "test": "",
+              "uuid": "3e79be50-052a-4d18-a9b5-2216a972519c",
+              "destination_block": "278e431d-9fef-5168-8970-24714486a4c4",
+              "semantic_label": "",
+              "vendor_metadata": {}
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "code_generator": "TEXT_MESSAGE",
+                      "condition": null,
+                      "meta": {
+                        "column": 1,
+                        "line": 1
+                      },
+                      "name": "Text_1",
+                      "uuid": "dc24ea0d-8f6e-514c-aaf9-c1a4d79c9898",
+                      "version": "1"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 3,
+                        "line": 5
+                      },
+                      "text": {},
+                      "type": "text"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "Routing for Text_1",
+          "type": "Core.Case",
+          "config": {},
+          "tags": [],
+          "uuid": "278e431d-9fef-5168-8970-24714486a4c4",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": false,
+              "name": "Exit for Text_003732",
+              "config": {},
+              "test": "true",
+              "uuid": "b63964b0-23b0-4cb6-bb66-9d50b0e3dade",
+              "destination_block": "e8dcfb9c-3c9b-5c24-9a70-5e10d845d434",
+              "semantic_label": null,
+              "vendor_metadata": {}
+            },
+            {
+              "default": true,
+              "name": "Routing for Text_1",
+              "config": {},
+              "test": "",
+              "uuid": "3c0f29d9-3fb4-4b5a-b4a9-44f3b24c386f",
+              "destination_block": null,
+              "semantic_label": "",
+              "vendor_metadata": {}
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "code_generator": "TEXT_MESSAGE",
+                      "condition": null,
+                      "meta": {
+                        "column": 1,
+                        "line": 1
+                      },
+                      "name": "Text_1",
+                      "uuid": "dc24ea0d-8f6e-514c-aaf9-c1a4d79c9898",
+                      "version": "1"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "column": 3,
+                        "line": 6
+                      },
+                      "then": {},
+                      "type": "then"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "last_modified": "2025-06-10T03:33:36.700023Z",
+      "languages": [
+        {
+          "id": "46c15efc-0544-47ba-ae50-9c5d2fa33a08",
+          "label": "English",
+          "iso_639_3": "eng",
+          "variant": null,
+          "bcp_47": null
+        }
+      ],
+      "uuid": "5fabe136-2cae-43ab-8e08-5696e41ede5c",
+      "first_block_id": "510dc4ac-c881-5cfa-9141-d408bd455a03",
+      "interaction_timeout": 300,
+      "vendor_metadata": {},
+      "supported_modes": [
+        "RICH_MESSAGING"
+      ],
+      "exit_block_id": ""
+    }
+  ],
+  "resources": [
+    {
+      "values": [
+        {
+          "value": "hi there!",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "46c15efc-0544-47ba-ae50-9c5d2fa33a08"
+        }
+      ],
+      "uuid": "2d59c290-1605-4f6c-b805-182b5aeaf726"
+    },
+    {
+      "values": [
+        {
+          "value": "hello",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "46c15efc-0544-47ba-ae50-9c5d2fa33a08"
+        }
+      ],
+      "uuid": "689ba0bd-4550-4b30-ad98-232191874eed"
+    },
+    {
+      "values": [
+        {
+          "value": "Hi",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "46c15efc-0544-47ba-ae50-9c5d2fa33a08"
+        }
+      ],
+      "uuid": "a8619611-6e02-469d-b3aa-47fa96690ec4"
+    }
+  ],
+  "vendor_metadata": {},
+  "specification_version": "1.0.0-rc3"
+}
