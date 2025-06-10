@@ -91,7 +91,7 @@ defmodule FlowRunner.Simulator do
           | {:error, reason :: String.t()}
   def next(sim, user_input \\ nil, acc \\ [], recursion \\ 0)
 
-  def next(_sim, _user_input, _acc, recursion) when recursion > 1000 do
+  def next(_sim, _user_input, _acc, recursion) when recursion > @max_recursion do
     {:error, "Exceeded max recursion calls allowed (#{@max_recursion})"}
   end
 
