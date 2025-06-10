@@ -449,10 +449,10 @@ defmodule FlowRunner.Simulator do
         else: debug_value
 
     header_media_param =
-      Enum.find(
-        header_params,
-        &(&1.type in ["document", "video", "image"] && &1.language == sim.language.iso_639_3)
-      )
+      Enum.find(header_params, fn param ->
+        param.type in ["document", "video", "image"]
+          and param.language == sim.language.iso_639_3
+      end)
 
     media_link =
       if header_media_param do
