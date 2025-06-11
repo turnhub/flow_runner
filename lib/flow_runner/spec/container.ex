@@ -45,6 +45,8 @@ defmodule FlowRunner.Spec.Container do
     end
   end
 
+  @spec fetch_flow_by_uuid(Container.t(), String.t()) ::
+          {:ok, Container.t(), FlowRunner.Spec.Flow.t()} | {:error, String.t()}
   def fetch_flow_by_uuid(%Container{flows: flows} = container, uuid) do
     case Enum.find(flows, &(&1.uuid == uuid)) do
       nil -> {:error, "no matching flow"}
