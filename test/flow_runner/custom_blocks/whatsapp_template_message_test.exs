@@ -3,6 +3,53 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessageTest do
 
   alias FlowRunner.CustomBlocks.WhatsAppTemplateMessage
 
+  describe "validate_config!/1 for button url" do
+    test "translated button url" do
+      config = %{
+        "template" => %{
+          "components" => [
+            %{
+              "index" => "0",
+              "parameters" => [
+                %{"language" => "bel", "text" => "\"bel\"", "type" => "text"}
+              ],
+              "sub_type" => "url",
+              "type" => "button"
+            },
+            %{
+              "index" => "0",
+              "parameters" => [
+                %{"language" => "en", "text" => "\"en\"", "type" => "text"}
+              ],
+              "sub_type" => "url",
+              "type" => "button"
+            }
+          ],
+          "language" => %{"code" => "\"en\""},
+          "name" => "\"hello_template\"",
+          "tracking" => nil
+        }
+      }
+
+      result = WhatsAppTemplateMessage.validate_config!(config)
+
+      assert [
+               %{
+                 index: "0",
+                 parameters: [%{type: "text", text: "\"bel\"", language: "bel"}],
+                 sub_type: "url",
+                 type: "button"
+               },
+               %{
+                 index: "0",
+                 parameters: [%{type: "text", text: "\"en\"", language: "en"}],
+                 sub_type: "url",
+                 type: "button"
+               }
+             ] = result.template.components
+    end
+  end
+
   describe "validate_config!/1 for document parameter" do
     test "returns document with filename when present" do
       config = %{

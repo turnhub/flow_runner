@@ -45,14 +45,16 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
   defp parse_component(
          %{"type" => type, "parameters" => parameters} = component,
          default_language
-       ),
-       do: %{
-         type: type,
-         index: component["index"],
-         # required only for buttons
-         sub_type: component["sub_type"],
-         parameters: Enum.map(parameters, &parse_parameter(&1, default_language))
-       }
+       ) do
+    %{
+      type: type,
+      index: component["index"],
+      # required only for buttons
+      sub_type: component["sub_type"],
+      parameters:
+        Enum.map(parameters, &parse_parameter(&1, component["language"] || default_language))
+    }
+  end
 
   defp parse_parameter(%{"type" => "text", "text" => text} = component, default_language),
     do: %{
