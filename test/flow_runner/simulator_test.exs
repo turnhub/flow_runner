@@ -703,7 +703,7 @@ defmodule FlowRunner.SimulatorTest do
     assert outputs
            |> get_in([:message, :text])
            |> with_content_type("TEXT")
-           |> has_value("[DEBUG]\nTemplate template_name sent with language eng.")
+           |> has_value("[DEBUG]\nTemplate template_name sent with language en.")
 
     assert outputs
            |> get_in([:message, :button])
@@ -775,7 +775,7 @@ defmodule FlowRunner.SimulatorTest do
     assert outputs
            |> get_in([:message, :text])
            |> with_content_type("TEXT")
-           |> has_value("[DEBUG]\nTemplate template_name sent with language eng.")
+           |> has_value("[DEBUG]\nTemplate template_name sent with language en.")
 
     assert outputs
            |> get_in([:message, :button])
@@ -800,7 +800,7 @@ defmodule FlowRunner.SimulatorTest do
     assert outputs
            |> get_in([:message, :text])
            |> with_content_type("TEXT")
-           |> has_value("[DEBUG]\nTemplate template_name sent with language eng.")
+           |> has_value("[DEBUG]\nTemplate template_name sent with language en.")
 
     assert outputs
            |> get_in([:message, :button])

@@ -419,9 +419,7 @@ defmodule FlowRunner.Simulator do
       template_components
       |> Enum.find(%{}, &(&1.type == "body"))
       |> Map.get(:parameters, [])
-      |> Enum.filter(fn parameter ->
-        parameter[:language] == sim.language.iso_639_3
-      end)
+      |> Enum.filter(&(&1[:language] == sim.language.iso_639_3))
       |> Enum.map_join(", ", fn %{text: param} ->
         param
         |> Expression.evaluate_block!(context_vars, sim.callbacks_module)
@@ -470,13 +468,13 @@ defmodule FlowRunner.Simulator do
       end
 
     debug_value =
-      if media_link,
-        do: debug_value <> "\nMedia link: #{media_link}",
-        else: debug_value
+      if media_link do
+        debug_value <> "\nMedia link: #{media_link}"
+      else
+        debug_value
+      end
 
-    button_params = extract_buttons(template_components, sim)
-
-    if button_params do
+    if button_params = extract_buttons(template_components, template_language) do
       debug_value =
         debug_value <>
           "\n\nThe buttons represented here are not necessarily the same as the ones in the real template. Please double check the template buttons when running the flow in a real-world scenario."
@@ -560,14 +558,14 @@ defmodule FlowRunner.Simulator do
     {nil, sim}
   end
 
-  defp extract_buttons(template_components, sim) do
+  defp extract_buttons(template_components, template_language) do
     buttons = Enum.filter(template_components, &(&1.type == "button" and &1.sub_type != "url"))
 
     if buttons != [] do
       template_components
       |> Enum.filter(&(&1.type == "button"))
       |> Enum.map(fn button -> Map.get(button, :parameters, []) end)
-      |> Enum.filter(fn [%{language: language} | _] -> language == sim.language.iso_639_3 end)
+      |> Enum.filter(fn [%{language: language} | _] -> language == template_language end)
       |> Enum.reverse()
       |> List.flatten()
       |> Enum.map(fn %{payload: payload} -> payload end)

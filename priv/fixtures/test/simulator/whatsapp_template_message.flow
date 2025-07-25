@@ -189,6 +189,7 @@
                   "parameters": [
                     {
                       "type": "payload",
+                      "language": "en",
                       "payload": "card2"
                     }
                   ],
@@ -200,6 +201,7 @@
                   "parameters": [
                     {
                       "type": "payload",
+                      "language": "en",
                       "payload": "card1"
                     }
                   ],
@@ -211,10 +213,12 @@
                   "parameters": [
                     {
                       "type": "text",
+                      "language": "en",
                       "text": "\"placeholder-1\""
                     },
                     {
                       "type": "text",
+                      "language": "en",
                       "text": "\"placeholder-2\""
                     }
                   ],
@@ -222,7 +226,7 @@
                 }
               ],
               "language": {
-                "code": "\"eng\""
+                "code": "\"en\""
               },
               "tracking": null
             }
