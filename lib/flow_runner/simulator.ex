@@ -558,6 +558,15 @@ defmodule FlowRunner.Simulator do
     {nil, sim}
   end
 
+  @spec extract_buttons(
+          list(%{
+            index: nil | String.t(),
+            type: String.t(),
+            parameters: list(%{type: String.t(), text: String.t(), language: String.t()}),
+            sub_type: String.t() | nil
+          }),
+          String.t()
+        ) :: [String.t()] | nil
   defp extract_buttons(template_components, template_language) do
     buttons = Enum.filter(template_components, &(&1.type == "button" and &1.sub_type != "url"))
 
