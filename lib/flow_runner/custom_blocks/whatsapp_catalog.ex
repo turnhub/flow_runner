@@ -48,8 +48,8 @@ defmodule FlowRunner.CustomBlocks.WhatsAppCatalog do
     Enum.reduce(keys, %{}, fn key, acc ->
       param_key = to_string(key)
 
-      if value = params[param_key] do
-        Map.put(acc, key, value)
+      if Map.has_key?(params, param_key) do
+        Map.put(acc, key, params[param_key])
       else
         acc
       end
