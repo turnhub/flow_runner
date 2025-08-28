@@ -558,14 +558,16 @@ defmodule FlowRunner.Simulator do
   def output_block(sim, %{type: "Io.Turn.Wait", config: %{seconds: seconds}}) do
     evaluated_seconds =
       if is_binary(seconds) do
-        Expression.evaluate_block!(seconds, sim.context.vars, sim.callbacks_module)
+        seconds
+        |> Expression.evaluate_block!(sim.context.vars, sim.callbacks_module)
+        |> String.to_integer()
       else
         seconds
       end
 
     debug_value = """
     [DEBUG]
-    Wait block: Pausing execution for #{evaluated_seconds} second(s).
+    Paused execution for #{evaluated_seconds} second(s).
     """
 
     # Wait for the number of seconds specified in the wait block

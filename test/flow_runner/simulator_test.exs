@@ -1043,7 +1043,7 @@ defmodule FlowRunner.SimulatorTest do
     assert {:message, wait_fields} = wait_output
     [wait_text] = get_in(wait_fields, [:text])
     assert wait_text.content_type == "TEXT"
-    assert wait_text.value =~ "Wait block: Pausing execution for 1 second(s)"
+    assert wait_text.value =~ "Paused execution for 1 second(s)"
 
     # Second output should be the message after wait
     assert {:message, message_fields} = message_output
