@@ -651,6 +651,32 @@ defmodule FlowRunner.Simulator do
     {{:message, text: content_resource_outputs}, sim}
   end
 
+  def output_block(sim, %{type: "Io.Turn.Wait", config: %{seconds: seconds}}) do
+    evaluated_seconds =
+      if is_binary(seconds) do
+        Expression.evaluate_block!(seconds, sim.context.vars, sim.callbacks_module)
+      else
+        seconds
+      end
+
+    debug_value = """
+    [DEBUG]
+    Paused execution for #{evaluated_seconds} second(s).
+    """
+
+    # Wait for the number of seconds specified in the wait block
+    Process.sleep(evaluated_seconds * 1000)
+
+    text_output = %Output{
+      mime_type: "text/plain",
+      raw_value: debug_value,
+      value: debug_value,
+      content_type: "TEXT"
+    }
+
+    {{:message, text: [text_output]}, sim}
+  end
+
   def output_block(sim, %{type: type}) do
     Logger.info("Simulator unable to output block of type #{inspect(type)}")
     {nil, sim}

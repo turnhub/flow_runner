@@ -67,6 +67,7 @@ defmodule FlowRunner.CustomBlocks.WhatsAppCatalogTest do
         "text" => "some text",
         "footer" => "footer text"
       }
+
       keys = [:footer, :header]
 
       result = WhatsAppCatalog.read_optional_params(params, keys)
@@ -80,6 +81,7 @@ defmodule FlowRunner.CustomBlocks.WhatsAppCatalogTest do
         "footer" => "footer text",
         "header" => "header text"
       }
+
       keys = [:footer, :header]
 
       result = WhatsAppCatalog.read_optional_params(params, keys)
@@ -92,6 +94,7 @@ defmodule FlowRunner.CustomBlocks.WhatsAppCatalogTest do
         "footer" => "footer value",
         "custom_param" => "custom value"
       }
+
       keys = [:footer, :custom_param]
 
       result = WhatsAppCatalog.read_optional_params(params, keys)
@@ -105,6 +108,7 @@ defmodule FlowRunner.CustomBlocks.WhatsAppCatalogTest do
       container = %{}
       flow = %{}
       block = %{uuid: "test-block-uuid"}
+
       context = %{
         last_block_uuid: "previous-uuid",
         waiting_for_user_input: true
@@ -124,6 +128,7 @@ defmodule FlowRunner.CustomBlocks.WhatsAppCatalogTest do
       container = %{}
       flow = %{}
       block = %{uuid: "catalog-block-uuid"}
+
       context = %{
         last_block_uuid: "old-uuid",
         waiting_for_user_input: true,

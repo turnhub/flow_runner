@@ -1130,4 +1130,31 @@ defmodule FlowRunner.SimulatorTest do
            |> with_content_type("TEXT")
            |> has_value("View Catalog")
   end
+
+  test "simulator with wait block" do
+    sim = Simulator.new(read_floip!("wait"))
+
+    {:end, _sim, outputs} = Simulator.start(sim)
+
+    # Should have two messages: wait debug message and the actual message
+    assert length(outputs) == 2
+
+    # First output should be the wait block debug message
+    [wait_output, message_output] = outputs
+
+    assert {:message, wait_fields} = wait_output
+    [wait_text] = get_in(wait_fields, [:text])
+    assert wait_text.content_type == "TEXT"
+
+    assert wait_text.value == """
+           [DEBUG]
+           Paused execution for 1 second(s).
+           """
+
+    # Second output should be the message after wait
+    assert {:message, message_fields} = message_output
+    [message_text] = get_in(message_fields, [:text])
+    assert message_text.content_type == "TEXT"
+    assert message_text.value == "This message appears after the wait!"
+  end
 end

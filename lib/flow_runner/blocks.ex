@@ -31,7 +31,8 @@ defmodule FlowRunner.Blocks do
       "Io.Turn.WhatsAppRequestLocation" => FlowRunner.CustomBlocks.WhatsAppRequestLocation,
       "Io.Turn.WhatsAppSendFlow" => FlowRunner.CustomBlocks.WhatsAppSendFlow,
       "Io.Turn.WhatsAppTemplateMessage" => FlowRunner.CustomBlocks.WhatsAppTemplateMessage,
-      "Io.Turn.Webhook" => FlowRunner.CustomBlocks.Webhook
+      "Io.Turn.Webhook" => FlowRunner.CustomBlocks.Webhook,
+      "Io.Turn.Wait" => FlowRunner.CustomBlocks.Wait
     }
   end
 end

@@ -57,7 +57,6 @@ defmodule FlowRunner.CustomBlocks.WhatsAppCatalog do
   end
 
   @impl true
-  @decorate with_span("DSL.Blocks.WhatsAppCatalog.evaluate_incoming")
   def evaluate_incoming(container, flow, block, context) do
     context = %{
       context

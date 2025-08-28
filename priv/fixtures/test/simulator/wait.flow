@@ -1,0 +1,81 @@
+{
+  "specification_version": "1.0.0-rc3",
+  "uuid": "e8c2b2b3-7c8c-4c8c-8c8c-8c8c8c8c8c8c",
+  "name": "Wait Block Test",
+  "description": "A simple flow to test the Wait block in simulator",
+  "vendor_metadata": {},
+  "flows": [
+    {
+      "uuid": "62d0084d-e88f-48c3-ac64-7a15855f0a43",
+      "name": "main",
+      "label": "Main flow",
+      "last_modified": "2020-01-01T00:00:00.000000Z",
+      "interaction_timeout": 300000,
+      "vendor_metadata": {},
+      "supported_modes": ["RICH_MESSAGING"],
+      "languages": [
+        {
+          "id": "eng",
+          "label": "English",
+          "iso_639_3": "eng"
+        }
+      ],
+      "first_block_id": "4d73864d-f579-4c72-81ea-0a38f4195228",
+      "blocks": [
+        {
+          "uuid": "4d73864d-f579-4c72-81ea-0a38f4195228",
+          "name": "Wait 1 seconds",
+          "label": "Wait Block",
+          "semantic_label": "",
+          "type": "Io.Turn.Wait",
+          "config": {
+            "seconds": 1
+          },
+          "exits": [
+            {
+              "uuid": "0d26c2d1-eaa1-4a73-aff7-a5ce9d637b5e",
+              "name": "Default",
+              "semantic_label": "",
+              "destination_block": "6b7b6a49-ecfb-4712-b2c1-1c57c3c4e5a8",
+              "test": "",
+              "default": true
+            }
+          ]
+        },
+        {
+          "uuid": "6b7b6a49-ecfb-4712-b2c1-1c57c3c4e5a8",
+          "name": "After wait message",
+          "label": "Message Block",
+          "semantic_label": "",
+          "type": "MobilePrimitives.Message",
+          "config": {
+            "prompt": "b5bbda7e-41c8-46aa-a21e-7b5c1e4f8d92"
+          },
+          "exits": [
+            {
+              "uuid": "f7a8c9b2-3e5d-4f6a-8b9c-1d2e3f4a5b6c",
+              "name": "Default",
+              "semantic_label": "",
+              "test": "",
+              "default": true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "uuid": "b5bbda7e-41c8-46aa-a21e-7b5c1e4f8d92",
+      "values": [
+        {
+          "language_id": "eng",
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "modes": ["RICH_MESSAGING"],
+          "value": "This message appears after the wait!"
+        }
+      ]
+    }
+  ]
+}
