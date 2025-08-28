@@ -523,9 +523,6 @@ defmodule FlowRunner.Simulator do
     [text_resource_value] = fetch_resource_values(sim, text_resource, "TEXT")
     catalog_text = resource_value_output(sim, text_resource_value).value
 
-    # Create a debug message for the catalog
-    debug_value = "[DEBUG]\nWhatsApp Catalog Message: #{catalog_text}"
-
     # Create a placeholder thumbnail image (simulating catalog thumbnail)
     catalog_image_path =
       Path.join([
@@ -545,8 +542,8 @@ defmodule FlowRunner.Simulator do
     # Create the main text output
     text_output = %Output{
       mime_type: "text/plain",
-      raw_value: debug_value,
-      value: debug_value,
+      raw_value: catalog_text,
+      value: catalog_text,
       content_type: "TEXT"
     }
 

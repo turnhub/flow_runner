@@ -1034,11 +1034,11 @@ defmodule FlowRunner.SimulatorTest do
 
     {:end, _sim, outputs} = Simulator.start(sim)
 
-    # Check the debug message is present
+    # Check the catalog message text
     assert outputs
            |> get_in([:interactive, :text])
            |> with_content_type("TEXT")
-           |> has_value("[DEBUG]\nWhatsApp Catalog Message: Welcome to our catalog!")
+           |> has_value("Welcome to our catalog!")
 
     # Check the thumbnail image is present
     assert outputs
@@ -1066,7 +1066,7 @@ defmodule FlowRunner.SimulatorTest do
     assert outputs
            |> get_in([:interactive, :text])
            |> with_content_type("TEXT")
-           |> has_value("[DEBUG]\nWhatsApp Catalog Message: Browse our products")
+           |> has_value("Browse our products")
 
     # Check the footer is in its own output section (like list blocks)
     assert outputs
