@@ -1068,11 +1068,11 @@ defmodule FlowRunner.SimulatorTest do
            |> with_content_type("TEXT")
            |> has_value("[DEBUG]\nWhatsApp Catalog Message: Browse our products")
 
-    # Check the footer is included in the debug message
+    # Check the footer is in its own output section (like list blocks)
     assert outputs
-           |> get_in([:interactive, :text])
+           |> get_in([:interactive, :footer])
            |> with_content_type("TEXT")
-           |> has_value("Footer: Contact us for more info")
+           |> has_value("Contact us for more info")
 
     # Check the interactive elements are present
     assert outputs
@@ -1098,11 +1098,11 @@ defmodule FlowRunner.SimulatorTest do
            |> with_content_type("TEXT")
            |> has_value("Welcome to Amazing Store catalog!")
 
-    # Check that expressions are evaluated in the footer
+    # Check that expressions are evaluated in the footer (in its own output section)
     assert outputs
-           |> get_in([:interactive, :text])
+           |> get_in([:interactive, :footer])
            |> with_content_type("TEXT")
-           |> has_value("Footer: Contact help@store.com")
+           |> has_value("Contact help@store.com")
 
     # Check the catalog maintains its interactive structure
     assert outputs

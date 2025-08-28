@@ -526,21 +526,6 @@ defmodule FlowRunner.Simulator do
     # Create a debug message for the catalog
     debug_value = "[DEBUG]\nWhatsApp Catalog Message: #{catalog_text}"
 
-    # Add footer if present
-    footer_text =
-      if Map.has_key?(catalog_config, :footer) do
-        footer_resource = fetch_resource_by_uuid!(sim, catalog_config.footer)
-        [footer_resource_value] = fetch_resource_values(sim, footer_resource, "TEXT")
-        resource_value_output(sim, footer_resource_value).value
-      else
-        nil
-      end
-
-    debug_value =
-      if footer_text,
-        do: debug_value <> "\nFooter: #{footer_text}",
-        else: debug_value
-
     # Create a placeholder thumbnail image (simulating catalog thumbnail)
     catalog_image_path =
       Path.join([
@@ -574,12 +559,29 @@ defmodule FlowRunner.Simulator do
       content_type: "TEXT"
     }
 
-    {{:interactive,
+    # Handle footer metadata in the same way as list blocks
+    catalog_metadata = %{}
+
+    catalog_metadata =
+      if Map.has_key?(catalog_config, :footer) do
+        footer_resource = fetch_resource_by_uuid!(sim, catalog_config.footer)
+        [footer_resource_value] = fetch_resource_values(sim, footer_resource, "TEXT")
+        footer_text = resource_value_output(sim, footer_resource_value).value
+        Map.put(catalog_metadata, "footer", footer_text)
+      else
+        catalog_metadata
+      end
+
+    metadata_outputs = get_interactive_metadata_resource_outputs(sim, catalog_metadata)
+
+    outputs =
       [
         text: [text_output],
         image: [image_output],
         button: [button_output]
-      ]}, sim}
+      ] ++ metadata_outputs
+
+    {{:interactive, outputs}, sim}
   end
 
   def output_block(sim, %{type: "Core.Log", config: %{message: text_resource_uuid}}) do
