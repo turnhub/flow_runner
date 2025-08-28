@@ -73,6 +73,21 @@ defmodule FlowRunner.SimulatorTest do
     assert outputs == []
   end
 
+  test "simulator with whatsapp request location" do
+    sim = Simulator.new(read_floip!("whatsapp_request_location_basic"))
+    {:waiting, _sim, outputs} = Simulator.start(sim)
+
+    assert outputs
+           |> get_in([:interactive, :text])
+           |> with_content_type("TEXT")
+           |> has_value("Please share your location so we can help you better.")
+
+    assert outputs
+           |> get_in([:interactive, :button])
+           |> with_content_type("TEXT")
+           |> has_value("Send location")
+  end
+
   test "simulator with quick reply" do
     sim = Simulator.new(read_floip!("quick_reply_stack"))
 

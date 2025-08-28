@@ -1,0 +1,98 @@
+{
+  "name": "WhatsApp Request Location Basic Test",
+  "description": "Basic WhatsApp request location message test",
+  "resources": [
+    {
+      "values": [
+        {
+          "value": "End of flow",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "279d802b-479a-4a15-9a68-cd29c39b8a94"
+        }
+      ],
+      "uuid": "af8bdbce-3b5a-473d-9566-0fbba71256d0"
+    },
+    {
+      "values": [
+        {
+          "value": "Please share your location so we can help you better.",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "279d802b-479a-4a15-9a68-cd29c39b8a94"
+        }
+      ],
+      "uuid": "12345678-1234-5678-9012-123456789abc"
+    }
+  ],
+  "uuid": "d4b3810f-00d3-492e-92bd-75b0670d5ea7",
+  "flows": [
+    {
+      "label": null,
+      "name": "stack",
+      "blocks": [
+        {
+          "label": null,
+          "name": "whatsapp_request_location_block",
+          "type": "Io.Turn.WhatsAppRequestLocation",
+          "config": {
+            "request_location": {
+              "text": "12345678-1234-5678-9012-123456789abc"
+            }
+          },
+          "tags": [],
+          "uuid": "ca650f72-9f18-511f-8766-4ddba1db6606",
+          "semantic_label": null,
+          "ui_metadata": {
+            "canvas_location": {
+              "x": 120,
+              "y": 120
+            }
+          },
+          "vendor_metadata": {}
+        },
+        {
+          "label": null,
+          "name": "end",
+          "type": "MobilePrimitives.Message",
+          "config": {
+            "prompt": "af8bdbce-3b5a-473d-9566-0fbba71256d0"
+          },
+          "tags": [],
+          "uuid": "4eca4020-3fd6-4b9e-add8-34bd0b27b7a0",
+          "semantic_label": null,
+          "ui_metadata": {
+            "canvas_location": {
+              "x": 120,
+              "y": 240
+            }
+          },
+          "vendor_metadata": {}
+        }
+      ],
+      "first_block_id": "ca650f72-9f18-511f-8766-4ddba1db6606",
+      "uuid": "b01b55b7-6acd-4ea4-a738-d3f52e3e0cdc",
+      "languages": [
+        {
+          "iso_639_3": "eng",
+          "id": "279d802b-479a-4a15-9a68-cd29c39b8a94",
+          "label": "English"
+        }
+      ],
+      "last_modified": "2023-10-01T00:00:00Z",
+      "interaction_timeout": 60,
+      "name": "WhatsApp Request Location Flow",
+      "supported_modes": [
+        "RICH_MESSAGING"
+      ]
+    }
+  ],
+  "description": "Basic WhatsApp request location message test",
+  "specification_version": "1.0.0-rc2"
+}
