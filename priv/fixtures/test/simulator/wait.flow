@@ -29,7 +29,7 @@
           "semantic_label": "",
           "type": "Io.Turn.Wait",
           "config": {
-            "seconds": "1"
+            "seconds": 1
           },
           "exits": [
             {
