@@ -1,0 +1,110 @@
+{
+  "name": "WhatsApp Catalog With Footer Test",
+  "description": "WhatsApp catalog message with footer test",
+  "resources": [
+    {
+      "values": [
+        {
+          "value": "End of flow",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "279d802b-479a-4a15-9a68-cd29c39b8a94"
+        }
+      ],
+      "uuid": "af8bdbce-3b5a-473d-9566-0fbba71256d0"
+    }
+  ],
+  "uuid": "d4b3810f-00d3-492e-92bd-75b0670d5ea7",
+  "flows": [
+    {
+      "label": null,
+      "name": "stack",
+      "blocks": [
+        {
+          "label": null,
+          "name": "whatsapp_catalog_block",
+          "type": "Io.Turn.WhatsAppCatalog",
+          "config": {
+            "catalog": {
+              "text": "\"Browse our products\"",
+              "footer": "\"Contact us for more info\""
+            }
+          },
+          "tags": [],
+          "uuid": "ca650f72-9f18-511f-8766-4ddba1db6606",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "Default",
+              "config": {},
+              "test": "",
+              "uuid": "99cb2cef-432d-4388-a450-04e6d186b5b6",
+              "destination_block": "20d3f9be-271b-547a-828b-76d001c2235a",
+              "semantic_label": null,
+              "vendor_metadata": {}
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {}
+        },
+        {
+          "label": null,
+          "name": "end_message",
+          "type": "MobilePrimitives.Message",
+          "config": {
+            "prompt": "af8bdbce-3b5a-473d-9566-0fbba71256d0"
+          },
+          "tags": [],
+          "uuid": "20d3f9be-271b-547a-828b-76d001c2235a",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "Default",
+              "config": {},
+              "test": "",
+              "uuid": "697b1cc0-e6a3-4f4e-a180-4be58cae855d",
+              "destination_block": null,
+              "semantic_label": "",
+              "vendor_metadata": {}
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {}
+        }
+      ],
+      "languages": [
+        {
+          "id": "279d802b-479a-4a15-9a68-cd29c39b8a94",
+          "label": "English",
+          "variant": null,
+          "iso_639_3": "eng",
+          "bcp_47": "en"
+        }
+      ],
+      "supported_modes": [
+        "RICH_MESSAGING"
+      ],
+      "first_block_id": "ca650f72-9f18-511f-8766-4ddba1db6606",
+      "name": "stack",
+      "last_modified": "2024-01-01T00:00:00Z",
+      "uuid": "8dc39b47-c1cc-47fe-a7d7-5bea9a8b3967"
+    }
+  ],
+  "specification_version": "1.0.0-rc3",
+  "uuid": "d4b3810f-00d3-492e-92bd-75b0670d5ea7"
+}
