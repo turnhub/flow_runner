@@ -529,12 +529,12 @@ defmodule FlowRunner.Simulator do
 
     # Create a placeholder thumbnail image (simulating catalog thumbnail)
     # Uses embedded data URI to ensure image is always available regardless of static assets configuration
-    catalog_image_path = @catalog_placeholder_data_uri
+    catalog_thumbnail_image = @catalog_placeholder_data_uri
 
     image_output = %Output{
       mime_type: "image/jpeg",
-      raw_value: catalog_image_path,
-      value: catalog_image_path,
+      raw_value: catalog_thumbnail_image,
+      value: catalog_thumbnail_image,
       content_type: "IMAGE"
     }
 
@@ -555,17 +555,15 @@ defmodule FlowRunner.Simulator do
       content_type: "TEXT"
     }
 
-    # Handle footer metadata in the same way as list blocks
-    catalog_metadata = %{}
-
+    # Handle footer metadata
     catalog_metadata =
       if Map.has_key?(catalog_config, :footer) do
         footer_resource = fetch_resource_by_uuid!(sim, catalog_config.footer)
         [footer_resource_value] = fetch_resource_values(sim, footer_resource, "TEXT")
         footer_text = resource_value_output(sim, footer_resource_value).value
-        Map.put(catalog_metadata, "footer", footer_text)
+        %{"footer" => footer_text}
       else
-        catalog_metadata
+        %{}
       end
 
     metadata_outputs = get_interactive_metadata_resource_outputs(sim, catalog_metadata)
