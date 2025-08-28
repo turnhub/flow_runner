@@ -578,6 +578,39 @@ defmodule FlowRunner.Simulator do
     {{:interactive, outputs}, sim}
   end
 
+  def output_block(sim, %{type: "Io.Turn.WhatsAppRequestLocation", config: config}) do
+    request_location_config = config.request_location
+
+    # Resolve the request location text resource and evaluate it
+    text_resource = fetch_resource_by_uuid!(sim, request_location_config.text)
+    [text_resource_value] = fetch_resource_values(sim, text_resource, "TEXT")
+    request_text = resource_value_output(sim, text_resource_value).value
+
+    # Create the main text output
+    text_output = %Output{
+      mime_type: "text/plain",
+      raw_value: request_text,
+      value: request_text,
+      content_type: "TEXT"
+    }
+
+    # Create the "Send location" button
+    button_output = %Output{
+      mime_type: "text/plain",
+      raw_value: "Send location",
+      value: "Send location",
+      event_value: "send_location",
+      content_type: "TEXT"
+    }
+
+    outputs = [
+      text: [text_output],
+      button: [button_output]
+    ]
+
+    {{:interactive, outputs}, sim}
+  end
+
   def output_block(sim, %{type: "Core.Log", config: %{message: text_resource_uuid}}) do
     log_resource = fetch_resource_by_uuid!(sim, text_resource_uuid)
 
