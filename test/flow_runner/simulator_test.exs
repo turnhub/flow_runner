@@ -1028,4 +1028,91 @@ defmodule FlowRunner.SimulatorTest do
     # does NOT exists in the context variables
     assert get_in(sim.context.vars, ["variables", "platform"]) == nil
   end
+
+  test "whatsapp catalog with text only" do
+    sim = Simulator.new(read_floip!("whatsapp_catalog_basic"))
+
+    {:end, _sim, outputs} = Simulator.start(sim)
+
+    # Check the catalog message text
+    assert outputs
+           |> get_in([:interactive, :text])
+           |> with_content_type("TEXT")
+           |> has_value("Welcome to our catalog!")
+
+    # Check the thumbnail image is present (now uses data URI)
+    assert outputs
+           |> get_in([:interactive, :image])
+           |> with_content_type("IMAGE")
+           |> has_value("data:image/jpeg;base64,")
+
+    # Check the "View Catalog" button is present
+    assert outputs
+           |> get_in([:interactive, :button])
+           |> with_content_type("TEXT")
+           |> has_value("View Catalog")
+
+    # Check the button has the correct event value
+    button_output = outputs |> get_in([:interactive, :button]) |> hd()
+    assert button_output.event_value == "view_catalog"
+  end
+
+  test "whatsapp catalog with text and footer" do
+    sim = Simulator.new(read_floip!("whatsapp_catalog_with_footer"))
+
+    {:end, _sim, outputs} = Simulator.start(sim)
+
+    # Check the main catalog message
+    assert outputs
+           |> get_in([:interactive, :text])
+           |> with_content_type("TEXT")
+           |> has_value("Browse our products")
+
+    # Check the footer is in its own output section (like list blocks)
+    assert outputs
+           |> get_in([:interactive, :footer])
+           |> with_content_type("TEXT")
+           |> has_value("Contact us for more info")
+
+    # Check the interactive elements are present
+    assert outputs
+           |> get_in([:interactive, :image])
+           |> with_content_type("IMAGE")
+           |> has_value("data:image/jpeg;base64,")
+
+    assert outputs
+           |> get_in([:interactive, :button])
+           |> with_content_type("TEXT")
+           |> has_value("View Catalog")
+  end
+
+  test "whatsapp catalog with expressions in text and footer" do
+    sim = Simulator.new(read_floip!("whatsapp_catalog_with_expressions"))
+
+    {:end, _sim, outputs} =
+      Simulator.start(sim, %{"store_name" => "Amazing Store", "support_email" => "help@store.com"})
+
+    # Check that expressions are evaluated in the catalog text
+    assert outputs
+           |> get_in([:interactive, :text])
+           |> with_content_type("TEXT")
+           |> has_value("Welcome to Amazing Store catalog!")
+
+    # Check that expressions are evaluated in the footer (in its own output section)
+    assert outputs
+           |> get_in([:interactive, :footer])
+           |> with_content_type("TEXT")
+           |> has_value("Contact help@store.com")
+
+    # Check the catalog maintains its interactive structure
+    assert outputs
+           |> get_in([:interactive, :image])
+           |> with_content_type("IMAGE")
+           |> has_value("data:image/jpeg;base64,")
+
+    assert outputs
+           |> get_in([:interactive, :button])
+           |> with_content_type("TEXT")
+           |> has_value("View Catalog")
+  end
 end
