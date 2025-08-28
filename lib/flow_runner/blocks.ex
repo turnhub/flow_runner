@@ -28,6 +28,7 @@ defmodule FlowRunner.Blocks do
       "Io.Turn.SetMessageProperty" => FlowRunner.CustomBlocks.SetMessageProperty,
       "Io.Turn.UpdateDictionary" => FlowRunner.CustomBlocks.UpdateDictionary,
       "Io.Turn.WhatsAppCatalog" => FlowRunner.CustomBlocks.WhatsAppCatalog,
+      "Io.Turn.WhatsAppRequestLocation" => FlowRunner.CustomBlocks.WhatsAppRequestLocation,
       "Io.Turn.WhatsAppSendFlow" => FlowRunner.CustomBlocks.WhatsAppSendFlow,
       "Io.Turn.WhatsAppTemplateMessage" => FlowRunner.CustomBlocks.WhatsAppTemplateMessage,
       "Io.Turn.Webhook" => FlowRunner.CustomBlocks.Webhook
