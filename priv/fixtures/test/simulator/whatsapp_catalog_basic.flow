@@ -15,6 +15,20 @@
         }
       ],
       "uuid": "af8bdbce-3b5a-473d-9566-0fbba71256d0"
+    },
+    {
+      "values": [
+        {
+          "value": "Welcome to our catalog!",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "279d802b-479a-4a15-9a68-cd29c39b8a94"
+        }
+      ],
+      "uuid": "12345678-1234-5678-9012-123456789abc"
     }
   ],
   "uuid": "d4b3810f-00d3-492e-92bd-75b0670d5ea7",
@@ -29,7 +43,7 @@
           "type": "Io.Turn.WhatsAppCatalog",
           "config": {
             "catalog": {
-              "text": "\"Welcome to our catalog!\""
+              "text": "12345678-1234-5678-9012-123456789abc"
             }
           },
           "tags": [],

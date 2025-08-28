@@ -516,12 +516,12 @@ defmodule FlowRunner.Simulator do
   end
 
   def output_block(sim, %{type: "Io.Turn.WhatsAppCatalog", config: config}) do
-    context_vars = if sim.context, do: sim.context.vars, else: %{}
     catalog_config = config.catalog
 
-    # Evaluate the catalog text message
-    catalog_text =
-      Expression.evaluate_as_string!(catalog_config.text, context_vars, sim.callbacks_module)
+    # Resolve the catalog text resource and evaluate it
+    text_resource = fetch_resource_by_uuid!(sim, catalog_config.text)
+    [text_resource_value] = fetch_resource_values(sim, text_resource, "TEXT")
+    catalog_text = resource_value_output(sim, text_resource_value).value
 
     # Create a debug message for the catalog
     debug_value = "[DEBUG]\nWhatsApp Catalog Message: #{catalog_text}"
@@ -529,7 +529,9 @@ defmodule FlowRunner.Simulator do
     # Add footer if present
     footer_text =
       if Map.has_key?(catalog_config, :footer) do
-        Expression.evaluate_as_string!(catalog_config.footer, context_vars, sim.callbacks_module)
+        footer_resource = fetch_resource_by_uuid!(sim, catalog_config.footer)
+        [footer_resource_value] = fetch_resource_values(sim, footer_resource, "TEXT")
+        resource_value_output(sim, footer_resource_value).value
       else
         nil
       end
