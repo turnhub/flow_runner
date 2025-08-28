@@ -1040,11 +1040,11 @@ defmodule FlowRunner.SimulatorTest do
            |> with_content_type("TEXT")
            |> has_value("Welcome to our catalog!")
 
-    # Check the thumbnail image is present
+    # Check the thumbnail image is present (now uses data URI)
     assert outputs
            |> get_in([:interactive, :image])
            |> with_content_type("IMAGE")
-           |> has_value("catalog_placeholder.jpg")
+           |> has_value("data:image/jpeg;base64,")
 
     # Check the "View Catalog" button is present
     assert outputs
@@ -1078,7 +1078,7 @@ defmodule FlowRunner.SimulatorTest do
     assert outputs
            |> get_in([:interactive, :image])
            |> with_content_type("IMAGE")
-           |> has_value("catalog_placeholder.jpg")
+           |> has_value("data:image/jpeg;base64,")
 
     assert outputs
            |> get_in([:interactive, :button])
@@ -1108,7 +1108,7 @@ defmodule FlowRunner.SimulatorTest do
     assert outputs
            |> get_in([:interactive, :image])
            |> with_content_type("IMAGE")
-           |> has_value("catalog_placeholder.jpg")
+           |> has_value("data:image/jpeg;base64,")
 
     assert outputs
            |> get_in([:interactive, :button])
