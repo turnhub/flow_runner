@@ -23,7 +23,6 @@ defmodule FlowRunner.CustomBlocks.WhatsAppRequestLocation do
   end
 
   @impl true
-  @decorate with_span("DSL.Blocks.WhatsAppRequestLocation.evaluate_incoming")
   def evaluate_incoming(container, flow, block, context) do
     context = %{
       context
