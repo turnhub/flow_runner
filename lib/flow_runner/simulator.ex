@@ -515,6 +515,71 @@ defmodule FlowRunner.Simulator do
     end
   end
 
+  def output_block(sim, %{type: "Io.Turn.WhatsAppCatalog", config: config}) do
+    context_vars = if sim.context, do: sim.context.vars, else: %{}
+    catalog_config = config.catalog
+
+    # Evaluate the catalog text message
+    catalog_text =
+      Expression.evaluate_as_string!(catalog_config.text, context_vars, sim.callbacks_module)
+
+    # Create a debug message for the catalog
+    debug_value = "[DEBUG]\nWhatsApp Catalog Message: #{catalog_text}"
+
+    # Add footer if present
+    footer_text =
+      if Map.has_key?(catalog_config, :footer) do
+        Expression.evaluate_as_string!(catalog_config.footer, context_vars, sim.callbacks_module)
+      else
+        nil
+      end
+
+    debug_value =
+      if footer_text,
+        do: debug_value <> "\nFooter: #{footer_text}",
+        else: debug_value
+
+    # Create a placeholder thumbnail image (simulating catalog thumbnail)
+    catalog_image_path =
+      Path.join([
+        Application.app_dir(:flow_runner, "priv"),
+        "static",
+        "images",
+        "catalog_placeholder.jpg"
+      ])
+
+    image_output = %Output{
+      mime_type: "image/jpeg",
+      raw_value: catalog_image_path,
+      value: catalog_image_path,
+      content_type: "IMAGE"
+    }
+
+    # Create the main text output
+    text_output = %Output{
+      mime_type: "text/plain",
+      raw_value: debug_value,
+      value: debug_value,
+      content_type: "TEXT"
+    }
+
+    # Create the "View Catalog" button
+    button_output = %Output{
+      mime_type: "text/plain",
+      raw_value: "View Catalog",
+      value: "View Catalog",
+      event_value: "view_catalog",
+      content_type: "TEXT"
+    }
+
+    {{:interactive,
+      [
+        text: [text_output],
+        image: [image_output],
+        button: [button_output]
+      ]}, sim}
+  end
+
   def output_block(sim, %{type: "Core.Log", config: %{message: text_resource_uuid}}) do
     log_resource = fetch_resource_by_uuid!(sim, text_resource_uuid)
 
