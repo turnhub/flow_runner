@@ -61,8 +61,8 @@ defmodule FlowRunner.CustomBlocks.WhatsAppCatalog do
     context = %{
       context
       | last_block_uuid: block.uuid,
-        # catalog messages are display-only, they don't wait for user input
-        waiting_for_user_input: false
+        # catalog messages wait for user input (place order)
+        waiting_for_user_input: true
     }
 
     {:ok, container, flow, block, context}
