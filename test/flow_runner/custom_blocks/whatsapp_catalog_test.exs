@@ -104,14 +104,14 @@ defmodule FlowRunner.CustomBlocks.WhatsAppCatalogTest do
   end
 
   describe "evaluate_incoming/4" do
-    test "sets waiting_for_user_input to false and updates last_block_uuid" do
+    test "sets waiting_for_user_input to true and updates last_block_uuid" do
       container = %{}
       flow = %{}
       block = %{uuid: "test-block-uuid"}
 
       context = %{
         last_block_uuid: "previous-uuid",
-        waiting_for_user_input: true
+        waiting_for_user_input: false
       }
 
       {:ok, returned_container, returned_flow, returned_block, returned_context} =
@@ -121,7 +121,7 @@ defmodule FlowRunner.CustomBlocks.WhatsAppCatalogTest do
       assert returned_flow == flow
       assert returned_block == block
       assert returned_context.last_block_uuid == "test-block-uuid"
-      assert returned_context.waiting_for_user_input == false
+      assert returned_context.waiting_for_user_input == true
     end
 
     test "preserves other context fields while updating specific ones" do
@@ -131,7 +131,7 @@ defmodule FlowRunner.CustomBlocks.WhatsAppCatalogTest do
 
       context = %{
         last_block_uuid: "old-uuid",
-        waiting_for_user_input: true,
+        waiting_for_user_input: false,
         some_other_field: "preserved_value",
         another_field: 42
       }
@@ -140,7 +140,7 @@ defmodule FlowRunner.CustomBlocks.WhatsAppCatalogTest do
         WhatsAppCatalog.evaluate_incoming(container, flow, block, context)
 
       assert returned_context.last_block_uuid == "catalog-block-uuid"
-      assert returned_context.waiting_for_user_input == false
+      assert returned_context.waiting_for_user_input == true
       assert returned_context.some_other_field == "preserved_value"
       assert returned_context.another_field == 42
     end

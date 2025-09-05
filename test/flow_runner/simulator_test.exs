@@ -1047,7 +1047,7 @@ defmodule FlowRunner.SimulatorTest do
   test "whatsapp catalog with text only" do
     sim = Simulator.new(read_floip!("whatsapp_catalog_basic"))
 
-    {:end, _sim, outputs} = Simulator.start(sim)
+    {:waiting, _sim, outputs} = Simulator.start(sim)
 
     # Check the catalog message text
     assert outputs
@@ -1075,7 +1075,7 @@ defmodule FlowRunner.SimulatorTest do
   test "whatsapp catalog with text and footer" do
     sim = Simulator.new(read_floip!("whatsapp_catalog_with_footer"))
 
-    {:end, _sim, outputs} = Simulator.start(sim)
+    {:waiting, _sim, outputs} = Simulator.start(sim)
 
     # Check the main catalog message
     assert outputs
@@ -1104,7 +1104,7 @@ defmodule FlowRunner.SimulatorTest do
   test "whatsapp catalog with expressions in text and footer" do
     sim = Simulator.new(read_floip!("whatsapp_catalog_with_expressions"))
 
-    {:end, _sim, outputs} =
+    {:waiting, _sim, outputs} =
       Simulator.start(sim, %{"store_name" => "Amazing Store", "support_email" => "help@store.com"})
 
     # Check that expressions are evaluated in the catalog text
