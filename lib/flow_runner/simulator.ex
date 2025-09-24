@@ -366,7 +366,9 @@ defmodule FlowRunner.Simulator do
       )
 
     contact = Map.get(context_vars, "contact", %{})
-    updated_contact = Map.put(contact, key, value)
+    # Sanitize the value if it looks like an enum field (ALL_CAPS_WITH_UNDERSCORES)
+    sanitized_value = maybe_sanitize_enum_field(value)
+    updated_contact = Map.put(contact, key, sanitized_value)
     updated_vars = Map.put(context_vars, "contact", updated_contact)
     language_code = if key == "language", do: value, else: sim.context.language
 
@@ -768,4 +770,33 @@ defmodule FlowRunner.Simulator do
       end
     end)
   end
+
+  @doc """
+  Sanitizes contact field values for enum fields.
+
+  If the value looks like an enum (ALL_CAPS_WITH_UNDERSCORES), converts it to
+  an object with display, value, and __value__ keys for proper access.
+  """
+  defp maybe_sanitize_enum_field(value) when is_binary(value) do
+    # Check if the value matches enum pattern (ALL_CAPS with possible underscores and numbers)
+    if String.match?(value, ~r/^[A-Z][A-Z0-9_]*$/) do
+      # Convert ENUM_VALUE to "Enum Value" for display
+      display_value =
+        value
+        |> String.split("_")
+        |> Enum.map_join(" ", &String.capitalize/1)
+
+      # Create the enum object structure that templates expect
+      %{
+        "display" => display_value,
+        "value" => value,
+        "__value__" => value
+      }
+    else
+      # Not an enum pattern, return as-is
+      value
+    end
+  end
+
+  defp maybe_sanitize_enum_field(value), do: value
 end
