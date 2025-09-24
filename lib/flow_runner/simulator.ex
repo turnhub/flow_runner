@@ -771,12 +771,10 @@ defmodule FlowRunner.Simulator do
     end)
   end
 
-  @doc """
-  Sanitizes contact field values for enum fields.
+  # Sanitizes contact field values for enum fields.
 
-  If the value looks like an enum (ALL_CAPS_WITH_UNDERSCORES), converts it to
-  an object with display, value, and __value__ keys for proper access.
-  """
+  # If the value looks like an enum (ALL_CAPS_WITH_UNDERSCORES), converts it to
+  # an object with display, value, and __value__ keys for proper access.
   defp maybe_sanitize_enum_field(value) when is_binary(value) do
     # Check if the value matches enum pattern (ALL_CAPS with possible underscores and numbers)
     if String.match?(value, ~r/^[A-Z][A-Z0-9_]*$/) do
