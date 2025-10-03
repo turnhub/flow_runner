@@ -651,6 +651,46 @@ defmodule FlowRunner.Simulator do
     {{:message, text: content_resource_outputs}, sim}
   end
 
+  def output_block(sim, %{type: "Io.Turn.MetaConversion", config: config}) do
+    meta_conversion_config = config.meta_conversion
+
+    event_name = meta_conversion_config.event_name
+    user_data = inspect(meta_conversion_config.user_data, pretty: true)
+
+    optional_fields =
+      meta_conversion_config
+      |> Map.drop([:event_name, :user_data])
+      |> Enum.map(fn {key, value} -> "  #{key}: #{inspect(value)}" end)
+      |> Enum.join("\n")
+
+    debug_value =
+      if optional_fields != "" do
+        """
+        [DEBUG]
+        Meta Conversion event sent:
+          event_name: #{event_name}
+          user_data: #{user_data}
+        #{optional_fields}
+        """
+      else
+        """
+        [DEBUG]
+        Meta Conversion event sent:
+          event_name: #{event_name}
+          user_data: #{user_data}
+        """
+      end
+
+    text_output = %Output{
+      mime_type: "text/plain",
+      raw_value: debug_value,
+      value: debug_value,
+      content_type: "TEXT"
+    }
+
+    {{:message, text: [text_output]}, sim}
+  end
+
   def output_block(sim, %{type: "Io.Turn.Wait", config: %{seconds: seconds}}) do
     evaluated_seconds =
       if is_binary(seconds) do
