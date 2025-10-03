@@ -1,0 +1,87 @@
+{
+  "specification_version": "1.0.0-rc3",
+  "uuid": "a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d",
+  "name": "Meta Conversion Basic Test",
+  "description": "A simple flow to test the Meta Conversion block with required fields only",
+  "vendor_metadata": {},
+  "flows": [
+    {
+      "uuid": "b2c3d4e5-f6a7-4b5c-9d0e-1f2a3b4c5d6e",
+      "name": "main",
+      "label": "Main flow",
+      "last_modified": "2020-01-01T00:00:00.000000Z",
+      "interaction_timeout": 300000,
+      "vendor_metadata": {},
+      "supported_modes": ["RICH_MESSAGING"],
+      "languages": [
+        {
+          "id": "eng",
+          "label": "English",
+          "iso_639_3": "eng"
+        }
+      ],
+      "first_block_id": "c3d4e5f6-a7b8-4c5d-0e1f-2a3b4c5d6e7f",
+      "blocks": [
+        {
+          "uuid": "c3d4e5f6-a7b8-4c5d-0e1f-2a3b4c5d6e7f",
+          "name": "Send Meta Conversion",
+          "label": "Meta Conversion Block",
+          "semantic_label": "",
+          "type": "Io.Turn.MetaConversion",
+          "config": {
+            "meta_conversion": {
+              "event_name": "Purchase",
+              "user_data": {
+                "email": "user@example.com",
+                "phone": "+1234567890"
+              }
+            }
+          },
+          "exits": [
+            {
+              "uuid": "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a",
+              "name": "Default",
+              "semantic_label": "",
+              "destination_block": "e5f6a7b8-c9d0-4e1f-2a3b-4c5d6e7f8a9b",
+              "test": "",
+              "default": true
+            }
+          ]
+        },
+        {
+          "uuid": "e5f6a7b8-c9d0-4e1f-2a3b-4c5d6e7f8a9b",
+          "name": "After conversion message",
+          "label": "Message Block",
+          "semantic_label": "",
+          "type": "MobilePrimitives.Message",
+          "config": {
+            "prompt": "f6a7b8c9-d0e1-4f2a-3b4c-5d6e7f8a9b0c"
+          },
+          "exits": [
+            {
+              "uuid": "a7b8c9d0-e1f2-4a3b-4c5d-6e7f8a9b0c1d",
+              "name": "Default",
+              "semantic_label": "",
+              "test": "",
+              "default": true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "uuid": "f6a7b8c9-d0e1-4f2a-3b4c-5d6e7f8a9b0c",
+      "values": [
+        {
+          "language_id": "eng",
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "modes": ["RICH_MESSAGING"],
+          "value": "Conversion event sent successfully!"
+        }
+      ]
+    }
+  ]
+}
