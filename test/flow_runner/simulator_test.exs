@@ -999,52 +999,60 @@ defmodule FlowRunner.SimulatorTest do
       "description" => "Test description",
       "uuid" => "66980030-a035-42da-97de-64814acbd834",
       "resources" => [],
-      "flows" => [%{
-        "label" => nil,
-        "name" => "test_flow",
-        "blocks" => [%{
+      "flows" => [
+        %{
           "label" => nil,
-          "name" => "test_enum_sanitization",
-          "type" => "Core.SetContactProperty",
-          "config" => %{
-            "set_contact_property" => %{
-              "property_key" => "status",
-              "property_value" => "PENDING_APPROVAL"
+          "name" => "test_flow",
+          "blocks" => [
+            %{
+              "label" => nil,
+              "name" => "test_enum_sanitization",
+              "type" => "Core.SetContactProperty",
+              "config" => %{
+                "set_contact_property" => %{
+                  "property_key" => "status",
+                  "property_value" => "PENDING_APPROVAL"
+                }
+              },
+              "tags" => [],
+              "uuid" => "c180325c-c48c-5a18-a117-634366357b29",
+              "ui_metadata" => %{
+                "canvas_coordinates" => %{"x" => 0, "y" => 0}
+              },
+              "exits" => [
+                %{
+                  "default" => true,
+                  "name" => "default_exit",
+                  "config" => %{},
+                  "test" => "",
+                  "uuid" => "1318ac38-99ed-4f2f-b15f-5daf26ce3ece",
+                  "semantic_label" => "",
+                  "vendor_metadata" => %{},
+                  "destination_block" => nil
+                }
+              ],
+              "semantic_label" => nil,
+              "vendor_metadata" => %{}
             }
-          },
-          "tags" => [],
-          "uuid" => "c180325c-c48c-5a18-a117-634366357b29",
-          "ui_metadata" => %{
-            "canvas_coordinates" => %{"x" => 0, "y" => 0}
-          },
-          "exits" => [%{
-            "default" => true,
-            "name" => "default_exit",
-            "config" => %{},
-            "test" => "",
-            "uuid" => "1318ac38-99ed-4f2f-b15f-5daf26ce3ece",
-            "semantic_label" => "",
-            "vendor_metadata" => %{},
-            "destination_block" => nil
-          }],
-          "semantic_label" => nil,
-          "vendor_metadata" => %{}
-        }],
-        "last_modified" => "2024-01-01T00:00:00.000000Z",
-        "uuid" => "425d9020-4d40-456d-8dd1-d1d3734e648a",
-        "languages" => [%{
-          "id" => "61f302b9-960d-4df4-8d6e-6435fd704810",
-          "label" => "English",
-          "variant" => nil,
-          "iso_639_3" => "eng",
-          "bcp_47" => nil
-        }],
-        "first_block_id" => "c180325c-c48c-5a18-a117-634366357b29",
-        "interaction_timeout" => 300,
-        "vendor_metadata" => %{},
-        "supported_modes" => ["RICH_MESSAGING"],
-        "exit_block_id" => ""
-      }],
+          ],
+          "last_modified" => "2024-01-01T00:00:00.000000Z",
+          "uuid" => "425d9020-4d40-456d-8dd1-d1d3734e648a",
+          "languages" => [
+            %{
+              "id" => "61f302b9-960d-4df4-8d6e-6435fd704810",
+              "label" => "English",
+              "variant" => nil,
+              "iso_639_3" => "eng",
+              "bcp_47" => nil
+            }
+          ],
+          "first_block_id" => "c180325c-c48c-5a18-a117-634366357b29",
+          "interaction_timeout" => 300,
+          "vendor_metadata" => %{},
+          "supported_modes" => ["RICH_MESSAGING"],
+          "exit_block_id" => ""
+        }
+      ],
       "vendor_metadata" => %{},
       "specification_version" => "1.0.0-rc3"
     }
@@ -1056,10 +1064,10 @@ defmodule FlowRunner.SimulatorTest do
     contact_status = get_in(sim.context.vars, ["contact", "status"])
 
     assert %{
-      "display" => "Pending Approval",
-      "value" => "PENDING_APPROVAL",
-      "__value__" => "PENDING_APPROVAL"
-    } = contact_status
+             "display" => "Pending Approval",
+             "value" => "PENDING_APPROVAL",
+             "__value__" => "PENDING_APPROVAL"
+           } = contact_status
 
     # Test various enum patterns
     test_cases = [
@@ -1077,52 +1085,60 @@ defmodule FlowRunner.SimulatorTest do
         "description" => "Test description",
         "uuid" => "66980030-a035-42da-97de-64814acbd834",
         "resources" => [],
-        "flows" => [%{
-          "label" => nil,
-          "name" => "test_flow",
-          "blocks" => [%{
+        "flows" => [
+          %{
             "label" => nil,
-            "name" => "test_enum_#{enum_value}",
-            "type" => "Core.SetContactProperty",
-            "config" => %{
-              "set_contact_property" => %{
-                "property_key" => "test_field",
-                "property_value" => enum_value
+            "name" => "test_flow",
+            "blocks" => [
+              %{
+                "label" => nil,
+                "name" => "test_enum_#{enum_value}",
+                "type" => "Core.SetContactProperty",
+                "config" => %{
+                  "set_contact_property" => %{
+                    "property_key" => "test_field",
+                    "property_value" => enum_value
+                  }
+                },
+                "tags" => [],
+                "uuid" => "c180325c-c48c-5a18-a117-634366357b29",
+                "ui_metadata" => %{
+                  "canvas_coordinates" => %{"x" => 0, "y" => 0}
+                },
+                "exits" => [
+                  %{
+                    "default" => true,
+                    "name" => "default_exit",
+                    "config" => %{},
+                    "test" => "",
+                    "uuid" => "1318ac38-99ed-4f2f-b15f-5daf26ce3ece",
+                    "semantic_label" => "",
+                    "vendor_metadata" => %{},
+                    "destination_block" => nil
+                  }
+                ],
+                "semantic_label" => nil,
+                "vendor_metadata" => %{}
               }
-            },
-            "tags" => [],
-            "uuid" => "c180325c-c48c-5a18-a117-634366357b29",
-            "ui_metadata" => %{
-              "canvas_coordinates" => %{"x" => 0, "y" => 0}
-            },
-            "exits" => [%{
-              "default" => true,
-              "name" => "default_exit",
-              "config" => %{},
-              "test" => "",
-              "uuid" => "1318ac38-99ed-4f2f-b15f-5daf26ce3ece",
-              "semantic_label" => "",
-              "vendor_metadata" => %{},
-              "destination_block" => nil
-            }],
-            "semantic_label" => nil,
-            "vendor_metadata" => %{}
-          }],
-          "last_modified" => "2024-01-01T00:00:00.000000Z",
-          "uuid" => "425d9020-4d40-456d-8dd1-d1d3734e648a",
-          "languages" => [%{
-            "id" => "61f302b9-960d-4df4-8d6e-6435fd704810",
-            "label" => "English",
-            "variant" => nil,
-            "iso_639_3" => "eng",
-            "bcp_47" => nil
-          }],
-          "first_block_id" => "c180325c-c48c-5a18-a117-634366357b29",
-          "interaction_timeout" => 300,
-          "vendor_metadata" => %{},
-          "supported_modes" => ["RICH_MESSAGING"],
-          "exit_block_id" => ""
-        }],
+            ],
+            "last_modified" => "2024-01-01T00:00:00.000000Z",
+            "uuid" => "425d9020-4d40-456d-8dd1-d1d3734e648a",
+            "languages" => [
+              %{
+                "id" => "61f302b9-960d-4df4-8d6e-6435fd704810",
+                "label" => "English",
+                "variant" => nil,
+                "iso_639_3" => "eng",
+                "bcp_47" => nil
+              }
+            ],
+            "first_block_id" => "c180325c-c48c-5a18-a117-634366357b29",
+            "interaction_timeout" => 300,
+            "vendor_metadata" => %{},
+            "supported_modes" => ["RICH_MESSAGING"],
+            "exit_block_id" => ""
+          }
+        ],
         "vendor_metadata" => %{},
         "specification_version" => "1.0.0-rc3"
       }
@@ -1132,25 +1148,34 @@ defmodule FlowRunner.SimulatorTest do
       contact_field = get_in(sim.context.vars, ["contact", "test_field"])
 
       assert %{
-        "display" => ^expected_display,
-        "value" => ^enum_value,
-        "__value__" => ^enum_value
-      } = contact_field
+               "display" => ^expected_display,
+               "value" => ^enum_value,
+               "__value__" => ^enum_value
+             } = contact_field
     end
   end
 
   test "contact property non-enum values remain unchanged" do
     # Test that non-enum values are not sanitized
     non_enum_cases = [
-      "john_doe",        # lowercase with underscore
-      "John Smith",      # mixed case with space
-      "user123",         # lowercase with numbers
-      "some-value",      # with dashes
-      "normaltext",      # simple lowercase
-      "Mixed_Case_Text", # mixed case with underscores
-      "123NUMBER",       # starts with number
-      "A",               # single uppercase letter
-      ""                 # empty string
+      # lowercase with underscore
+      "john_doe",
+      # mixed case with space
+      "John Smith",
+      # lowercase with numbers
+      "user123",
+      # with dashes
+      "some-value",
+      # simple lowercase
+      "normaltext",
+      # mixed case with underscores
+      "Mixed_Case_Text",
+      # starts with number
+      "123NUMBER",
+      # single uppercase letter
+      "A",
+      # empty string
+      ""
     ]
 
     for test_value <- non_enum_cases do
@@ -1159,52 +1184,60 @@ defmodule FlowRunner.SimulatorTest do
         "description" => "Test description",
         "uuid" => "66980030-a035-42da-97de-64814acbd834",
         "resources" => [],
-        "flows" => [%{
-          "label" => nil,
-          "name" => "test_flow",
-          "blocks" => [%{
+        "flows" => [
+          %{
             "label" => nil,
-            "name" => "test_non_enum",
-            "type" => "Core.SetContactProperty",
-            "config" => %{
-              "set_contact_property" => %{
-                "property_key" => "test_field",
-                "property_value" => test_value
+            "name" => "test_flow",
+            "blocks" => [
+              %{
+                "label" => nil,
+                "name" => "test_non_enum",
+                "type" => "Core.SetContactProperty",
+                "config" => %{
+                  "set_contact_property" => %{
+                    "property_key" => "test_field",
+                    "property_value" => test_value
+                  }
+                },
+                "tags" => [],
+                "uuid" => "c180325c-c48c-5a18-a117-634366357b29",
+                "ui_metadata" => %{
+                  "canvas_coordinates" => %{"x" => 0, "y" => 0}
+                },
+                "exits" => [
+                  %{
+                    "default" => true,
+                    "name" => "default_exit",
+                    "config" => %{},
+                    "test" => "",
+                    "uuid" => "1318ac38-99ed-4f2f-b15f-5daf26ce3ece",
+                    "semantic_label" => "",
+                    "vendor_metadata" => %{},
+                    "destination_block" => nil
+                  }
+                ],
+                "semantic_label" => nil,
+                "vendor_metadata" => %{}
               }
-            },
-            "tags" => [],
-            "uuid" => "c180325c-c48c-5a18-a117-634366357b29",
-            "ui_metadata" => %{
-              "canvas_coordinates" => %{"x" => 0, "y" => 0}
-            },
-            "exits" => [%{
-              "default" => true,
-              "name" => "default_exit",
-              "config" => %{},
-              "test" => "",
-              "uuid" => "1318ac38-99ed-4f2f-b15f-5daf26ce3ece",
-              "semantic_label" => "",
-              "vendor_metadata" => %{},
-              "destination_block" => nil
-            }],
-            "semantic_label" => nil,
-            "vendor_metadata" => %{}
-          }],
-          "last_modified" => "2024-01-01T00:00:00.000000Z",
-          "uuid" => "425d9020-4d40-456d-8dd1-d1d3734e648a",
-          "languages" => [%{
-            "id" => "61f302b9-960d-4df4-8d6e-6435fd704810",
-            "label" => "English",
-            "variant" => nil,
-            "iso_639_3" => "eng",
-            "bcp_47" => nil
-          }],
-          "first_block_id" => "c180325c-c48c-5a18-a117-634366357b29",
-          "interaction_timeout" => 300,
-          "vendor_metadata" => %{},
-          "supported_modes" => ["RICH_MESSAGING"],
-          "exit_block_id" => ""
-        }],
+            ],
+            "last_modified" => "2024-01-01T00:00:00.000000Z",
+            "uuid" => "425d9020-4d40-456d-8dd1-d1d3734e648a",
+            "languages" => [
+              %{
+                "id" => "61f302b9-960d-4df4-8d6e-6435fd704810",
+                "label" => "English",
+                "variant" => nil,
+                "iso_639_3" => "eng",
+                "bcp_47" => nil
+              }
+            ],
+            "first_block_id" => "c180325c-c48c-5a18-a117-634366357b29",
+            "interaction_timeout" => 300,
+            "vendor_metadata" => %{},
+            "supported_modes" => ["RICH_MESSAGING"],
+            "exit_block_id" => ""
+          }
+        ],
         "vendor_metadata" => %{},
         "specification_version" => "1.0.0-rc3"
       }
@@ -1231,52 +1264,60 @@ defmodule FlowRunner.SimulatorTest do
       "description" => "Test description",
       "uuid" => "66980030-a035-42da-97de-64814acbd834",
       "resources" => [],
-      "flows" => [%{
-        "label" => nil,
-        "name" => "test_flow",
-        "blocks" => [%{
+      "flows" => [
+        %{
           "label" => nil,
-          "name" => "test_preserve_fields",
-          "type" => "Core.SetContactProperty",
-          "config" => %{
-            "set_contact_property" => %{
-              "property_key" => "status",
-              "property_value" => "VERIFIED_USER"
+          "name" => "test_flow",
+          "blocks" => [
+            %{
+              "label" => nil,
+              "name" => "test_preserve_fields",
+              "type" => "Core.SetContactProperty",
+              "config" => %{
+                "set_contact_property" => %{
+                  "property_key" => "status",
+                  "property_value" => "VERIFIED_USER"
+                }
+              },
+              "tags" => [],
+              "uuid" => "c180325c-c48c-5a18-a117-634366357b29",
+              "ui_metadata" => %{
+                "canvas_coordinates" => %{"x" => 0, "y" => 0}
+              },
+              "exits" => [
+                %{
+                  "default" => true,
+                  "name" => "default_exit",
+                  "config" => %{},
+                  "test" => "",
+                  "uuid" => "1318ac38-99ed-4f2f-b15f-5daf26ce3ece",
+                  "semantic_label" => "",
+                  "vendor_metadata" => %{},
+                  "destination_block" => nil
+                }
+              ],
+              "semantic_label" => nil,
+              "vendor_metadata" => %{}
             }
-          },
-          "tags" => [],
-          "uuid" => "c180325c-c48c-5a18-a117-634366357b29",
-          "ui_metadata" => %{
-            "canvas_coordinates" => %{"x" => 0, "y" => 0}
-          },
-          "exits" => [%{
-            "default" => true,
-            "name" => "default_exit",
-            "config" => %{},
-            "test" => "",
-            "uuid" => "1318ac38-99ed-4f2f-b15f-5daf26ce3ece",
-            "semantic_label" => "",
-            "vendor_metadata" => %{},
-            "destination_block" => nil
-          }],
-          "semantic_label" => nil,
-          "vendor_metadata" => %{}
-        }],
-        "last_modified" => "2024-01-01T00:00:00.000000Z",
-        "uuid" => "425d9020-4d40-456d-8dd1-d1d3734e648a",
-        "languages" => [%{
-          "id" => "61f302b9-960d-4df4-8d6e-6435fd704810",
-          "label" => "English",
-          "variant" => nil,
-          "iso_639_3" => "eng",
-          "bcp_47" => nil
-        }],
-        "first_block_id" => "c180325c-c48c-5a18-a117-634366357b29",
-        "interaction_timeout" => 300,
-        "vendor_metadata" => %{},
-        "supported_modes" => ["RICH_MESSAGING"],
-        "exit_block_id" => ""
-      }],
+          ],
+          "last_modified" => "2024-01-01T00:00:00.000000Z",
+          "uuid" => "425d9020-4d40-456d-8dd1-d1d3734e648a",
+          "languages" => [
+            %{
+              "id" => "61f302b9-960d-4df4-8d6e-6435fd704810",
+              "label" => "English",
+              "variant" => nil,
+              "iso_639_3" => "eng",
+              "bcp_47" => nil
+            }
+          ],
+          "first_block_id" => "c180325c-c48c-5a18-a117-634366357b29",
+          "interaction_timeout" => 300,
+          "vendor_metadata" => %{},
+          "supported_modes" => ["RICH_MESSAGING"],
+          "exit_block_id" => ""
+        }
+      ],
       "vendor_metadata" => %{},
       "specification_version" => "1.0.0-rc3"
     }
@@ -1293,10 +1334,10 @@ defmodule FlowRunner.SimulatorTest do
 
     # Verify enum field was sanitized
     assert %{
-      "display" => "Verified User",
-      "value" => "VERIFIED_USER",
-      "__value__" => "VERIFIED_USER"
-    } = contact["status"]
+             "display" => "Verified User",
+             "value" => "VERIFIED_USER",
+             "__value__" => "VERIFIED_USER"
+           } = contact["status"]
   end
 
   test "update_dictionary" do
