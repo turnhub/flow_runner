@@ -23,30 +23,22 @@ defmodule FlowRunner.CustomBlocks.MetaConversion do
 
   @impl true
   def validate_config!(%{
-        "meta_conversion" =>
+        "conversion" =>
           %{
-            "event_name" => event_name,
-            "user_data" => user_data
+            "event_name" => event_name_uuid,
+            "user_data" => user_data_uuid
           } = params
-      })
-      when is_binary(event_name) and is_map(user_data) do
-    # Extract all optional parameters (everything except event_name and user_data)
-    optional_params =
-      params
-      |> Map.drop(["event_name", "user_data"])
-      |> Enum.map(fn {key, value} -> {String.to_atom(key), value} end)
-      |> Map.new()
+      }) do
+    # Extract optional_fields if present (list of resource UUIDs)
+    optional_fields = Map.get(params, "optional_fields", [])
 
-    meta_conversion_config =
-      Map.merge(
-        %{
-          event_name: event_name,
-          user_data: user_data
-        },
-        optional_params
-      )
-
-    %{meta_conversion: meta_conversion_config}
+    %{
+      conversion: %{
+        event_name: event_name_uuid,
+        user_data: user_data_uuid,
+        optional_fields: optional_fields
+      }
+    }
   end
 
   @impl true
