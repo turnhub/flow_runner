@@ -4,80 +4,54 @@ defmodule FlowRunner.CustomBlocks.MetaConversionTest do
   alias FlowRunner.CustomBlocks.MetaConversion
 
   describe "validate_config!/1" do
-    test "returns meta_conversion config with required parameters" do
+    test "returns conversion config with required parameters only" do
       config = %{
-        "meta_conversion" => %{
-          "event_name" => "Purchase",
-          "user_data" => %{"email" => "user@example.com"}
+        "conversion" => %{
+          "event_name" => "event-name-uuid-123",
+          "user_data" => "user-data-uuid-456"
         }
       }
 
       result = MetaConversion.validate_config!(config)
 
-      assert result.meta_conversion.event_name == "Purchase"
-      assert result.meta_conversion.user_data == %{"email" => "user@example.com"}
-      refute Map.has_key?(result.meta_conversion, :custom_data)
-      refute Map.has_key?(result.meta_conversion, :event_time)
+      assert result.conversion.event_name == "event-name-uuid-123"
+      assert result.conversion.user_data == "user-data-uuid-456"
+      assert result.conversion.optional_fields == []
     end
 
-    test "returns meta_conversion config with required and optional parameters" do
+    test "returns conversion config with optional_fields" do
       config = %{
-        "meta_conversion" => %{
-          "event_name" => "AddToCart",
-          "user_data" => %{"email" => "test@example.com", "phone" => "+1234567890"},
-          "custom_data" => %{"value" => 99.99, "currency" => "USD"},
-          "event_time" => "1234567890",
-          "action_source" => "website"
+        "conversion" => %{
+          "event_name" => "event-name-uuid-123",
+          "user_data" => "user-data-uuid-456",
+          "optional_fields" => ["optional-uuid-1", "optional-uuid-2"]
         }
       }
 
       result = MetaConversion.validate_config!(config)
 
-      assert result.meta_conversion.event_name == "AddToCart"
-
-      assert result.meta_conversion.user_data == %{
-               "email" => "test@example.com",
-               "phone" => "+1234567890"
-             }
-
-      assert result.meta_conversion.custom_data == %{"value" => 99.99, "currency" => "USD"}
-      assert result.meta_conversion.event_time == "1234567890"
-      assert result.meta_conversion.action_source == "website"
+      assert result.conversion.event_name == "event-name-uuid-123"
+      assert result.conversion.user_data == "user-data-uuid-456"
+      assert result.conversion.optional_fields == ["optional-uuid-1", "optional-uuid-2"]
     end
 
-    test "returns meta_conversion config with all optional parameters" do
+    test "returns conversion config with empty optional_fields list" do
       config = %{
-        "meta_conversion" => %{
-          "event_name" => "Lead",
-          "user_data" => %{"email" => "lead@example.com"},
-          "custom_data" => %{"content_name" => "Product A"},
-          "event_time" => "1234567890",
-          "action_source" => "app",
-          "event_source_url" => "https://example.com/product",
-          "opt_out" => false,
-          "event_id" => "event-123",
-          "data_processing_options" => ["LDU"],
-          "data_processing_options_country" => 1,
-          "data_processing_options_state" => 1000
+        "conversion" => %{
+          "event_name" => "event-name-uuid-123",
+          "user_data" => "user-data-uuid-456",
+          "optional_fields" => []
         }
       }
 
       result = MetaConversion.validate_config!(config)
 
-      assert result.meta_conversion.event_name == "Lead"
-      assert result.meta_conversion.user_data == %{"email" => "lead@example.com"}
-      assert result.meta_conversion.custom_data == %{"content_name" => "Product A"}
-      assert result.meta_conversion.event_time == "1234567890"
-      assert result.meta_conversion.action_source == "app"
-      assert result.meta_conversion.event_source_url == "https://example.com/product"
-      assert result.meta_conversion.opt_out == false
-      assert result.meta_conversion.event_id == "event-123"
-      assert result.meta_conversion.data_processing_options == ["LDU"]
-      assert result.meta_conversion.data_processing_options_country == 1
-      assert result.meta_conversion.data_processing_options_state == 1000
+      assert result.conversion.event_name == "event-name-uuid-123"
+      assert result.conversion.user_data == "user-data-uuid-456"
+      assert result.conversion.optional_fields == []
     end
 
-    test "raises error when meta_conversion key is missing" do
+    test "raises error when conversion key is missing" do
       config = %{}
 
       assert_raise FunctionClauseError, fn ->
@@ -87,8 +61,8 @@ defmodule FlowRunner.CustomBlocks.MetaConversionTest do
 
     test "raises error when event_name parameter is missing" do
       config = %{
-        "meta_conversion" => %{
-          "user_data" => %{"email" => "user@example.com"}
+        "conversion" => %{
+          "user_data" => "user-data-uuid-456"
         }
       }
 
@@ -99,62 +73,14 @@ defmodule FlowRunner.CustomBlocks.MetaConversionTest do
 
     test "raises error when user_data parameter is missing" do
       config = %{
-        "meta_conversion" => %{
-          "event_name" => "Purchase"
+        "conversion" => %{
+          "event_name" => "event-name-uuid-123"
         }
       }
 
       assert_raise FunctionClauseError, fn ->
         MetaConversion.validate_config!(config)
       end
-    end
-
-    test "raises error when event_name is not a string" do
-      config = %{
-        "meta_conversion" => %{
-          "event_name" => 123,
-          "user_data" => %{"email" => "user@example.com"}
-        }
-      }
-
-      assert_raise FunctionClauseError, fn ->
-        MetaConversion.validate_config!(config)
-      end
-    end
-
-    test "raises error when user_data is not a map" do
-      config = %{
-        "meta_conversion" => %{
-          "event_name" => "Purchase",
-          "user_data" => "not a map"
-        }
-      }
-
-      assert_raise FunctionClauseError, fn ->
-        MetaConversion.validate_config!(config)
-      end
-    end
-  end
-
-  describe "validate_config!/1 with arbitrary optional parameters" do
-    test "accepts any optional parameter beyond required fields" do
-      config = %{
-        "meta_conversion" => %{
-          "event_name" => "Purchase",
-          "user_data" => %{"email" => "user@example.com"},
-          "arbitrary_field_1" => "value1",
-          "arbitrary_field_2" => %{"nested" => "value"},
-          "arbitrary_field_3" => 123
-        }
-      }
-
-      result = MetaConversion.validate_config!(config)
-
-      assert result.meta_conversion.event_name == "Purchase"
-      assert result.meta_conversion.user_data == %{"email" => "user@example.com"}
-      assert result.meta_conversion.arbitrary_field_1 == "value1"
-      assert result.meta_conversion.arbitrary_field_2 == %{"nested" => "value"}
-      assert result.meta_conversion.arbitrary_field_3 == 123
     end
   end
 
