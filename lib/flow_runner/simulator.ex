@@ -776,8 +776,8 @@ defmodule FlowRunner.Simulator do
   # If the value looks like an enum (ALL_CAPS_WITH_UNDERSCORES), converts it to
   # an object with display, value, and __value__ keys for proper access.
   defp maybe_sanitize_enum_field(value) do
-    # Check if the value matches enum pattern (ALL_CAPS with possible underscores and numbers)
-    if String.match?(value, ~r/^[A-Z][A-Z0-9_]*$/) do
+    # Check if the value matches enum pattern (ALL_CAPS with underscores or multiple characters)
+    if String.match?(value, ~r/^[A-Z][A-Z0-9]*_[A-Z0-9_]*$|^[A-Z]{2,}[A-Z0-9]*$/) do
       # Convert ENUM_VALUE to "Enum Value" for display
       display_value =
         value
