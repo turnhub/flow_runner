@@ -29,13 +29,6 @@ defmodule FlowRunner.Spec.Container do
           vendor_metadata: map
         }
 
-  validates(:specification_version,
-    presence: true,
-    format: ~r/1.0.0-rc[0123]/
-  )
-
-  validates(:uuid, presence: true, uuid: [format: :default])
-
   @spec fetch_resource_by_uuid(Container.t(), uuid :: String.t()) ::
           {:ok, FlowRunner.Spec.Resource.t()} | {:error, reason :: String.t()}
   def fetch_resource_by_uuid(%Container{resources: resources}, uuid) do

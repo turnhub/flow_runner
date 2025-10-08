@@ -53,7 +53,7 @@ defmodule FlowRunner.MixProject do
   defp deps do
     [
       {:bypass, "~> 2.1"},
-      {:credo, "~> 1.5", only: [:dev], runtime: false},
+      {:credo, "~> 1.7", only: [:dev], runtime: false},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:elixir_uuid, "~> 1.2"},
       {:excoveralls, "~> 0.10", only: :test},
@@ -63,7 +63,7 @@ defmodule FlowRunner.MixProject do
       {:iptools, "~> 0.0.5"},
       {:jason, "~> 1.2"},
       {:junit_formatter, "~> 3.1", only: [:test]},
-      {:mix_test_watch, "~> 1.1", only: [:dev, :test], runtime: false},
+      {:mix_test_watch, "~> 1.3", only: [:dev, :test], runtime: false},
       {:open_telemetry_decorator, "<=1.4.13 or >1.5.6"},
       {:tesla, "~> 1.11"},
       {:version_tasks, "~> 0.12.0",

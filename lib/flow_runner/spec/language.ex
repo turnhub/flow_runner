@@ -15,8 +15,4 @@ defmodule FlowRunner.Spec.Language do
           variant: String.t() | nil,
           bcp_47: String.t() | nil
         }
-
-  validates(:id, presence: true)
-  validates(:iso_639_3, presence: true, format: ~r/[a-zA-Z]{3}/)
-  validates(:label, presence: true)
 end
