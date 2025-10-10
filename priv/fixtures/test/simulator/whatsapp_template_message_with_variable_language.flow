@@ -1,0 +1,295 @@
+{
+  "name": "Default name",
+  "description": "Test template with variable language for buttons",
+  "resources": [
+    {
+      "values": [
+        {
+          "value": "This is card 2",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "279d802b-479a-4a15-9a68-cd29c39b8a94"
+        }
+      ],
+      "uuid": "af8bdbce-3b5a-473d-9566-0fbba71256d0"
+    },
+    {
+      "values": [
+        {
+          "value": "This is card 1",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "279d802b-479a-4a15-9a68-cd29c39b8a94"
+        }
+      ],
+      "uuid": "4a91c1fa-e017-4d85-80e2-55f985cf1271"
+    }
+  ],
+  "uuid": "d4b3810f-00d3-492e-92bd-75b0670d5ea7",
+  "flows": [
+    {
+      "label": null,
+      "name": "stack",
+      "blocks": [
+        {
+          "label": null,
+          "name": "card2_text",
+          "type": "MobilePrimitives.Message",
+          "config": {
+            "prompt": "af8bdbce-3b5a-473d-9566-0fbba71256d0"
+          },
+          "tags": [],
+          "uuid": "8052f0a5-1769-518e-b6f1-864a98ae2b53",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "card2_text",
+              "config": {},
+              "test": "",
+              "uuid": "697b1cc0-e6a3-4f4e-a180-4be58cae855d",
+              "destination_block": null,
+              "semantic_label": "",
+              "vendor_metadata": {}
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "line": 12
+                      },
+                      "name": "Card2",
+                      "uuid": "33f9ee00-9b9f-5574-8c73-fc89a7350f81"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "line": 13
+                      },
+                      "text": {},
+                      "type": "text"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "card1_text",
+          "type": "MobilePrimitives.Message",
+          "config": {
+            "prompt": "4a91c1fa-e017-4d85-80e2-55f985cf1271"
+          },
+          "tags": [],
+          "uuid": "20d3f9be-271b-547a-828b-76d001c2235a",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": true,
+              "name": "card1_text",
+              "config": {},
+              "test": "",
+              "uuid": "b33fe65f-f00f-4c9b-81ef-ab8ce34f663a",
+              "destination_block": null,
+              "semantic_label": "",
+              "vendor_metadata": {}
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "line": 8
+                      },
+                      "name": "Card1",
+                      "uuid": "215d154b-0ac7-5f37-90a5-0c0c2f0e77da"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "line": 9
+                      },
+                      "text": {},
+                      "type": "text"
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "label": null,
+          "name": "card_whatsapp_template_message",
+          "type": "Io.Turn.WhatsAppTemplateMessage",
+          "config": {
+            "template": {
+              "name": "\"template_name\"",
+              "components": [
+                {
+                  "index": "1",
+                  "type": "button",
+                  "parameters": [
+                    {
+                      "type": "payload",
+                      "payload": "card2",
+                      "language": "@fields.language"
+                    }
+                  ],
+                  "sub_type": "quick_reply"
+                },
+                {
+                  "index": "0",
+                  "type": "button",
+                  "parameters": [
+                    {
+                      "type": "payload",
+                      "payload": "card1",
+                      "language": "@fields.language"
+                    }
+                  ],
+                  "sub_type": "quick_reply"
+                },
+                {
+                  "index": null,
+                  "type": "body",
+                  "parameters": [
+                    {
+                      "type": "text",
+                      "text": "\"placeholder-1\""
+                    },
+                    {
+                      "type": "text",
+                      "text": "\"placeholder-2\""
+                    }
+                  ],
+                  "sub_type": null
+                }
+              ],
+              "language": {
+                "code": "\"eng\""
+              },
+              "tracking": null
+            }
+          },
+          "tags": [],
+          "uuid": "ca650f72-9f18-511f-8766-4ddba1db6606",
+          "ui_metadata": {
+            "canvas_coordinates": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "exits": [
+            {
+              "default": null,
+              "name": "card1",
+              "config": {},
+              "test": "block.value = \"template-btn-idx-0\"",
+              "uuid": "99cb2cef-432d-4388-a450-04e6d186b5b6",
+              "destination_block": "20d3f9be-271b-547a-828b-76d001c2235a",
+              "semantic_label": null,
+              "vendor_metadata": {}
+            },
+            {
+              "default": null,
+              "name": "card2",
+              "config": {},
+              "test": "block.value = \"template-btn-idx-1\"",
+              "uuid": "4887df92-de2a-482a-8d56-f2eb46d693af",
+              "destination_block": "8052f0a5-1769-518e-b6f1-864a98ae2b53",
+              "semantic_label": null,
+              "vendor_metadata": {}
+            },
+            {
+              "default": true,
+              "name": "card_whatsapp_template_message",
+              "config": {},
+              "test": "",
+              "uuid": "72f3907f-b9d3-4e26-85bd-8e70cb6526a1",
+              "destination_block": null,
+              "semantic_label": "",
+              "vendor_metadata": {}
+            }
+          ],
+          "semantic_label": null,
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "condition": null,
+                      "meta": {
+                        "line": 2
+                      },
+                      "name": "Card",
+                      "uuid": "4d692c00-9ba9-54f9-a873-e3900b9eb5db"
+                    },
+                    "card_item": {
+                      "meta": {
+                        "line": 3
+                      },
+                      "type": "whatsapp_template_message",
+                      "whatsapp_template_message": {}
+                    },
+                    "index": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "last_modified": "2024-12-12T17:51:23.290061Z",
+      "uuid": "a6387a93-4882-4572-bc15-1bf97b7ece29",
+      "languages": [
+        {
+          "id": "279d802b-479a-4a15-9a68-cd29c39b8a94",
+          "label": "English",
+          "variant": null,
+          "iso_639_3": "eng",
+          "bcp_47": null
+        }
+      ],
+      "first_block_id": "ca650f72-9f18-511f-8766-4ddba1db6606",
+      "interaction_timeout": 300,
+      "vendor_metadata": {},
+      "supported_modes": [
+        "RICH_MESSAGING"
+      ],
+      "exit_block_id": ""
+    }
+  ],
+  "vendor_metadata": {},
+  "specification_version": "1.0.0-rc3"
+}
