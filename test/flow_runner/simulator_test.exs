@@ -832,6 +832,34 @@ defmodule FlowRunner.SimulatorTest do
     assert outputs == []
   end
 
+  test "whatsapp template message with variable language in buttons" do
+    sim = Simulator.new(read_floip!("whatsapp_template_message_with_variable_language"))
+
+    {:waiting, sim, outputs} = Simulator.start(sim, %{"fields" => %{"language" => "eng"}})
+
+    assert outputs
+           |> get_in([:message, :text])
+           |> with_content_type("TEXT")
+           |> has_value("[DEBUG]\nTemplate template_name sent with language eng.")
+
+    assert outputs
+           |> get_in([:message, :button])
+           |> with_content_type("TEXT")
+           |> has_value("card1")
+
+    assert outputs
+           |> get_in([:message, :button])
+           |> with_content_type("TEXT")
+           |> has_value("card2")
+
+    {:end, _sim, outputs} = Simulator.next(sim, "card1")
+
+    assert outputs
+           |> get_in([:message, :text])
+           |> with_content_type("TEXT")
+           |> has_value("This is card 1")
+  end
+
   test "video" do
     sim = Simulator.new(read_floip!("simulator_video"))
     {:end, _sim, outputs} = Simulator.start(sim)
