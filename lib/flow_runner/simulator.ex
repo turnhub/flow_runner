@@ -660,66 +660,6 @@ defmodule FlowRunner.Simulator do
     {{:message, text: content_resource_outputs}, sim}
   end
 
-  def output_block(sim, %{type: "Io.Turn.MetaConversion", config: config}) do
-    conversion_config = config.conversion
-
-    # Resolve the event_name resource UUID and evaluate it
-    event_name_resource = fetch_resource_by_uuid!(sim, conversion_config.event_name)
-    [event_name_value] = fetch_resource_values(sim, event_name_resource, "TEXT")
-    event_name = resource_value_output(sim, event_name_value).value
-
-    # Resolve the user_data resource UUID and evaluate it
-    user_data_resource = fetch_resource_by_uuid!(sim, conversion_config.user_data)
-    [user_data_value] = fetch_resource_values(sim, user_data_resource, "TEXT")
-    user_data_str = resource_value_output(sim, user_data_value).value
-
-    # Parse user_data as JSON if it's a string
-    user_data =
-      case Jason.decode(user_data_str) do
-        {:ok, decoded} -> inspect(decoded, pretty: true)
-        {:error, _} -> user_data_str
-      end
-
-    # Resolve optional_fields if present
-    optional_fields_output =
-      if conversion_config.optional_fields != [] do
-        conversion_config.optional_fields
-        |> Enum.with_index(1)
-        |> Enum.map_join("\n", fn {field_uuid, index} ->
-          resolve_optional_field(sim, field_uuid, index)
-        end)
-      else
-        ""
-      end
-
-    debug_value =
-      if optional_fields_output != "" do
-        """
-        [DEBUG]
-        Meta Conversion event sent:
-          event_name: #{event_name}
-          user_data: #{user_data}
-        #{optional_fields_output}
-        """
-      else
-        """
-        [DEBUG]
-        Meta Conversion event sent:
-          event_name: #{event_name}
-          user_data: #{user_data}
-        """
-      end
-
-    text_output = %Output{
-      mime_type: "text/plain",
-      raw_value: debug_value,
-      value: debug_value,
-      content_type: "TEXT"
-    }
-
-    {{:message, text: [text_output]}, sim}
-  end
-
   def output_block(sim, %{type: "Io.Turn.Wait", config: %{seconds: seconds}}) do
     evaluated_seconds =
       if is_binary(seconds) do
@@ -749,22 +689,6 @@ defmodule FlowRunner.Simulator do
   def output_block(sim, %{type: type}) do
     Logger.info("Simulator unable to output block of type #{inspect(type)}")
     {nil, sim}
-  end
-
-  defp resolve_optional_field(sim, field_uuid, index) do
-    field_resource = fetch_resource_by_uuid!(sim, field_uuid)
-    [field_value] = fetch_resource_values(sim, field_resource, "TEXT")
-    field_str = resource_value_output(sim, field_value).value
-
-    case Jason.decode(field_str) do
-      {:ok, field_map} when is_map(field_map) ->
-        Enum.map_join(field_map, "\n", fn {key, value} ->
-          "  #{key}: #{inspect(value)}"
-        end)
-
-      _ ->
-        "  optional_field_#{index}: #{field_str}"
-    end
   end
 
   defp extract_buttons(template_components, sim) do
