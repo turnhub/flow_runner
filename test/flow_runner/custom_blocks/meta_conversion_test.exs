@@ -7,48 +7,48 @@ defmodule FlowRunner.CustomBlocks.MetaConversionTest do
     test "returns conversion config with required parameters only" do
       config = %{
         "conversion" => %{
-          "event_name" => "event-name-uuid-123",
-          "user_data" => "user-data-uuid-456"
+          "event_name" => "Purchase",
+          "user_data" => %{"email" => "user@example.com"}
         }
       }
 
       result = MetaConversion.validate_config!(config)
 
-      assert result.conversion.event_name == "event-name-uuid-123"
-      assert result.conversion.user_data == "user-data-uuid-456"
-      assert result.conversion.optional_fields == []
+      assert result.conversion.event_name == "Purchase"
+      assert result.conversion.user_data == %{"email" => "user@example.com"}
+      assert result.conversion.optional_fields == %{}
     end
 
-    test "returns conversion config with optional_fields" do
+    test "returns conversion config with user_data and optional_fields as maps" do
       config = %{
         "conversion" => %{
-          "event_name" => "event-name-uuid-123",
-          "user_data" => "user-data-uuid-456",
-          "optional_fields" => ["optional-uuid-1", "optional-uuid-2"]
+          "event_name" => "AddToCart",
+          "user_data" => %{"email" => "@email", "phone" => "@phone"},
+          "optional_fields" => %{"event_id" => "123", "event_source_url" => "@url"}
         }
       }
 
       result = MetaConversion.validate_config!(config)
 
-      assert result.conversion.event_name == "event-name-uuid-123"
-      assert result.conversion.user_data == "user-data-uuid-456"
-      assert result.conversion.optional_fields == ["optional-uuid-1", "optional-uuid-2"]
+      assert result.conversion.event_name == "AddToCart"
+      assert result.conversion.user_data == %{"email" => "@email", "phone" => "@phone"}
+      assert result.conversion.optional_fields == %{"event_id" => "123", "event_source_url" => "@url"}
     end
 
-    test "returns conversion config with empty optional_fields list" do
+    test "returns conversion config with user_data and optional_fields as keyword lists" do
       config = %{
         "conversion" => %{
-          "event_name" => "event-name-uuid-123",
-          "user_data" => "user-data-uuid-456",
-          "optional_fields" => []
+          "event_name" => "ViewContent",
+          "user_data" => [phone: "+1234567890", email: "test@example.com"],
+          "optional_fields" => [event_id: "456", currency: "USD"]
         }
       }
 
       result = MetaConversion.validate_config!(config)
 
-      assert result.conversion.event_name == "event-name-uuid-123"
-      assert result.conversion.user_data == "user-data-uuid-456"
-      assert result.conversion.optional_fields == []
+      assert result.conversion.event_name == "ViewContent"
+      assert result.conversion.user_data == %{phone: "+1234567890", email: "test@example.com"}
+      assert result.conversion.optional_fields == %{event_id: "456", currency: "USD"}
     end
 
     test "raises error when conversion key is missing" do
@@ -62,7 +62,7 @@ defmodule FlowRunner.CustomBlocks.MetaConversionTest do
     test "raises error when event_name parameter is missing" do
       config = %{
         "conversion" => %{
-          "user_data" => "user-data-uuid-456"
+          "user_data" => %{"email" => "user@example.com"}
         }
       }
 
@@ -74,13 +74,29 @@ defmodule FlowRunner.CustomBlocks.MetaConversionTest do
     test "raises error when user_data parameter is missing" do
       config = %{
         "conversion" => %{
-          "event_name" => "event-name-uuid-123"
+          "event_name" => "Purchase"
         }
       }
 
       assert_raise FunctionClauseError, fn ->
         MetaConversion.validate_config!(config)
       end
+    end
+
+    test "returns conversion config with user_data and optional_fields as JSON strings" do
+      config = %{
+        "conversion" => %{
+          "event_name" => "Purchase",
+          "user_data" => "{\"email\":\"user@example.com\",\"phone\":\"+1234567890\"}",
+          "optional_fields" => "{\"event_id\":\"123\",\"currency\":\"USD\"}"
+        }
+      }
+
+      result = MetaConversion.validate_config!(config)
+
+      assert result.conversion.event_name == "Purchase"
+      assert result.conversion.user_data == %{"email" => "user@example.com", "phone" => "+1234567890"}
+      assert result.conversion.optional_fields == %{"event_id" => "123", "currency" => "USD"}
     end
   end
 

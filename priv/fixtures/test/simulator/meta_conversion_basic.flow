@@ -30,8 +30,11 @@
           "type": "Io.Turn.MetaConversion",
           "config": {
             "conversion": {
-              "event_name": "a1b2c3d4-0001-0001-0001-000000000001",
-              "user_data": "a1b2c3d4-0002-0002-0002-000000000002"
+              "event_name": "Purchase",
+              "user_data": {
+                "email": "user@example.com",
+                "phone": "+1234567890"
+              }
             }
           },
           "exits": [
@@ -68,30 +71,6 @@
     }
   ],
   "resources": [
-    {
-      "uuid": "a1b2c3d4-0001-0001-0001-000000000001",
-      "values": [
-        {
-          "language_id": "eng",
-          "content_type": "TEXT",
-          "mime_type": "text/plain",
-          "modes": ["RICH_MESSAGING"],
-          "value": "Purchase"
-        }
-      ]
-    },
-    {
-      "uuid": "a1b2c3d4-0002-0002-0002-000000000002",
-      "values": [
-        {
-          "language_id": "eng",
-          "content_type": "TEXT",
-          "mime_type": "text/plain",
-          "modes": ["RICH_MESSAGING"],
-          "value": "{\"email\":\"user@example.com\",\"phone\":\"+1234567890\"}"
-        }
-      ]
-    },
     {
       "uuid": "f6a7b8c9-d0e1-4f2a-3b4c-5d6e7f8a9b0c",
       "values": [
