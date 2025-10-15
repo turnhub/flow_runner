@@ -1201,12 +1201,13 @@ defmodule FlowRunner.SimulatorTest do
     [conversion_text] = get_in(conversion_fields, [:text])
     assert conversion_text.content_type == "TEXT"
 
-    # Check that the debug output contains the event name and user_data as a map
+    # Check that the debug output contains the event name and user_data as raw data
     assert conversion_text.value =~ "Meta Conversion event sent:"
     assert conversion_text.value =~ "event_name: Purchase"
-    assert conversion_text.value =~ "user_data: %{"
-    assert conversion_text.value =~ "\"email\" => \"user@example.com\""
-    assert conversion_text.value =~ "\"phone\" => \"+1234567890\""
+    assert conversion_text.value =~ "user_data:"
+    # user_data is displayed as-is (as a map in this case)
+    assert conversion_text.value =~ ~s("email" => "user@example.com")
+    assert conversion_text.value =~ ~s("phone" => "+1234567890")
 
     # Second output should be the success message
     assert {:message, message_fields} = message_output
@@ -1229,22 +1230,23 @@ defmodule FlowRunner.SimulatorTest do
     [conversion_text] = get_in(conversion_fields, [:text])
     assert conversion_text.content_type == "TEXT"
 
-    # Check that the debug output contains user_data as a map
+    # Check that the debug output contains user_data and optional_fields as raw data
     assert conversion_text.value =~ "Meta Conversion event sent:"
     assert conversion_text.value =~ "event_name: AddToCart"
-    assert conversion_text.value =~ "user_data: %{"
-    assert conversion_text.value =~ "\"email\" => \"customer@example.com\""
-    assert conversion_text.value =~ "\"phone\" => \"+9876543210\""
-    assert conversion_text.value =~ "\"fn\" => \"John\""
-    assert conversion_text.value =~ "\"ln\" => \"Doe\""
+    assert conversion_text.value =~ "user_data:"
+    # user_data is displayed as-is (as a map in this case)
+    assert conversion_text.value =~ ~s("email" => "customer@example.com")
+    assert conversion_text.value =~ ~s("phone" => "+9876543210")
+    assert conversion_text.value =~ ~s("fn" => "John")
+    assert conversion_text.value =~ ~s("ln" => "Doe")
 
-    # Check that the debug output contains optional_fields as a map
-    assert conversion_text.value =~ "optional_fields: %{"
-    assert conversion_text.value =~ "\"value\" => \"99.99\""
-    assert conversion_text.value =~ "\"currency\" => \"USD\""
-    assert conversion_text.value =~ "\"content_name\" => \"Premium Widget\""
-    assert conversion_text.value =~ "\"event_time\" => \"1234567890\""
-    assert conversion_text.value =~ "\"action_source\" => \"website\""
-    assert conversion_text.value =~ "\"event_source_url\" => \"https://example.com/products/widget\""
+    # Check that the debug output contains optional_fields as-is (as a map in this case)
+    assert conversion_text.value =~ "optional_fields:"
+    assert conversion_text.value =~ ~s("value" => "99.99")
+    assert conversion_text.value =~ ~s("currency" => "USD")
+    assert conversion_text.value =~ ~s("content_name" => "Premium Widget")
+    assert conversion_text.value =~ ~s("event_time" => "1234567890")
+    assert conversion_text.value =~ ~s("action_source" => "website")
+    assert conversion_text.value =~ ~s("event_source_url" => "https://example.com/products/widget")
   end
 end

@@ -47,8 +47,9 @@ defmodule FlowRunner.CustomBlocks.MetaConversionTest do
       result = MetaConversion.validate_config!(config)
 
       assert result.conversion.event_name == "ViewContent"
-      assert result.conversion.user_data == %{phone: "+1234567890", email: "test@example.com"}
-      assert result.conversion.optional_fields == %{event_id: "456", currency: "USD"}
+      # Keyword lists are passed through as-is, conversion happens in simulator
+      assert result.conversion.user_data == [phone: "+1234567890", email: "test@example.com"]
+      assert result.conversion.optional_fields == [event_id: "456", currency: "USD"]
     end
 
     test "raises error when conversion key is missing" do
@@ -95,8 +96,9 @@ defmodule FlowRunner.CustomBlocks.MetaConversionTest do
       result = MetaConversion.validate_config!(config)
 
       assert result.conversion.event_name == "Purchase"
-      assert result.conversion.user_data == %{"email" => "user@example.com", "phone" => "+1234567890"}
-      assert result.conversion.optional_fields == %{"event_id" => "123", "currency" => "USD"}
+      # JSON strings are passed through as-is, conversion happens in simulator
+      assert result.conversion.user_data == "{\"email\":\"user@example.com\",\"phone\":\"+1234567890\"}"
+      assert result.conversion.optional_fields == "{\"event_id\":\"123\",\"currency\":\"USD\"}"
     end
   end
 
