@@ -1087,7 +1087,7 @@ defmodule FlowRunner.SimulatorTest do
     assert outputs
            |> get_in([:interactive, :image])
            |> with_content_type("IMAGE")
-           |> has_value("data:image/jpeg;base64,")
+           |> has_value("data:image/png;base64,")
 
     # Check the "View Catalog" button is present
     assert outputs
@@ -1121,7 +1121,7 @@ defmodule FlowRunner.SimulatorTest do
     assert outputs
            |> get_in([:interactive, :image])
            |> with_content_type("IMAGE")
-           |> has_value("data:image/jpeg;base64,")
+           |> has_value("data:image/png;base64,")
 
     assert outputs
            |> get_in([:interactive, :button])
@@ -1151,7 +1151,7 @@ defmodule FlowRunner.SimulatorTest do
     assert outputs
            |> get_in([:interactive, :image])
            |> with_content_type("IMAGE")
-           |> has_value("data:image/jpeg;base64,")
+           |> has_value("data:image/png;base64,")
 
     assert outputs
            |> get_in([:interactive, :button])
