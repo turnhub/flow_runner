@@ -538,11 +538,15 @@ defmodule FlowRunner.Simulator do
       content_type: "IMAGE"
     }
 
-    # Create the main text output
+    # Create message output
+    # NOTE: This is a warning since the catalog message type isn't fully supported in the simulator
+    text_output =
+      "[WARNING]\nThis message type isn't fully supported by the simulator, try previewing this on your phone.\n\n#{catalog_text}"
+
     text_output = %Output{
       mime_type: "text/plain",
-      raw_value: catalog_text,
-      value: catalog_text,
+      raw_value: text_output,
+      value: text_output,
       content_type: "TEXT"
     }
 
@@ -586,11 +590,16 @@ defmodule FlowRunner.Simulator do
     [text_resource_value] = fetch_resource_values(sim, text_resource, "TEXT")
     request_text = resource_value_output(sim, text_resource_value).value
 
+    # Create message output
+    # NOTE: This is a warning since the catalog message type isn't fully supported in the simulator
+    text_output =
+      "[WARNING]\nThis message type isn't fully supported by the simulator, try previewing this on your phone.\n\n#{request_text}"
+
     # Create the main text output
     text_output = %Output{
       mime_type: "text/plain",
-      raw_value: request_text,
-      value: request_text,
+      raw_value: text_output,
+      value: text_output,
       content_type: "TEXT"
     }
 
