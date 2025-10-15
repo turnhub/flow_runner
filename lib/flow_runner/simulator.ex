@@ -672,45 +672,15 @@ defmodule FlowRunner.Simulator do
         sim.callbacks_module
       )
 
-    # Process user_data: convert to map if needed, evaluate each value as expression
-    user_data_map = ensure_map(conversion_config.user_data)
+    # Evaluate user_data values while keeping the original structure (map or keyword list)
+    user_data = evaluate_conversion_fields(conversion_config.user_data, context_vars, sim.callbacks_module)
 
-    user_data =
-      user_data_map
-      |> Enum.map(fn {key, value_expr} ->
-        evaluated_value =
-          Expression.evaluate_as_string!(
-            to_string(value_expr),
-            context_vars,
-            sim.callbacks_module
-          )
-
-        {to_string(key), evaluated_value}
-      end)
-      |> Map.new()
-      |> inspect()
-
-    # Process optional_fields: convert to map if needed, evaluate each value as expression
-    optional_fields_map = ensure_map(conversion_config.optional_fields)
-
+    # Evaluate optional_fields values while keeping the original structure
     optional_fields_output =
-      if map_size(optional_fields_map) > 0 do
-        optional_fields =
-          optional_fields_map
-          |> Enum.map(fn {key, value_expr} ->
-            evaluated_value =
-              Expression.evaluate_as_string!(
-                to_string(value_expr),
-                context_vars,
-                sim.callbacks_module
-              )
-
-            {to_string(key), evaluated_value}
-          end)
-          |> Map.new()
-          |> inspect()
-
-        "\n  optional_fields: #{optional_fields}"
+      if conversion_config.optional_fields != %{} and conversion_config.optional_fields != "" and
+           conversion_config.optional_fields != nil do
+        optional_fields = evaluate_conversion_fields(conversion_config.optional_fields, context_vars, sim.callbacks_module)
+        "\n  optional_fields: #{inspect(optional_fields)}"
       else
         ""
       end
@@ -719,7 +689,7 @@ defmodule FlowRunner.Simulator do
     [DEBUG]
     Meta Conversion event sent:
       event_name: #{event_name}
-      user_data: #{user_data}#{optional_fields_output}
+      user_data: #{inspect(user_data)}#{optional_fields_output}
     """
 
     text_output = %Output{
@@ -763,10 +733,31 @@ defmodule FlowRunner.Simulator do
     {nil, sim}
   end
 
-  # Helper function to ensure input is a map
-  defp ensure_map(fields) when is_map(fields), do: fields
-  defp ensure_map(fields) when is_list(fields), do: Map.new(fields)
-  defp ensure_map(_), do: %{}
+  # Helper function to evaluate conversion field values and return as a map
+  defp evaluate_conversion_fields(fields, context_vars, callbacks_module) do
+    fields
+    |> normalize_to_map()
+    |> evaluate_map_values(context_vars, callbacks_module)
+  end
+
+  # Convert various data types to a map
+  defp normalize_to_map(fields) when is_map(fields), do: fields
+  defp normalize_to_map(fields) when is_list(fields), do: Enum.into(fields, %{})
+  defp normalize_to_map(fields) when is_binary(fields) do
+    case Jason.decode(fields) do
+      {:ok, decoded} when is_map(decoded) -> decoded
+      _ -> %{}
+    end
+  end
+  defp normalize_to_map(_), do: %{}
+
+  # Evaluate all values in a map as expressions
+  defp evaluate_map_values(map, context_vars, callbacks_module) do
+    Map.new(map, fn {key, value_expr} ->
+      evaluated_value = Expression.evaluate_as_string!(to_string(value_expr), context_vars, callbacks_module)
+      {key, evaluated_value}
+    end)
+  end
 
   defp extract_buttons(template_components, sim) do
     buttons = Enum.filter(template_components, &(&1.type == "button" and &1.sub_type != "url"))

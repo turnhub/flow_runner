@@ -34,51 +34,10 @@ defmodule FlowRunner.CustomBlocks.MetaConversion do
             "event_name" => event_name,
             "user_data" => user_data
           } = params
-      }) do
-    # Normalize user_data to a map (can be map, keyword list, or JSON string)
-    user_data =
-      case user_data do
-        fields when is_map(fields) ->
-          fields
-
-        fields when is_binary(fields) ->
-          # Try to parse as JSON string
-          case Jason.decode(fields) do
-            {:ok, decoded} when is_map(decoded) -> decoded
-            _ -> %{}
-          end
-
-        fields when is_list(fields) ->
-          # Try to convert keyword list to map
-          if Keyword.keyword?(fields), do: Map.new(fields), else: %{}
-
-        _other ->
-          %{}
-      end
-
-    # Extract optional_fields if present (map, keyword list, or JSON string)
+      })
+      when user_data != nil and user_data != "" do
+    # Extract optional_fields if present (default to empty map)
     optional_fields = Map.get(params, "optional_fields", %{})
-
-    # Ensure optional_fields is a map or empty
-    optional_fields =
-      case optional_fields do
-        fields when is_map(fields) ->
-          fields
-
-        fields when is_binary(fields) ->
-          # Try to parse as JSON string
-          case Jason.decode(fields) do
-            {:ok, decoded} when is_map(decoded) -> decoded
-            _ -> %{}
-          end
-
-        fields when is_list(fields) ->
-          # Try to convert keyword list to map
-          if Keyword.keyword?(fields), do: Map.new(fields), else: %{}
-
-        _other ->
-          %{}
-      end
 
     %{
       conversion: %{
