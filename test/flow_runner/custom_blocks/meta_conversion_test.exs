@@ -32,7 +32,11 @@ defmodule FlowRunner.CustomBlocks.MetaConversionTest do
 
       assert result.conversion.event_name == "AddToCart"
       assert result.conversion.user_data == %{"email" => "@email", "phone" => "@phone"}
-      assert result.conversion.optional_fields == %{"event_id" => "123", "event_source_url" => "@url"}
+
+      assert result.conversion.optional_fields == %{
+               "event_id" => "123",
+               "event_source_url" => "@url"
+             }
     end
 
     test "returns conversion config with user_data and optional_fields as keyword lists" do
@@ -97,7 +101,9 @@ defmodule FlowRunner.CustomBlocks.MetaConversionTest do
 
       assert result.conversion.event_name == "Purchase"
       # JSON strings are passed through as-is, conversion happens in simulator
-      assert result.conversion.user_data == "{\"email\":\"user@example.com\",\"phone\":\"+1234567890\"}"
+      assert result.conversion.user_data ==
+               "{\"email\":\"user@example.com\",\"phone\":\"+1234567890\"}"
+
       assert result.conversion.optional_fields == "{\"event_id\":\"123\",\"currency\":\"USD\"}"
     end
   end

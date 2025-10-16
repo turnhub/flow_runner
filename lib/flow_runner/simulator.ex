@@ -673,13 +673,19 @@ defmodule FlowRunner.Simulator do
       )
 
     # Evaluate user_data values while keeping the original structure (map or keyword list)
-    user_data = evaluate_conversion_fields(conversion_config.user_data, context_vars, sim.callbacks_module)
+    user_data =
+      evaluate_conversion_fields(conversion_config.user_data, context_vars, sim.callbacks_module)
 
     # Evaluate optional_fields values while keeping the original structure
     optional_fields_output =
-      if conversion_config.optional_fields != %{} and conversion_config.optional_fields != "" and
-           conversion_config.optional_fields != nil do
-        optional_fields = evaluate_conversion_fields(conversion_config.optional_fields, context_vars, sim.callbacks_module)
+      if conversion_config.optional_fields not in [nil, %{}, ""] do
+        optional_fields =
+          evaluate_conversion_fields(
+            conversion_config.optional_fields,
+            context_vars,
+            sim.callbacks_module
+          )
+
         "\n  optional_fields: #{inspect(optional_fields)}"
       else
         ""
@@ -743,18 +749,22 @@ defmodule FlowRunner.Simulator do
   # Convert various data types to a map
   defp normalize_to_map(fields) when is_map(fields), do: fields
   defp normalize_to_map(fields) when is_list(fields), do: Enum.into(fields, %{})
+
   defp normalize_to_map(fields) when is_binary(fields) do
     case Jason.decode(fields) do
       {:ok, decoded} when is_map(decoded) -> decoded
       _ -> %{}
     end
   end
+
   defp normalize_to_map(_), do: %{}
 
   # Evaluate all values in a map as expressions
   defp evaluate_map_values(map, context_vars, callbacks_module) do
     Map.new(map, fn {key, value_expr} ->
-      evaluated_value = Expression.evaluate_as_string!(to_string(value_expr), context_vars, callbacks_module)
+      evaluated_value =
+        Expression.evaluate_as_string!(to_string(value_expr), context_vars, callbacks_module)
+
       {key, evaluated_value}
     end)
   end

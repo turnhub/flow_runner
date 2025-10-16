@@ -1247,6 +1247,8 @@ defmodule FlowRunner.SimulatorTest do
     assert conversion_text.value =~ ~s("content_name" => "Premium Widget")
     assert conversion_text.value =~ ~s("event_time" => "1234567890")
     assert conversion_text.value =~ ~s("action_source" => "website")
-    assert conversion_text.value =~ ~s("event_source_url" => "https://example.com/products/widget")
+
+    assert conversion_text.value =~
+             ~s("event_source_url" => "https://example.com/products/widget")
   end
 end
