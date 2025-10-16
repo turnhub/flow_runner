@@ -1087,7 +1087,7 @@ defmodule FlowRunner.SimulatorTest do
     assert outputs
            |> get_in([:interactive, :image])
            |> with_content_type("IMAGE")
-           |> has_value("data:image/jpeg;base64,")
+           |> has_value("data:image/png;base64,")
 
     # Check the "View Catalog" button is present
     assert outputs
@@ -1121,7 +1121,7 @@ defmodule FlowRunner.SimulatorTest do
     assert outputs
            |> get_in([:interactive, :image])
            |> with_content_type("IMAGE")
-           |> has_value("data:image/jpeg;base64,")
+           |> has_value("data:image/png;base64,")
 
     assert outputs
            |> get_in([:interactive, :button])
@@ -1151,7 +1151,7 @@ defmodule FlowRunner.SimulatorTest do
     assert outputs
            |> get_in([:interactive, :image])
            |> with_content_type("IMAGE")
-           |> has_value("data:image/jpeg;base64,")
+           |> has_value("data:image/png;base64,")
 
     assert outputs
            |> get_in([:interactive, :button])
@@ -1184,5 +1184,71 @@ defmodule FlowRunner.SimulatorTest do
     [message_text] = get_in(message_fields, [:text])
     assert message_text.content_type == "TEXT"
     assert message_text.value == "This message appears after the wait!"
+  end
+
+  test "meta conversion with basic configuration" do
+    sim = Simulator.new(read_floip!("meta_conversion_basic"))
+
+    {:end, _sim, outputs} = Simulator.start(sim)
+
+    # Should have two messages: meta conversion debug message and the success message
+    assert length(outputs) == 2
+
+    # First output should be the meta conversion debug message
+    [conversion_output, message_output] = outputs
+
+    assert {:message, conversion_fields} = conversion_output
+    [conversion_text] = get_in(conversion_fields, [:text])
+    assert conversion_text.content_type == "TEXT"
+
+    # Check that the debug output contains the event name and user_data as raw data
+    assert conversion_text.value =~ "Meta Conversion event sent:"
+    assert conversion_text.value =~ "event_name: Purchase"
+    assert conversion_text.value =~ "user_data:"
+    # user_data is displayed as-is (as a map in this case)
+    assert conversion_text.value =~ ~s("email" => "user@example.com")
+    assert conversion_text.value =~ ~s("phone" => "+1234567890")
+
+    # Second output should be the success message
+    assert {:message, message_fields} = message_output
+    [message_text] = get_in(message_fields, [:text])
+    assert message_text.content_type == "TEXT"
+    assert message_text.value == "Conversion event sent successfully!"
+  end
+
+  test "meta conversion with optional parameters" do
+    sim = Simulator.new(read_floip!("meta_conversion_with_optional_params"))
+
+    {:end, _sim, outputs} = Simulator.start(sim)
+
+    # Should have one message: meta conversion debug message
+    assert length(outputs) == 1
+
+    [conversion_output] = outputs
+
+    assert {:message, conversion_fields} = conversion_output
+    [conversion_text] = get_in(conversion_fields, [:text])
+    assert conversion_text.content_type == "TEXT"
+
+    # Check that the debug output contains user_data and optional_fields as raw data
+    assert conversion_text.value =~ "Meta Conversion event sent:"
+    assert conversion_text.value =~ "event_name: AddToCart"
+    assert conversion_text.value =~ "user_data:"
+    # user_data is displayed as-is (as a map in this case)
+    assert conversion_text.value =~ ~s("email" => "customer@example.com")
+    assert conversion_text.value =~ ~s("phone" => "+9876543210")
+    assert conversion_text.value =~ ~s("fn" => "John")
+    assert conversion_text.value =~ ~s("ln" => "Doe")
+
+    # Check that the debug output contains optional_fields as-is (as a map in this case)
+    assert conversion_text.value =~ "optional_fields:"
+    assert conversion_text.value =~ ~s("value" => "99.99")
+    assert conversion_text.value =~ ~s("currency" => "USD")
+    assert conversion_text.value =~ ~s("content_name" => "Premium Widget")
+    assert conversion_text.value =~ ~s("event_time" => "1234567890")
+    assert conversion_text.value =~ ~s("action_source" => "website")
+
+    assert conversion_text.value =~
+             ~s("event_source_url" => "https://example.com/products/widget")
   end
 end
