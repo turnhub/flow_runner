@@ -677,8 +677,10 @@ defmodule FlowRunner.Simulator do
       evaluate_conversion_fields(conversion_config.user_data, context_vars, sim.callbacks_module)
 
     # Evaluate optional_fields values while keeping the original structure
+    optional_fields? = conversion_config.optional_fields not in [nil, %{}, ""]
+
     optional_fields_output =
-      if conversion_config.optional_fields not in [nil, %{}, ""] do
+      if optional_fields? do
         optional_fields =
           evaluate_conversion_fields(
             conversion_config.optional_fields,
@@ -687,8 +689,6 @@ defmodule FlowRunner.Simulator do
           )
 
         "\n  optional_fields: #{inspect(optional_fields)}"
-      else
-        ""
       end
 
     debug_value = """
