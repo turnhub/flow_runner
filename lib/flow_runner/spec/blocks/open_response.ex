@@ -33,7 +33,7 @@ defmodule FlowRunner.Spec.Blocks.OpenResponse do
 
   @impl true
   @decorate with_span("FlowRunner.Blocks.OpenResponse.evaluate_incoming")
-  def evaluate_incoming(container, flow, block, context) do
+  def evaluate_incoming(container, flow, block, %Context{} = context) do
     {
       :ok,
       container,
