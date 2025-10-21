@@ -27,7 +27,7 @@ defmodule FlowRunner.Spec.Blocks.Log do
         %Container{} = container,
         %Flow{} = flow,
         %Block{} = block,
-        context
+        %Context{} = context
       ) do
     context =
       case Container.fetch_resource_by_uuid(container, block.config.message) do

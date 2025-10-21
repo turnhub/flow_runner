@@ -17,7 +17,7 @@ defmodule FlowRunner.CustomBlocks.UpdateDictionary do
 
   @impl true
   @decorate with_span("DSL.Blocks.UpdateDictionary.evaluate_incoming")
-  def evaluate_incoming(container, flow, block, context) do
+  def evaluate_incoming(container, flow, block, %FlowRunner.Context{} = context) do
     context = %FlowRunner.Context{
       context
       | waiting_for_user_input: false,

@@ -8,7 +8,7 @@ defmodule FlowRunner.MixProject do
       app: :flow_runner,
       aliases: aliases(),
       version: @version,
-      elixir: "~> 1.13",
+      elixir: "~> 1.16",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:yecc] ++ Mix.compilers(),
       description: description(),
