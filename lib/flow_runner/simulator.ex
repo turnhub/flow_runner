@@ -759,11 +759,26 @@ defmodule FlowRunner.Simulator do
   # Evaluate all values in a map as expressions
   defp evaluate_map_values(map, context_vars, callbacks_module) do
     Map.new(map, fn {key, value_expr} ->
-      evaluated_value =
-        Expression.evaluate_as_string!(to_string(value_expr), context_vars, callbacks_module)
+      evaluated_value = evaluate_field_value(value_expr, context_vars, callbacks_module)
 
       {key, evaluated_value}
     end)
+  end
+
+  # Evaluate a single field value - handles nested structures
+  defp evaluate_field_value(value, context_vars, callbacks_module) when is_map(value) do
+    evaluate_map_values(value, context_vars, callbacks_module)
+  end
+
+  defp evaluate_field_value(value, context_vars, callbacks_module) when is_list(value) do
+    # Convert keyword list to map and evaluate
+    value
+    |> Enum.into(%{})
+    |> evaluate_map_values(context_vars, callbacks_module)
+  end
+
+  defp evaluate_field_value(value, context_vars, callbacks_module) do
+    Expression.evaluate_as_string!(to_string(value), context_vars, callbacks_module)
   end
 
   defp extract_buttons(template_components, sim) do
