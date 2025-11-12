@@ -268,35 +268,32 @@ defmodule FlowRunner.Simulator do
         type: "Io.Turn.WhatsAppSendFlow",
         config: %{
           flow: %{
-            id: flow_id_resource_uuid,
+            id: flow_id,
             cta: cta_resource_uuid,
-            screen: screen_resource_uuid
+            screen: screen
           }
         }
       }) do
-    flow_resource = fetch_resource_by_uuid!(sim, flow_id_resource_uuid)
-    cta_resource = fetch_resource_by_uuid!(sim, cta_resource_uuid)
-    screen_resource = fetch_resource_by_uuid!(sim, screen_resource_uuid)
+    flow_id = Expression.evaluate_as_string!(flow_id, sim.context.vars, sim.callbacks_module)
 
-    [flow_id] =
-      sim
-      |> fetch_resource_values(flow_resource, "TEXT")
-      |> Enum.map(&resource_value_output(sim, &1))
+    screen =
+      Expression.evaluate_as_string!(
+        screen || "FIRST_ENTRY_SCREEN",
+        sim.context.vars,
+        sim.callbacks_module
+      )
+
+    cta_resource = fetch_resource_by_uuid!(sim, cta_resource_uuid)
 
     [cta] =
       sim
       |> fetch_resource_values(cta_resource, "TEXT")
       |> Enum.map(&resource_value_output(sim, &1))
 
-    [screen] =
-      sim
-      |> fetch_resource_values(screen_resource, "TEXT")
-      |> Enum.map(&resource_value_output(sim, &1))
-
     debug_value = """
     [DEBUG]
-    Flow with ID #{inspect(flow_id.value)} is sent to the phone using #{inspect(cta.value)} as the call to action.
-    It will start with the screen #{inspect(screen.value)}.
+    Flow with ID #{inspect(flow_id)} is sent to the phone using #{inspect(cta.value)} as the call to action.
+    It will start with the screen #{inspect(screen)}.
 
     Note: it won't actually run in this simulator.
     """
