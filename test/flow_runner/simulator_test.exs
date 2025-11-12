@@ -1263,4 +1263,36 @@ defmodule FlowRunner.SimulatorTest do
     assert conversion_text.value =~
              ~s("event_source_url" => "https://example.com/products/widget")
   end
+
+  test "meta conversion with nested optional fields" do
+    sim = Simulator.new(read_floip!("meta_conversion_with_nested_fields"))
+
+    {:end, _sim, outputs} = Simulator.start(sim)
+
+    assert length(outputs) == 1
+
+    [conversion_output] = outputs
+
+    assert {:message, conversion_fields} = conversion_output
+    [conversion_text] = get_in(conversion_fields, [:text])
+    assert conversion_text.content_type == "TEXT"
+
+    # Check that the debug output contains the event name and user_data
+    assert conversion_text.value =~ "Meta Conversion event sent:"
+    assert conversion_text.value =~ "event_name: Purchase"
+    assert conversion_text.value =~ "user_data:"
+    assert conversion_text.value =~ ~s("client_ip_address" => "1.1.1.1")
+    assert conversion_text.value =~ ~s("client_user_agent" => "test user agent")
+
+    # Check that the debug output contains optional_fields with nested custom_data
+    assert conversion_text.value =~ "optional_fields:"
+    assert conversion_text.value =~ ~s("value" => "199.99")
+    assert conversion_text.value =~ ~s("currency" => "USD")
+
+    # Verify nested custom_data is properly evaluated and displayed
+    assert conversion_text.value =~ ~s("custom_data" =>)
+    assert conversion_text.value =~ ~s("product_id" => "SKU123")
+    assert conversion_text.value =~ ~s("category" => "Electronics")
+    assert conversion_text.value =~ ~s("brand" => "TestBrand")
+  end
 end
