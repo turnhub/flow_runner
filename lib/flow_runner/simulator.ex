@@ -295,7 +295,7 @@ defmodule FlowRunner.Simulator do
     payload = get_vendor(vendor_metadata, ["card_item", "whatsapp_flow", "payload"])
 
     payload_output =
-      if payload not in [nil, %{}, ""] do
+      if payload && payload != %{} && payload != "" do
         evaluated_payload =
           evaluate_conversion_fields(payload, sim.context.vars, sim.callbacks_module)
 
