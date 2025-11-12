@@ -1,0 +1,137 @@
+{
+  "name": "WhatsApp Send Flow",
+  "description": "Basic WhatsApp flow message test",
+  "uuid": "d4b3810f-00d3-492e-92bd-75b0670d5ea7",
+  "flows": [
+    {
+      "uuid": "48da8ae9-0272-4ebf-8f30-fff28eeaf3c9",
+      "name": "WhatsApp Send Flow",
+      "label": null,
+      "last_modified": "2025-11-12T15:46:52.158515Z",
+      "interaction_timeout": 300,
+      "vendor_metadata": {},
+      "supported_modes": ["RICH_MESSAGING"],
+      "first_block_id": "e98b60d8-eaae-5fd4-a260-77a20549207b",
+      "exit_block_id": "",
+      "languages": [
+        {
+          "id": "57e46c33-bdb5-44cb-a707-11b89d1e6f7a",
+          "iso_639_3": "eng",
+          "label": "English",
+          "variant": null,
+          "bcp_47": null
+        }
+      ],
+      "blocks": [
+        {
+          "uuid": "e98b60d8-eaae-5fd4-a260-77a20549207b",
+          "name": "flow_whatsapp_flow",
+          "label": null,
+          "semantic_label": null,
+          "tags": [],
+          "vendor_metadata": {
+            "io": {
+              "turn": {
+                "stacks_dsl": {
+                  "0.1.0": {
+                    "card": {
+                      "code_generator": null,
+                      "condition": null,
+                      "meta": {"column": 3, "line": 2},
+                      "name": "Flow",
+                      "uuid": "181e9c45-45fd-5bb9-888a-00238f501ce2",
+                      "version": null
+                    },
+                    "card_item": {
+                      "meta": {"column": 5, "line": 4},
+                      "type": "whatsapp_flow",
+                      "whatsapp_flow": {"payload": {"foo": "bar"}}
+                    },
+                    "index": 0,
+                    "version": 2.0
+                  }
+                }
+              }
+            }
+          },
+          "ui_metadata": {"canvas_coordinates": {"x": 0, "y": 0}},
+          "type": "Io.Turn.WhatsAppSendFlow",
+          "config": {
+            "flow": {
+              "id": "1289489102445874",
+              "header": "c2d2b5ac-849d-411f-bdd1-00e2de8dfd9b",
+              "text": "2ce61ee7-27a2-4d7f-b797-4282674e6e20",
+              "footer": "e735ef66-c51c-4aae-8747-ea7c40f7a5ba",
+              "screen": "SIGN_UP",
+              "cta": "241daa6a-26ae-4cde-bcdf-07188e4a79d3"
+            }
+          },
+          "exits": [
+            {
+              "uuid": "47a40874-5531-45bc-b585-2f748a3905a6",
+              "name": "flow_whatsapp_flow",
+              "destination_block": null,
+              "semantic_label": "",
+              "test": "",
+              "default": true,
+              "config": {},
+              "vendor_metadata": {}
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "uuid": "241daa6a-26ae-4cde-bcdf-07188e4a79d3",
+      "values": [
+        {
+          "language_id": "57e46c33-bdb5-44cb-a707-11b89d1e6f7a",
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "modes": ["RICH_MESSAGING"],
+          "value": "click!"
+        }
+      ]
+    },
+    {
+      "uuid": "2ce61ee7-27a2-4d7f-b797-4282674e6e20",
+      "values": [
+        {
+          "language_id": "57e46c33-bdb5-44cb-a707-11b89d1e6f7a",
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "modes": ["RICH_MESSAGING"],
+          "value": "this is the body"
+        }
+      ]
+    },
+    {
+      "uuid": "c2d2b5ac-849d-411f-bdd1-00e2de8dfd9b",
+      "values": [
+        {
+          "language_id": "57e46c33-bdb5-44cb-a707-11b89d1e6f7a",
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "modes": ["RICH_MESSAGING"],
+          "value": "this is the header"
+        }
+      ]
+    },
+    {
+      "uuid": "e735ef66-c51c-4aae-8747-ea7c40f7a5ba",
+      "values": [
+        {
+          "language_id": "57e46c33-bdb5-44cb-a707-11b89d1e6f7a",
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "modes": ["RICH_MESSAGING"],
+          "value": "this is the footer"
+        }
+      ]
+    }
+  ],
+  "description": "Basic WhatsApp flow message test",
+  "specification_version": "1.0.0-rc3"
+}

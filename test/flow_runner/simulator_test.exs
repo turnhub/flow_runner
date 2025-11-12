@@ -73,6 +73,18 @@ defmodule FlowRunner.SimulatorTest do
     assert outputs == []
   end
 
+  test "simulator with whatsapp flow" do
+    sim = Simulator.new(read_floip!("whatsapp_send_flow"))
+    {:waiting, _sim, outputs} = Simulator.start(sim)
+
+    assert outputs
+           |> get_in([:message, :text])
+           |> with_content_type("TEXT")
+           |> has_value(
+             "Flow with ID \"1289489102445874\" is sent to the phone using \"click!\" as the call to action."
+           )
+  end
+
   test "simulator with whatsapp request location" do
     sim = Simulator.new(read_floip!("whatsapp_request_location_basic"))
     {:waiting, _sim, outputs} = Simulator.start(sim)
