@@ -272,7 +272,8 @@ defmodule FlowRunner.Simulator do
             cta: cta_resource_uuid,
             screen: screen
           }
-        }
+        },
+        vendor_metadata: vendor_metadata
       }) do
     flow_id = Expression.evaluate_as_string!(flow_id, sim.context.vars, sim.callbacks_module)
 
@@ -290,10 +291,23 @@ defmodule FlowRunner.Simulator do
       |> fetch_resource_values(cta_resource, "TEXT")
       |> Enum.map(&resource_value_output(sim, &1))
 
+    # Extract and evaluate payload if present
+    payload = get_vendor(vendor_metadata, ["card_item", "whatsapp_flow", "payload"])
+
+    payload_output =
+      if payload && payload != %{} && payload != "" do
+        evaluated_payload =
+          evaluate_conversion_fields(payload, sim.context.vars, sim.callbacks_module)
+
+        "\n    Payload: #{inspect(evaluated_payload)}"
+      else
+        ""
+      end
+
     debug_value = """
     [DEBUG]
     Flow with ID #{inspect(flow_id)} is sent to the phone using #{inspect(cta.value)} as the call to action.
-    It will start with the screen #{inspect(screen)}.
+    It will start with the screen #{inspect(screen)}.#{payload_output}
 
     Note: it won't actually run in this simulator.
     """
