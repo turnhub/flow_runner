@@ -83,6 +83,30 @@ defmodule FlowRunner.SimulatorTest do
            |> has_value(
              "Flow with ID \"1289489102445874\" is sent to the phone using \"click!\" as the call to action."
            )
+
+    # Assert payload is rendered
+    assert outputs
+           |> get_in([:message, :text])
+           |> with_content_type("TEXT")
+           |> has_value("Payload: %{\"foo\" => \"bar\"}")
+  end
+
+  test "simulator with whatsapp flow without payload" do
+    sim = Simulator.new(read_floip!("whatsapp_send_flow_no_payload"))
+    {:waiting, _sim, outputs} = Simulator.start(sim)
+
+    text_output =
+      outputs
+      |> get_in([:message, :text])
+      |> with_content_type("TEXT")
+      |> List.first()
+
+    # Assert basic flow info is present
+    assert text_output.value =~ "Flow with ID \"9876543210\""
+    assert text_output.value =~ "using \"Open Flow\" as the call to action"
+
+    # Assert payload is NOT present in output
+    refute text_output.value =~ "Payload:"
   end
 
   test "simulator with whatsapp request location" do
