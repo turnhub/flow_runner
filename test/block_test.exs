@@ -164,4 +164,40 @@ defmodule BlockTest do
     assert {:ok, %Context{}, _no_destination_block = nil} =
              Block.fetch_next_block(block, %Flow{}, context)
   end
+
+  test "evaluate exits with complex values containing __value__" do
+    # When an expression returns a map with __value__ (like has_phone),
+    # the exit should extract and use the __value__ for boolean evaluation
+    context = %Context{
+      vars: %{
+        "valid" => %{"__value__" => true, "phonenumber" => "+27820001001"}
+      }
+    }
+
+    block = %Block{
+      exits: [
+        %Exit{
+          uuid: "success-exit",
+          test: "valid"
+        },
+        %Exit{
+          uuid: "failure-exit",
+          default: true
+        }
+      ]
+    }
+
+    # Should match the first exit because valid.__value__ is true
+    assert {:ok, %Exit{uuid: "success-exit"}} = Block.evaluate_exits(block, context)
+
+    # Test with __value__ = false
+    context_false = %Context{
+      vars: %{
+        "valid" => %{"__value__" => false, "phonenumber" => nil}
+      }
+    }
+
+    # Should fall through to default exit because valid.__value__ is false
+    assert {:ok, %Exit{uuid: "failure-exit"}} = Block.evaluate_exits(block, context_false)
+  end
 end
