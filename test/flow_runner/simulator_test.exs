@@ -1155,6 +1155,86 @@ defmodule FlowRunner.SimulatorTest do
     end
   end
 
+  test "contact property enum field sanitization with expression" do
+    # Test enum value gets sanitized when property_value is an expression
+    container = %{
+      "name" => "Test Enum Sanitization Expression",
+      "description" => "Test description",
+      "uuid" => "66980030-a035-42da-97de-64814acbd834",
+      "resources" => [],
+      "flows" => [
+        %{
+          "label" => nil,
+          "name" => "test_flow",
+          "blocks" => [
+            %{
+              "label" => nil,
+              "name" => "test_enum_expression",
+              "type" => "Core.SetContactProperty",
+              "config" => %{
+                "set_contact_property" => %{
+                  "property_key" => "target_status",
+                  "property_value" => "@contact.source_status"
+                }
+              },
+              "tags" => [],
+              "uuid" => "c180325c-c48c-5a18-a117-634366357b29",
+              "ui_metadata" => %{
+                "canvas_coordinates" => %{"x" => 0, "y" => 0}
+              },
+              "exits" => [
+                %{
+                  "default" => true,
+                  "name" => "default_exit",
+                  "config" => %{},
+                  "test" => "",
+                  "uuid" => "1318ac38-99ed-4f2f-b15f-5daf26ce3ece",
+                  "semantic_label" => "",
+                  "vendor_metadata" => %{},
+                  "destination_block" => nil
+                }
+              ],
+              "semantic_label" => nil,
+              "vendor_metadata" => %{}
+            }
+          ],
+          "last_modified" => "2024-01-01T00:00:00.000000Z",
+          "uuid" => "425d9020-4d40-456d-8dd1-d1d3734e648a",
+          "languages" => [
+            %{
+              "id" => "61f302b9-960d-4df4-8d6e-6435fd704810",
+              "label" => "English",
+              "variant" => nil,
+              "iso_639_3" => "eng",
+              "bcp_47" => nil
+            }
+          ],
+          "first_block_id" => "c180325c-c48c-5a18-a117-634366357b29",
+          "interaction_timeout" => 300,
+          "vendor_metadata" => %{},
+          "supported_modes" => ["RICH_MESSAGING"],
+          "exit_block_id" => ""
+        }
+      ],
+      "vendor_metadata" => %{},
+      "specification_version" => "1.0.0-rc3"
+    }
+
+    # Initialize with a contact field containing an enum value
+    initial_vars = %{"contact" => %{"source_status" => "PENDING_APPROVAL"}}
+    sim = Simulator.new(FlowRunner.compile!(container))
+    {:end, sim, []} = Simulator.start(sim, initial_vars)
+
+    # Verify the enum value from the expression was sanitized into proper structure
+    target_status = get_in(sim.context.vars, ["contact", "target_status"])
+
+    assert %{
+             "display" => "Pending Approval",
+             "value" => "PENDING_APPROVAL",
+             "__value__" => "PENDING_APPROVAL"
+           } = target_status
+  end
+
   test "contact property non-enum values remain unchanged" do
     # Test that non-enum values are not sanitized
     non_enum_cases = [
