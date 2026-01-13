@@ -9,6 +9,10 @@ defmodule FlowRunner.Simulator do
 
   require Logger
 
+  # Base64 encoded placeholder image for WhatsApp catalog simulation
+  # This ensures the image is always available regardless of the consuming application's static assets
+  @catalog_placeholder_data_uri "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAaQAAAFQBAMAAAACYRcJAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAIVBMVEVGAJXu4v/o2f3ey/rVvvjJrfXAnf+ogN+NXchwOLRYGKIZMaM+AAAN9UlEQVR42uzXzXPSQBgG8L1hcns3tON1oRWvQPDjCCYVjwLBj5vabD3Wqi3lVD8YoKccdFp6yqnW/pU6enDsJiENO9k3nf39B888L08WommapmmapmmapmmapmmapmmalsS8/OuGhFnMDvY9p/mb4+0czBdnISmyxWx/wOA/1N2ZLYqa6vL04yMGEaj9bF7EG/w57TOIRVujM1IsxrQHS7RGASkO80RoKLKpw5AUxOkHBqnQx/NiVDRtQ2rVUUjQM8SKkosK0B9dD65pcx7i3oU2XJuFeSXMSR0ysJ6jzWRMGGTTDbEOA2SGcyRMIVHRM5nvYSX3A+wdFf/3ZE4AblimCYOV0bcEkZM6SEAPCRo/2iBF+ZggYbwGSe4ERZ9vUS0kGHwHiV4QBC7qIBEdE+WMVyDVekBU+wqSdZXvN4NUKpRVaCFOz+ilSFO1HWfwh9NsMFhmLcB9dhXb84b8H99zmgzz6V0wSEKrLo/gOw1IQo+JMuY7SEBtl8fwB4mh1kOcH9mqyxN4fYbxg2u0IVbF5Uv4TYhlBfi2oTrkyzkM4nTRvYTsIU/Da8TWtEtU2IMY1OUp+R2G6UleYhDNcnl6cStBx4hKolucS8hUw1OSNeQ8QyYENZl78YnkZKqFCkrKdnWiPkShuwpKyphI1MFQU4nFrbe8THSMYO5aPCO/EVmT+pJsnplfBxE9Ivn5AhE2hjy7bQaiB4qf4FRItPLslQOSl28SfkiCNogekpyYT0G0wQWrn95aSPJxHnt20k9vnFNJn+LOTv7p3Sa5uMVAUOYCKadHj5SNwxaXoQeCJ6rGYZPLUVczECUW9Y9CjjcgyOM9/jlpG+TXdFfJy8Hi0myreEGcg+Ael6cDV738xcv5+zYNBXHcS0ncjcTBrJb41TGqVKndAIHERkDJwAYkGDMlQnJIJzdDQpksIhG6WaKpSf5KJNQFzn53771+382tnNPd+3y/d86Lh46JokgIkOOlyY8MihRPr8OgTPhl8ka7SPGX84tdcX2l5OcyZcvkuvMmmkWKv/57E2a35ZIi+Ald911bXaG8QqvVSQ0dd96VlibVXRXZLrW06RNaZ+VDxayovwekYyEeYnVW7u7ic5VR/J3KyxQgfV5J+m5QmxFzP2mbyg352GXfBUxGRjmNIoc+7610TooJpXRyesJMGMh5ts1kZJjT0N1seymEQ/zNE0UtI7rODMSZkODivc5ayPEQi3AeDho3x5Y1gHA1NDVk9i7WeL6fMkYPjPGVqO/iTIs4sjXlCdCF830387RiLZKmEHeU+L6LNTXEX1Tm1HNymBqiviP8ZkkuYt7YiSrdq6Sdpx1LSee9QKkS33ekQUyp13WwVNl/LDDhM6ObqwLmdQoHBi9gJMmyTCMHNm9D/B1TJEuQd/E2byWYKwxR66f8IHiM/7Zx6wONxCNhDr0hXGz9/xqhwxXJ1haNIrTYNnmEJ55xLHjrmgHowFoHi4c2+cP00rvp+M6O6B8Li5O6YA/TAdqGd5hZVjdK9jCFaO9wZAUHGj57mIIC7B0GdnCg8UNxmDD+oWRVaWz5AHbAGGMni4C3d/YOYhRB/cMZZ/Cs78wvOJv3CAu85wzvDH7fr8FN6yEUeK2BeuWw7vf7g5l1570myMO90Gyr+87v/f2jzKbzqNi2cuQqJVD3XcNI70sFHwDI2+PokFf4wTvWatsFurwVoYPqKF2ZNX9K/QNwSzRn6JBUWY12bmsg3gG3RBMmpXHlJZPMBuPUP4TAb0oGnGXdTqef9VPymTVRp8BN6R3BInzPAFEpRR6M4k0GeEk19t9Yu/EubFZvMMPS6c2kVFLkwYRpwzA8qy7ssfUG4hVsPfmLAV5RbaEOdCnEUPwEtktpE4NXQ5S71gPGELZRmatTSmq4H16oYleQ/yF8GMG0dqKWpdOalFqHT+vj8BndkpVqiocwpb0v2klOBL9lw7/kjIjWQl48PyDeQZ6S2uH4amEKcpR5OBK9RJ+zGdGPuJ8SYQKl1IyUshSL3keJbpmSlHqgVV5TvZZMTFOiDmehFqYM5IdaspQuTVIiFH8PckS3bv9p71y+msiCMN4bJ/TddQdEl63iMMuIMo9dKzIOKxNM1J080ogrGDEqq+jMCLiKHofHrs9xUOCvHM8cF8Yy96tw83WSOf3bsdDDR1XXrfuoKutJ6xpKovSNbAr2tfYRKcUr6iR9pwgPKczylklJ3ju7pGYHb4WMgcRVlGDMcVI8mTy0tIWduJrCl+kDJ8l7Y93TrqRaSbg0yTSsks6TJE3oJPlY0g9YUhJx8tYXUhK+szClAPGL4s62xJG0fipJcYCY8wR2SeMkSdPKG82FAPFAcaISD5IknIqv9U/SgjVrfa76ApW9UfaseetZyg5QStrUS8IVcR+tksbS/kp6i/Oh/kmKkaTTpeJnu5Y0SpJUA1mrOhUf19xeVJwl4UUz1Er6EAAmgSS5BywyJGEr6VPxn3VW4ksKeyZpTiNpYZCsNBIAbhMcj2olvLtYIzge10p+CSUPQ2YlnIqHraH7lkwZ5ENpH60Ua6wkWUD5EGGpZSZEeHcxrrquXaRI8sqnk/QSHqYMVyaOJZ3nScKsWyWtouM/nA9lvwUEknT38KBn0hCcPeDdxdrgSnqo7+GBL4teAUkZH03ivBX34tEcTfIlraTq5jEwepmGkNTPM3HJOlyWsKSIIElE4zF1Scw7FPD6dxnzj/1+qaktp8EX/iNSEufB7iGQpG3/jH+7gpBEutj8YL/YfOB1wi+DcXnc62f9I4EuirGOljoMsX7d4Y+X1SOBESFJXedzfLD9DXZONA/ypKQm68FNDTy4caBh3QGGTdazqFnLwuSGsUsqtljVS9NgYXKv2+S/9DJlu6RmzzxcSgI5FOn+ObHHVnMifgQPxQm3z2DLPdZVSa3/pHq39cWP9erDFDzn5z978Ax4cbOCRr/eapttG95XV6rXaY+q34M6YYuPF9qj76HtMzeyGpD29P0QvOZvIp/9rf2rfKSNDku0AoUCKFDfRPF/vH2Fm9RGhwonH5Jb7ml9fPCjtmPSgjV07YLKmCavrPayLMlC9m21VX6OpbrcISnROgebMuhf0VJKOhRn2/bCOfCYn1h0kawBSaHGSgUpiVik/hJE8VXgsmOab2kXBLzJbEuFu4t455SlwovEhg9ngKSk5b4u+YmgTCzoLqAa9U3rvOtiS5E9fEQ16mvM5ghj+qYc5o+2kbr+408CV8EmHZTVUjaBxUS/MvmN6rP0y8bH1efaRgLLzBYWZh01uNl03S+NJNQSdckbFB9WPUdeoehwjjt06bJ70x6cDSUlcT7LDXn81kpJRG2tNBLBxmuufoe6wTTJbcpq0PPc200uMgOevP6a5jeTS2Jys8m38GNacWv5JymRW/6dwYMGHJz9CLcEvc1unxnWehogdhPJIrt9ph/jps4th7NwSUyf77OO+wWvOhgJrUrjKb1hcBF0dXaI4KAhKLFxK7mtc4XQ1hnc+E8Tmm8TmuuCgy88P2G1Z0aqRxnMYHohPI/ZyH5JPs/hD3WdRmbSJ6zY7+YyGQoxkRCHQiRRFkMh/FiGcZDpKbM77HejrWwGrMzyBqwk5WymFb0Xnkcbg1MvZTNQvaAb+/UwdR9WtJzRsCITS89zi3pmCwxoA58Sa1qRw/72o3KM3rnMJruGNdJ4tiVQNUgcojfNGaKXxJkN0TNlHCD0mvwGGMMryqQJiLeq4SxjIGVSyXAgZUHOOiSMDa2XQAinhvEwEehixH4j6ch8pqPUf7eYSbCTeh0w+4mFmOl3uJS+mPR8UPIyd1AyLv+dto+zTj2Bv9dIbMSy/pbKOjKTtFSbKnO83Uis1FFlJ380/KzTaHhJBdWb8D3vUoJ5+plGAqlHwO8YhypguXWkAvyOEvOAmQDQSDLesfFjqpkqAXGd1dc0F5lGmvT4FKIArE0OSBdY8/iYMs9My7iuk3TqSjNTCdTXcfe2csfuzjzor8JcmgiBXOyTuOcosvacEsivy/+WtyjhPi/FmntsiDINDriqeYLgdpxzY309/ax73oAzB+ZJUc9dbz4KBD95VHDx+SVXt8OZA/lYRXLNQVEcSL73AMREz/1zug5mRvTNTBdqDmmDNFLq9ctM7iHiThToviS+mSSjNRdF2Eh8M0ku1ZyyBvwl8c3krqkqFIFwRzaTu6Y7pcDRSHwzBRdrDl4HviQyhZJFk0MaBKaoUvkz6EB4U5kz3OigKLjlZQtucBVeVX1GV1CTouz5O+jIxareRJL7Xr8wlp6f4UytaxPh18Z8jqKgMxeudhZVn7L8y/C11z9Me4SQoqrf1FO9LgRpYwMfvxJYCaduVr/WM3MlCmxMZB0bZNks4MLFqzPVWlJL6rVqdWZK6CHkDYzFSRJFURgBNTq34+MvBD3lrIPb8VwPQ4h25AUXM3iLrJjH3St+TL2BwF8MHAC9DfvEURz0hNFNb2DY60mIKOoV8TG7PdAU3vMIEJI9PfdS73+m6dfUGzDMY8fw3fIGDrPBtlH2+BsOihxsxP2eotPGOgdFXMxfpVOtRw6xjo7ZO4Wm0eepN8CY/UrQJRM73oDjb0RBF4TugYGP2Yq7cLpnqTcEmKONSGsigtOxosS8RtQ1Qlzg4W/Nw7DwrOUNF8db8xcsh3vXRInJMHCy/+RG9O2rmrs7J95wYg62G3eir6/TVrYPUm+IMccH+08b1ZmpT8xUV55ufy4pGXrSk/8wXk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OjoV/AeeiWShgshcGAAAAAElFTkSuQmCC"
+
   defstruct uuid: nil,
             stacks: [],
             language: nil,
@@ -264,35 +268,46 @@ defmodule FlowRunner.Simulator do
         type: "Io.Turn.WhatsAppSendFlow",
         config: %{
           flow: %{
-            id: flow_id_resource_uuid,
+            id: flow_id,
             cta: cta_resource_uuid,
-            screen: screen_resource_uuid
+            screen: screen
           }
-        }
+        },
+        vendor_metadata: vendor_metadata
       }) do
-    flow_resource = fetch_resource_by_uuid!(sim, flow_id_resource_uuid)
-    cta_resource = fetch_resource_by_uuid!(sim, cta_resource_uuid)
-    screen_resource = fetch_resource_by_uuid!(sim, screen_resource_uuid)
+    flow_id = Expression.evaluate_as_string!(flow_id, sim.context.vars, sim.callbacks_module)
 
-    [flow_id] =
-      sim
-      |> fetch_resource_values(flow_resource, "TEXT")
-      |> Enum.map(&resource_value_output(sim, &1))
+    screen =
+      Expression.evaluate_as_string!(
+        screen || "FIRST_ENTRY_SCREEN",
+        sim.context.vars,
+        sim.callbacks_module
+      )
+
+    cta_resource = fetch_resource_by_uuid!(sim, cta_resource_uuid)
 
     [cta] =
       sim
       |> fetch_resource_values(cta_resource, "TEXT")
       |> Enum.map(&resource_value_output(sim, &1))
 
-    [screen] =
-      sim
-      |> fetch_resource_values(screen_resource, "TEXT")
-      |> Enum.map(&resource_value_output(sim, &1))
+    # Extract and evaluate payload if present
+    payload = get_vendor(vendor_metadata, ["card_item", "whatsapp_flow", "payload"])
+
+    payload_output =
+      if payload && payload != %{} && payload != "" do
+        evaluated_payload =
+          evaluate_conversion_fields(payload, sim.context.vars, sim.callbacks_module)
+
+        "\n    Payload: #{inspect(evaluated_payload)}"
+      else
+        ""
+      end
 
     debug_value = """
     [DEBUG]
-    Flow with ID #{inspect(flow_id.value)} is sent to the phone using #{inspect(cta.value)} as the call to action.
-    It will start with the screen #{inspect(screen.value)}.
+    Flow with ID #{inspect(flow_id)} is sent to the phone using #{inspect(cta.value)} as the call to action.
+    It will start with the screen #{inspect(screen)}.#{payload_output}
 
     Note: it won't actually run in this simulator.
     """
@@ -517,6 +532,107 @@ defmodule FlowRunner.Simulator do
     end
   end
 
+  def output_block(sim, %{type: "Io.Turn.WhatsAppCatalog", config: config}) do
+    catalog_config = config.catalog
+
+    # Resolve the catalog text resource and evaluate it
+    text_resource = fetch_resource_by_uuid!(sim, catalog_config.text)
+    [text_resource_value] = fetch_resource_values(sim, text_resource, "TEXT")
+    catalog_text = resource_value_output(sim, text_resource_value).value
+
+    # Create a placeholder thumbnail image (simulating catalog thumbnail)
+    # Uses embedded data URI to ensure image is always available regardless of static assets configuration
+    catalog_thumbnail_image = @catalog_placeholder_data_uri
+
+    image_output = %Output{
+      mime_type: "image/jpeg",
+      raw_value: catalog_thumbnail_image,
+      value: catalog_thumbnail_image,
+      content_type: "IMAGE"
+    }
+
+    # Create message output
+    # NOTE: This is a warning since the catalog message type isn't fully supported in the simulator
+    text_output =
+      "[WARNING]\nThis message type isn't fully supported by the simulator, try previewing this on your phone.\n\n#{catalog_text}"
+
+    text_output = %Output{
+      mime_type: "text/plain",
+      raw_value: text_output,
+      value: text_output,
+      content_type: "TEXT"
+    }
+
+    # Create the "View Catalog" button
+    button_output = %Output{
+      mime_type: "text/plain",
+      raw_value: "View Catalog",
+      value: "View Catalog",
+      event_value: "view_catalog",
+      content_type: "TEXT"
+    }
+
+    # Handle footer metadata
+    catalog_metadata =
+      if Map.has_key?(catalog_config, :footer) do
+        footer_resource = fetch_resource_by_uuid!(sim, catalog_config.footer)
+        [footer_resource_value] = fetch_resource_values(sim, footer_resource, "TEXT")
+        footer_text = resource_value_output(sim, footer_resource_value).value
+        %{"footer" => footer_text}
+      else
+        %{}
+      end
+
+    metadata_outputs = get_interactive_metadata_resource_outputs(sim, catalog_metadata)
+
+    outputs =
+      [
+        text: [text_output],
+        image: [image_output],
+        button: [button_output]
+      ] ++ metadata_outputs
+
+    {{:interactive, outputs}, sim}
+  end
+
+  def output_block(sim, %{type: "Io.Turn.WhatsAppRequestLocation", config: config}) do
+    request_location_config = config.request_location
+
+    # Resolve the request location text resource and evaluate it
+    text_resource = fetch_resource_by_uuid!(sim, request_location_config.text)
+    [text_resource_value] = fetch_resource_values(sim, text_resource, "TEXT")
+    request_text = resource_value_output(sim, text_resource_value).value
+
+    # Create message output
+    # NOTE: This is a warning since the catalog message type isn't fully supported in the simulator
+    text_output =
+      "[WARNING]\nThis message type isn't fully supported by the simulator, try previewing this on your phone.\n\n#{request_text}"
+
+    # Create the main text output
+    text_output = %Output{
+      mime_type: "text/plain",
+      raw_value: text_output,
+      value: text_output,
+      content_type: "TEXT"
+    }
+
+    # Create the "Send location" button
+    button_output = %Output{
+      mime_type: "text/plain",
+      raw_value: "Send location",
+      value: "Send location",
+      event_value: "send_location",
+      content_type: "TEXT"
+    }
+
+    outputs = [
+      text: [text_output],
+      button: [button_output]
+    ]
+
+    {{:interactive, outputs}, sim}
+  end
+
   def output_block(sim, %{type: "Core.Log", config: %{message: text_resource_uuid}}) do
     log_resource = fetch_resource_by_uuid!(sim, text_resource_uuid)
 
@@ -557,9 +673,128 @@ defmodule FlowRunner.Simulator do
     {{:message, text: content_resource_outputs}, sim}
   end
 
+  def output_block(sim, %{type: "Io.Turn.MetaConversion", config: config}) do
+    conversion_config = config.conversion
+    context_vars = if sim.context, do: sim.context.vars, else: %{}
+
+    # Evaluate event_name directly as an expression
+    event_name =
+      Expression.evaluate_as_string!(
+        conversion_config.event_name,
+        context_vars,
+        sim.callbacks_module
+      )
+
+    # Evaluate user_data values while keeping the original structure (map or keyword list)
+    user_data =
+      evaluate_conversion_fields(conversion_config.user_data, context_vars, sim.callbacks_module)
+
+    # Evaluate optional_fields values while keeping the original structure
+    optional_fields? = conversion_config.optional_fields not in [nil, %{}, ""]
+
+    optional_fields_output =
+      if optional_fields? do
+        optional_fields =
+          evaluate_conversion_fields(
+            conversion_config.optional_fields,
+            context_vars,
+            sim.callbacks_module
+          )
+
+        "\n  optional_fields: #{inspect(optional_fields)}"
+      end
+
+    debug_value = """
+    [DEBUG]
+    Meta Conversion event sent:
+      event_name: #{event_name}
+      user_data: #{inspect(user_data)}#{optional_fields_output}
+    """
+
+    text_output = %Output{
+      mime_type: "text/plain",
+      raw_value: debug_value,
+      value: debug_value,
+      content_type: "TEXT"
+    }
+
+    {{:message, text: [text_output]}, sim}
+  end
+
+  def output_block(sim, %{type: "Io.Turn.Wait", config: %{seconds: seconds}}) do
+    evaluated_seconds =
+      if is_binary(seconds) do
+        Expression.evaluate_block!(seconds, sim.context.vars, sim.callbacks_module)
+      else
+        seconds
+      end
+
+    debug_value = """
+    [DEBUG]
+    Paused execution for #{evaluated_seconds} second(s).
+    """
+
+    # Wait for the number of seconds specified in the wait block
+    Process.sleep(evaluated_seconds * 1000)
+
+    text_output = %Output{
+      mime_type: "text/plain",
+      raw_value: debug_value,
+      value: debug_value,
+      content_type: "TEXT"
+    }
+
+    {{:message, text: [text_output]}, sim}
+  end
+
   def output_block(sim, %{type: type}) do
     Logger.info("Simulator unable to output block of type #{inspect(type)}")
     {nil, sim}
+  end
+
+  # Helper function to evaluate conversion field values and return as a map
+  defp evaluate_conversion_fields(fields, context_vars, callbacks_module) do
+    fields
+    |> normalize_to_map()
+    |> evaluate_map_values(context_vars, callbacks_module)
+  end
+
+  # Convert various data types to a map
+  defp normalize_to_map(fields) when is_map(fields), do: fields
+  defp normalize_to_map(fields) when is_list(fields), do: Enum.into(fields, %{})
+
+  defp normalize_to_map(fields) when is_binary(fields) do
+    case Jason.decode(fields) do
+      {:ok, decoded} when is_map(decoded) -> decoded
+      _ -> %{}
+    end
+  end
+
+  defp normalize_to_map(_), do: %{}
+
+  # Evaluate all values in a map as expressions
+  defp evaluate_map_values(map, context_vars, callbacks_module) do
+    Map.new(map, fn {key, value_expr} ->
+      evaluated_value = evaluate_field_value(value_expr, context_vars, callbacks_module)
+
+      {key, evaluated_value}
+    end)
+  end
+
+  # Evaluate a single field value - handles nested structures
+  defp evaluate_field_value(value, context_vars, callbacks_module) when is_map(value) do
+    evaluate_map_values(value, context_vars, callbacks_module)
+  end
+
+  defp evaluate_field_value(value, context_vars, callbacks_module) when is_list(value) do
+    # Convert keyword list to map and evaluate
+    value
+    |> Enum.into(%{})
+    |> evaluate_map_values(context_vars, callbacks_module)
+  end
+
+  defp evaluate_field_value(value, context_vars, callbacks_module) do
+    Expression.evaluate_as_string!(to_string(value), context_vars, callbacks_module)
   end
 
   defp extract_buttons(template_components, sim) do
@@ -569,7 +804,10 @@ defmodule FlowRunner.Simulator do
       template_components
       |> Enum.filter(&(&1.type == "button"))
       |> Enum.map(fn button -> Map.get(button, :parameters, []) end)
-      |> Enum.filter(fn [%{language: language} | _] -> language == sim.language.iso_639_3 end)
+      |> Enum.filter(fn [%{language: language} | _] ->
+        Expression.evaluate_as_string!(language, sim.context.vars, sim.callbacks_module) ==
+          sim.language.iso_639_3
+      end)
       |> Enum.reverse()
       |> List.flatten()
       |> Enum.map(fn %{payload: payload} -> payload end)

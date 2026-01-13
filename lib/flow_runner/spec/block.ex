@@ -138,7 +138,7 @@ defmodule FlowRunner.Spec.Block do
     {:ok, context}
   end
 
-  def evaluate_user_input(block, context, user_input)
+  def evaluate_user_input(block, %Context{} = context, user_input)
       when context.waiting_for_user_input == true do
     vars =
       Map.merge(context.vars, %{
@@ -149,7 +149,7 @@ defmodule FlowRunner.Spec.Block do
     {:ok, %Context{context | vars: vars, waiting_for_user_input: false}}
   end
 
-  def evaluate_user_input(%{type: "Core.Case"} = block, context, user_input) do
+  def evaluate_user_input(%{type: "Core.Case"} = block, %Context{} = context, user_input) do
     vars =
       Map.merge(context.vars, %{
         "block" => %{"value" => user_input},

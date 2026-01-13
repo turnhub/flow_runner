@@ -93,7 +93,7 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
 
   @impl true
   @decorate with_span("FlowRunner.Blocks.SelectOneResponse.evaluate_incoming")
-  def evaluate_incoming(container, flow, block, context) do
+  def evaluate_incoming(container, flow, block, %Context{} = context) do
     {
       :ok,
       container,

@@ -73,6 +73,57 @@ defmodule FlowRunner.SimulatorTest do
     assert outputs == []
   end
 
+  test "simulator with whatsapp flow" do
+    sim = Simulator.new(read_floip!("whatsapp_send_flow"))
+    {:waiting, _sim, outputs} = Simulator.start(sim)
+
+    assert outputs
+           |> get_in([:message, :text])
+           |> with_content_type("TEXT")
+           |> has_value(
+             "Flow with ID \"1289489102445874\" is sent to the phone using \"click!\" as the call to action."
+           )
+
+    # Assert payload is rendered
+    assert outputs
+           |> get_in([:message, :text])
+           |> with_content_type("TEXT")
+           |> has_value("Payload: %{\"foo\" => \"bar\"}")
+  end
+
+  test "simulator with whatsapp flow without payload" do
+    sim = Simulator.new(read_floip!("whatsapp_send_flow_no_payload"))
+    {:waiting, _sim, outputs} = Simulator.start(sim)
+
+    text_output =
+      outputs
+      |> get_in([:message, :text])
+      |> with_content_type("TEXT")
+      |> List.first()
+
+    # Assert basic flow info is present
+    assert text_output.value =~ "Flow with ID \"9876543210\""
+    assert text_output.value =~ "using \"Open Flow\" as the call to action"
+
+    # Assert payload is NOT present in output
+    refute text_output.value =~ "Payload:"
+  end
+
+  test "simulator with whatsapp request location" do
+    sim = Simulator.new(read_floip!("whatsapp_request_location_basic"))
+    {:waiting, _sim, outputs} = Simulator.start(sim)
+
+    assert outputs
+           |> get_in([:interactive, :text])
+           |> with_content_type("TEXT")
+           |> has_value("Please share your location so we can help you better.")
+
+    assert outputs
+           |> get_in([:interactive, :button])
+           |> with_content_type("TEXT")
+           |> has_value("Send location")
+  end
+
   test "simulator with quick reply" do
     sim = Simulator.new(read_floip!("quick_reply_stack"))
 
@@ -817,6 +868,34 @@ defmodule FlowRunner.SimulatorTest do
     assert outputs == []
   end
 
+  test "whatsapp template message with variable language in buttons" do
+    sim = Simulator.new(read_floip!("whatsapp_template_message_with_variable_language"))
+
+    {:waiting, sim, outputs} = Simulator.start(sim, %{"fields" => %{"language" => "eng"}})
+
+    assert outputs
+           |> get_in([:message, :text])
+           |> with_content_type("TEXT")
+           |> has_value("[DEBUG]\nTemplate template_name sent with language eng.")
+
+    assert outputs
+           |> get_in([:message, :button])
+           |> with_content_type("TEXT")
+           |> has_value("card1")
+
+    assert outputs
+           |> get_in([:message, :button])
+           |> with_content_type("TEXT")
+           |> has_value("card2")
+
+    {:end, _sim, outputs} = Simulator.next(sim, "card1")
+
+    assert outputs
+           |> get_in([:message, :text])
+           |> with_content_type("TEXT")
+           |> has_value("This is card 1")
+  end
+
   test "video" do
     sim = Simulator.new(read_floip!("simulator_video"))
     {:end, _sim, outputs} = Simulator.start(sim)
@@ -1455,5 +1534,217 @@ defmodule FlowRunner.SimulatorTest do
     # it should NOT be updated because `variables.platform`
     # does NOT exists in the context variables
     assert get_in(sim.context.vars, ["variables", "platform"]) == nil
+  end
+
+  test "whatsapp catalog with text only" do
+    sim = Simulator.new(read_floip!("whatsapp_catalog_basic"))
+
+    {:waiting, _sim, outputs} = Simulator.start(sim)
+
+    # Check the catalog message text
+    assert outputs
+           |> get_in([:interactive, :text])
+           |> with_content_type("TEXT")
+           |> has_value("Welcome to our catalog!")
+
+    # Check the thumbnail image is present (now uses data URI)
+    assert outputs
+           |> get_in([:interactive, :image])
+           |> with_content_type("IMAGE")
+           |> has_value("data:image/png;base64,")
+
+    # Check the "View Catalog" button is present
+    assert outputs
+           |> get_in([:interactive, :button])
+           |> with_content_type("TEXT")
+           |> has_value("View Catalog")
+
+    # Check the button has the correct event value
+    button_output = outputs |> get_in([:interactive, :button]) |> hd()
+    assert button_output.event_value == "view_catalog"
+  end
+
+  test "whatsapp catalog with text and footer" do
+    sim = Simulator.new(read_floip!("whatsapp_catalog_with_footer"))
+
+    {:waiting, _sim, outputs} = Simulator.start(sim)
+
+    # Check the main catalog message
+    assert outputs
+           |> get_in([:interactive, :text])
+           |> with_content_type("TEXT")
+           |> has_value("Browse our products")
+
+    # Check the footer is in its own output section (like list blocks)
+    assert outputs
+           |> get_in([:interactive, :footer])
+           |> with_content_type("TEXT")
+           |> has_value("Contact us for more info")
+
+    # Check the interactive elements are present
+    assert outputs
+           |> get_in([:interactive, :image])
+           |> with_content_type("IMAGE")
+           |> has_value("data:image/png;base64,")
+
+    assert outputs
+           |> get_in([:interactive, :button])
+           |> with_content_type("TEXT")
+           |> has_value("View Catalog")
+  end
+
+  test "whatsapp catalog with expressions in text and footer" do
+    sim = Simulator.new(read_floip!("whatsapp_catalog_with_expressions"))
+
+    {:waiting, _sim, outputs} =
+      Simulator.start(sim, %{"store_name" => "Amazing Store", "support_email" => "help@store.com"})
+
+    # Check that expressions are evaluated in the catalog text
+    assert outputs
+           |> get_in([:interactive, :text])
+           |> with_content_type("TEXT")
+           |> has_value("Welcome to Amazing Store catalog!")
+
+    # Check that expressions are evaluated in the footer (in its own output section)
+    assert outputs
+           |> get_in([:interactive, :footer])
+           |> with_content_type("TEXT")
+           |> has_value("Contact help@store.com")
+
+    # Check the catalog maintains its interactive structure
+    assert outputs
+           |> get_in([:interactive, :image])
+           |> with_content_type("IMAGE")
+           |> has_value("data:image/png;base64,")
+
+    assert outputs
+           |> get_in([:interactive, :button])
+           |> with_content_type("TEXT")
+           |> has_value("View Catalog")
+  end
+
+  test "simulator with wait block" do
+    sim = Simulator.new(read_floip!("wait"))
+
+    {:end, _sim, outputs} = Simulator.start(sim)
+
+    # Should have two messages: wait debug message and the actual message
+    assert length(outputs) == 2
+
+    # First output should be the wait block debug message
+    [wait_output, message_output] = outputs
+
+    assert {:message, wait_fields} = wait_output
+    [wait_text] = get_in(wait_fields, [:text])
+    assert wait_text.content_type == "TEXT"
+
+    assert wait_text.value == """
+           [DEBUG]
+           Paused execution for 1 second(s).
+           """
+
+    # Second output should be the message after wait
+    assert {:message, message_fields} = message_output
+    [message_text] = get_in(message_fields, [:text])
+    assert message_text.content_type == "TEXT"
+    assert message_text.value == "This message appears after the wait!"
+  end
+
+  test "meta conversion with basic configuration" do
+    sim = Simulator.new(read_floip!("meta_conversion_basic"))
+
+    {:end, _sim, outputs} = Simulator.start(sim)
+
+    # Should have two messages: meta conversion debug message and the success message
+    assert length(outputs) == 2
+
+    # First output should be the meta conversion debug message
+    [conversion_output, message_output] = outputs
+
+    assert {:message, conversion_fields} = conversion_output
+    [conversion_text] = get_in(conversion_fields, [:text])
+    assert conversion_text.content_type == "TEXT"
+
+    # Check that the debug output contains the event name and user_data as raw data
+    assert conversion_text.value =~ "Meta Conversion event sent:"
+    assert conversion_text.value =~ "event_name: Purchase"
+    assert conversion_text.value =~ "user_data:"
+    # user_data is displayed as-is (as a map in this case)
+    assert conversion_text.value =~ ~s("email" => "user@example.com")
+    assert conversion_text.value =~ ~s("phone" => "+1234567890")
+
+    # Second output should be the success message
+    assert {:message, message_fields} = message_output
+    [message_text] = get_in(message_fields, [:text])
+    assert message_text.content_type == "TEXT"
+    assert message_text.value == "Conversion event sent successfully!"
+  end
+
+  test "meta conversion with optional parameters" do
+    sim = Simulator.new(read_floip!("meta_conversion_with_optional_params"))
+
+    {:end, _sim, outputs} = Simulator.start(sim)
+
+    # Should have one message: meta conversion debug message
+    assert length(outputs) == 1
+
+    [conversion_output] = outputs
+
+    assert {:message, conversion_fields} = conversion_output
+    [conversion_text] = get_in(conversion_fields, [:text])
+    assert conversion_text.content_type == "TEXT"
+
+    # Check that the debug output contains user_data and optional_fields as raw data
+    assert conversion_text.value =~ "Meta Conversion event sent:"
+    assert conversion_text.value =~ "event_name: AddToCart"
+    assert conversion_text.value =~ "user_data:"
+    # user_data is displayed as-is (as a map in this case)
+    assert conversion_text.value =~ ~s("email" => "customer@example.com")
+    assert conversion_text.value =~ ~s("phone" => "+9876543210")
+    assert conversion_text.value =~ ~s("fn" => "John")
+    assert conversion_text.value =~ ~s("ln" => "Doe")
+
+    # Check that the debug output contains optional_fields as-is (as a map in this case)
+    assert conversion_text.value =~ "optional_fields:"
+    assert conversion_text.value =~ ~s("value" => "99.99")
+    assert conversion_text.value =~ ~s("currency" => "USD")
+    assert conversion_text.value =~ ~s("content_name" => "Premium Widget")
+    assert conversion_text.value =~ ~s("event_time" => "1234567890")
+    assert conversion_text.value =~ ~s("action_source" => "website")
+
+    assert conversion_text.value =~
+             ~s("event_source_url" => "https://example.com/products/widget")
+  end
+
+  test "meta conversion with nested optional fields" do
+    sim = Simulator.new(read_floip!("meta_conversion_with_nested_fields"))
+
+    {:end, _sim, outputs} = Simulator.start(sim)
+
+    assert length(outputs) == 1
+
+    [conversion_output] = outputs
+
+    assert {:message, conversion_fields} = conversion_output
+    [conversion_text] = get_in(conversion_fields, [:text])
+    assert conversion_text.content_type == "TEXT"
+
+    # Check that the debug output contains the event name and user_data
+    assert conversion_text.value =~ "Meta Conversion event sent:"
+    assert conversion_text.value =~ "event_name: Purchase"
+    assert conversion_text.value =~ "user_data:"
+    assert conversion_text.value =~ ~s("client_ip_address" => "1.1.1.1")
+    assert conversion_text.value =~ ~s("client_user_agent" => "test user agent")
+
+    # Check that the debug output contains optional_fields with nested custom_data
+    assert conversion_text.value =~ "optional_fields:"
+    assert conversion_text.value =~ ~s("value" => "199.99")
+    assert conversion_text.value =~ ~s("currency" => "USD")
+
+    # Verify nested custom_data is properly evaluated and displayed
+    assert conversion_text.value =~ ~s("custom_data" =>)
+    assert conversion_text.value =~ ~s("product_id" => "SKU123")
+    assert conversion_text.value =~ ~s("category" => "Electronics")
+    assert conversion_text.value =~ ~s("brand" => "TestBrand")
   end
 end

@@ -12,8 +12,8 @@ jobs:
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
-          elixir-version: "1.18"
-          otp-version: "27"
+          elixir-version: "1.19.0"
+          otp-version: "28"
       - name: Install Dependencies
         run: |
           mix local.hex --force

@@ -1,14 +1,14 @@
 defmodule FlowRunner.MixProject do
   use Mix.Project
 
-  @version "6.0.0"
+  @version "6.5.3"
 
   def project do
     [
       app: :flow_runner,
       aliases: aliases(),
       version: @version,
-      elixir: "~> 1.13",
+      elixir: "~> 1.16",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:yecc] ++ Mix.compilers(),
       description: description(),
@@ -53,17 +53,17 @@ defmodule FlowRunner.MixProject do
   defp deps do
     [
       {:bypass, "~> 2.1"},
-      {:credo, "~> 1.5", only: [:dev], runtime: false},
+      {:credo, "~> 1.7", only: [:dev], runtime: false},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:elixir_uuid, "~> 1.2"},
       {:excoveralls, "~> 0.10", only: :test},
-      {:expression, "~> 2.46.0"},
+      {:expression, "~> 2.47.3"},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:finch, "~> 0.17"},
       {:iptools, "~> 0.0.5"},
       {:jason, "~> 1.2"},
       {:junit_formatter, "~> 3.1", only: [:test]},
-      {:mix_test_watch, "~> 1.1", only: [:dev, :test], runtime: false},
+      {:mix_test_watch, "~> 1.3", only: [:dev, :test], runtime: false},
       {:open_telemetry_decorator, "<=1.4.13 or >1.5.6"},
       {:tesla, "~> 1.11"},
       {:version_tasks, "~> 0.12.0",

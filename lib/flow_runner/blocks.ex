@@ -22,14 +22,18 @@ defmodule FlowRunner.Blocks do
       "MobilePrimitives.NumericResponse" => FlowRunner.Spec.Blocks.NumericResponse,
       "MobilePrimitives.OpenResponse" => FlowRunner.Spec.Blocks.OpenResponse,
       "Io.Turn.DynamicSelectOneResponse" => FlowRunner.CustomBlocks.DynamicSelectOneResponse,
+      "Io.Turn.MetaConversion" => FlowRunner.CustomBlocks.MetaConversion,
       "Io.Turn.ScheduleFlow" => FlowRunner.CustomBlocks.ScheduleFlow,
       "Io.Turn.SendContentMessage" => FlowRunner.CustomBlocks.SendContentMessage,
       "Io.Turn.SetChatProperty" => FlowRunner.CustomBlocks.SetChatProperty,
       "Io.Turn.SetMessageProperty" => FlowRunner.CustomBlocks.SetMessageProperty,
       "Io.Turn.UpdateDictionary" => FlowRunner.CustomBlocks.UpdateDictionary,
+      "Io.Turn.WhatsAppCatalog" => FlowRunner.CustomBlocks.WhatsAppCatalog,
+      "Io.Turn.WhatsAppRequestLocation" => FlowRunner.CustomBlocks.WhatsAppRequestLocation,
       "Io.Turn.WhatsAppSendFlow" => FlowRunner.CustomBlocks.WhatsAppSendFlow,
       "Io.Turn.WhatsAppTemplateMessage" => FlowRunner.CustomBlocks.WhatsAppTemplateMessage,
-      "Io.Turn.Webhook" => FlowRunner.CustomBlocks.Webhook
+      "Io.Turn.Webhook" => FlowRunner.CustomBlocks.Webhook,
+      "Io.Turn.Wait" => FlowRunner.CustomBlocks.Wait
     }
   end
 end
