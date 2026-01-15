@@ -59,6 +59,6 @@ defmodule FlowRunner.Spec.ResourceValue do
   end
 
   def supports_mode(resource_value, mode) do
-    Enum.count(resource_value.modes, &(&1 == mode)) > 0
+    Enum.any?(resource_value.modes, &(&1 == mode))
   end
 end

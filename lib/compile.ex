@@ -3,6 +3,8 @@ defmodule FlowRunner.Compile do
   Compile converts a JSON flow into an internal representation that is able to be run.
   """
 
+  alias FlowRunner.Spec.Container
+
   @spec compile(binary | map) ::
           {:ok, FlowRunner.Spec.Container.t()}
           | {:error, String.t()}
@@ -23,8 +25,8 @@ defmodule FlowRunner.Compile do
   @spec compile!(binary | map) :: FlowRunner.Spec.Container.t()
   def compile!(data), do: compile!(FlowRunner.blocks_module(), data)
 
-  @spec compile!(module, binary | map) :: FlowRunner.Spec.Container.t()
+  @spec compile!(module, binary | map) :: Container.t()
   def compile!(module, data) do
-    FlowRunner.Spec.Container.load!(module, data)
+    Container.load!(module, data)
   end
 end

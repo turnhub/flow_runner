@@ -8,8 +8,8 @@ defmodule FlowRunner.Blocks do
   @doc """
   Returns the default blocks as per the FLOIP spec
   """
-  @spec blocks() :: %{(type :: String.t()) => implementation :: module}
-  def blocks() do
+  @spec blocks :: %{(type :: String.t()) => implementation :: module}
+  def blocks do
     %{
       "Core.Case" => FlowRunner.Spec.Blocks.Case,
       "Core.Log" => FlowRunner.Spec.Blocks.Log,

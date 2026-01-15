@@ -45,8 +45,7 @@ defmodule FlowRunner.Test.Utils do
       |> File.read!()
       |> Jason.decode!()
 
-    implementation
-    |> apply(:compile!, [blocks_module, json])
+    implementation.compile!(blocks_module, json)
     |> create_webhook_bypasses(bypasses)
   end
 
