@@ -6,6 +6,8 @@ defmodule FlowRunner.CustomBlocks.DynamicSelectOneResponse do
   @behaviour FlowRunner.Spec.Block
   use OpenTelemetryDecorator
 
+  alias Expression.V2.Compat
+
   @impl true
   def validate_config!(
         %{
@@ -31,7 +33,7 @@ defmodule FlowRunner.CustomBlocks.DynamicSelectOneResponse do
 
   def update_config(container, flow, block, context) do
     value =
-      Expression.V2.Compat.evaluate_block!(
+      Compat.evaluate_block!(
         block.config.choice_expression,
         context.vars,
         FlowRunner.expression_callbacks_module()

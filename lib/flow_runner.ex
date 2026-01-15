@@ -5,11 +5,15 @@ defmodule FlowRunner do
 
   @behaviour FlowRunner.Contract
 
+  alias FlowRunner.Compile
   alias FlowRunner.Context
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Flow
-  alias FlowRunner.Compile
+  alias FlowRunner.Spec.Resource
+
+  alias Expression.V2.Compat
+
   require Logger
 
   @doc """
@@ -76,10 +80,10 @@ defmodule FlowRunner do
     Block.evaluate_incoming(container, flow, next_block, context)
   end
 
-  def blocks_module(),
+  def blocks_module,
     do: Application.get_env(:flow_runner, :blocks_module) || FlowRunner.Blocks
 
-  def expression_callbacks_module(),
+  def expression_callbacks_module,
     do:
       Application.get_env(
         :flow_runner,
@@ -89,23 +93,23 @@ defmodule FlowRunner do
 
   @impl FlowRunner.Contract
   def evaluate_expression(expression, context) do
-    Expression.V2.Compat.evaluate!(expression, context, expression_callbacks_module())
+    Compat.evaluate!(expression, context, expression_callbacks_module())
   end
 
   @impl FlowRunner.Contract
   def evaluate_expression_as_string!(expression, context) do
-    Expression.V2.Compat.evaluate_as_string!(expression, context, expression_callbacks_module())
+    Compat.evaluate_as_string!(expression, context, expression_callbacks_module())
   end
 
   @impl FlowRunner.Contract
   def evaluate_expression_block(expression, context) do
-    Expression.V2.Compat.evaluate_block!(expression, context, expression_callbacks_module())
+    Compat.evaluate_block!(expression, context, expression_callbacks_module())
   end
 
   defdelegate fetch_resource_by_uuid(container, uuid), to: FlowRunner.Spec.Container
 
   def fetch_resource_value(resource, language, mode, flow),
-    do: FlowRunner.Spec.Resource.matching_resource(resource, language, mode, flow)
+    do: Resource.matching_resource(resource, language, mode, flow)
 
   @doc """
   Get the language struct for a context

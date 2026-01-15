@@ -81,14 +81,14 @@ defmodule FlowRunner.SimulatorTest do
            |> get_in([:message, :text])
            |> with_content_type("TEXT")
            |> has_value(
-             "Flow with ID \"1289489102445874\" is sent to the phone using \"click!\" as the call to action."
+             ~s(Flow with ID "1289489102445874" is sent to the phone using "click!" as the call to action.)
            )
 
     # Assert payload is rendered
     assert outputs
            |> get_in([:message, :text])
            |> with_content_type("TEXT")
-           |> has_value("Payload: %{\"foo\" => \"bar\"}")
+           |> has_value(~s(Payload: %{"foo" => "bar"}))
   end
 
   test "simulator with whatsapp flow without payload" do

@@ -2,6 +2,8 @@ defmodule FlowRunner.FlowBuilderTest do
   use ExUnit.Case
   doctest FlowRunner.FlowBuilder
 
+  alias FlowRunner.Builder.Floip1
+
   test "as_floip" do
     one_minute = :timer.minutes(1)
     five_minutes = :timer.minutes(5)
@@ -121,7 +123,7 @@ defmodule FlowRunner.FlowBuilderTest do
                }
              ],
              "resources" => resources
-           } = FlowRunner.Builder.Floip1.as_floip()
+           } = Floip1.as_floip()
 
     assert [english, afrikaans] = languages
 

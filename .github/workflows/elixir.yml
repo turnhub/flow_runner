@@ -48,7 +48,7 @@ jobs:
       - name: Static code quality checks
         run: |
           mix format --check-formatted
-          mix credo
+          mix credo --strict
           mix dialyzer --format github
       - name: Code Annotations Report
         if: ${{ always() }}

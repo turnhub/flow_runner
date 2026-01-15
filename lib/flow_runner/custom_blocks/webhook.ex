@@ -39,7 +39,7 @@ defmodule FlowRunner.CustomBlocks.Webhook do
     timeout: @default_timeout
   ]
 
-  def default_timeout(), do: @default_timeout
+  def default_timeout, do: @default_timeout
 
   @impl true
   # credo:disable-for-next-line

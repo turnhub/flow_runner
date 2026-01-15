@@ -277,7 +277,7 @@ defmodule FlowRunner.FlowBuilder do
         [master | translations]
       end
 
-      def languages() do
+      def languages do
         [@default_language] ++
           Enum.map(@translations, fn {language, _translation} -> language end)
       end
