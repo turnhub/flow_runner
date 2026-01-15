@@ -274,15 +274,11 @@ defmodule FlowRunner.Spec.Block do
       block_config: block.config
     )
 
-    truthy_exits =
-      exits
-      |> Enum.reject(&(&1.default == true))
-      |> Enum.filter(&Exit.evaluate(&1, context))
-
-    if length(truthy_exits) > 0 do
-      {:ok, Enum.at(truthy_exits, 0)}
-    else
-      evaluate_default_exit(block)
+    case exits
+         |> Enum.reject(&(&1.default == true))
+         |> Enum.filter(&Exit.evaluate(&1, context)) do
+      [first_truthy_exit | _] -> {:ok, first_truthy_exit}
+      [] -> evaluate_default_exit(block)
     end
   end
 
