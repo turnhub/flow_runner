@@ -1,9 +1,12 @@
 defmodule FlowRunner.Spec.Blocks.SetGroupMembership do
   @moduledoc """
   Set a group membership.
+
+  This is a FLOIP spec block for group membership management.
   """
   @behaviour FlowRunner.Spec.Block
   use OpenTelemetryDecorator
+
   alias FlowRunner.Context
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container

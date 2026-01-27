@@ -5,6 +5,38 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
   """
   @behaviour FlowRunner.Spec.Block
   use OpenTelemetryDecorator
+  use FlowRunner.BlockAutodoc
+
+  @block_category "input"
+  @block_doc type: "MobilePrimitives.SelectOneResponse",
+             dsl_name: "buttons()",
+             description:
+               "Presents the user with a set of options as buttons and waits for them to select one.",
+             config: %{
+               "prompt" => %{
+                 type: "string",
+                 required: true,
+                 description: "The message text displayed with the buttons"
+               },
+               "choices" => %{
+                 type: "list",
+                 required: true,
+                 description: "List of button options (card names or [value, label] pairs)"
+               }
+             },
+             example: """
+             card ReadDocument do
+               buttons([Accept, Decline]) do
+                 text("Please read and accept the terms")
+                 document("https://example.org/terms.pdf")
+               end
+             end
+
+             card Accept do
+               text("Thank you for accepting!")
+             end
+             """,
+             returns: "Map with __value__, name, index, and label of the selected choice"
   alias FlowRunner.Context
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container

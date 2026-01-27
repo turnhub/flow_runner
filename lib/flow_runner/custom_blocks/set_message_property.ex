@@ -6,6 +6,30 @@ defmodule FlowRunner.CustomBlocks.SetMessageProperty do
 
   @behaviour FlowRunner.Spec.Block
   use OpenTelemetryDecorator
+  use FlowRunner.BlockAutodoc
+
+  @block_category "messaging"
+  @block_doc type: "Io.Turn.SetMessageProperty",
+             dsl_name: "add_label()",
+             description: "Adds a label to a message in the current context.",
+             config: %{
+               "message" => %{
+                 type: "string",
+                 required: true,
+                 description: "The message reference to label"
+               },
+               "labels" => %{
+                 type: "list",
+                 required: true,
+                 description: "List of labels to apply"
+               }
+             },
+             example: """
+             card Card do
+               add_label("important")
+               add_label(operator)
+             end
+             """
 
   @impl true
   def validate_config!(%{

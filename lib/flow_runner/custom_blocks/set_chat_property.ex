@@ -11,6 +11,24 @@ defmodule FlowRunner.CustomBlocks.SetChatProperty do
   @behaviour FlowRunner.Spec.Block
 
   use OpenTelemetryDecorator
+  use FlowRunner.BlockAutodoc
+
+  @block_category "chat"
+  @block_doc type: "Io.Turn.SetChatProperty",
+             dsl_name: "assign_chat_to()",
+             description: "Assigns the current chat to a user or queue.",
+             config: %{
+               "assign_to" => %{
+                 type: "string",
+                 required: true,
+                 description: "Email of the user to assign the chat to"
+               }
+             },
+             example: """
+             card Card do
+               assign_chat_to("support@example.com")
+             end
+             """
 
   @impl true
   def validate_config!(%{

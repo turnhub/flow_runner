@@ -1,9 +1,13 @@
 defmodule FlowRunner.Spec.Blocks.Case do
   @moduledoc """
   Switch between various exit conditions.
+
+  This is an internal block used for routing logic. Users don't call it directly
+  in the DSL - it's generated from `when` conditions and `then` statements.
   """
   @behaviour FlowRunner.Spec.Block
   use OpenTelemetryDecorator
+
   alias FlowRunner.Context
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container

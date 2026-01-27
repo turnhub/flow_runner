@@ -5,6 +5,35 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
 
   @behaviour FlowRunner.Spec.Block
   use OpenTelemetryDecorator
+  use FlowRunner.BlockAutodoc
+
+  @block_category "whatsapp"
+  @block_doc type: "Io.Turn.WhatsAppTemplateMessage",
+             dsl_name: "send_message_template()",
+             description: "Sends a WhatsApp message template with dynamic parameters.",
+             config: %{
+               "template.name" => %{
+                 type: "string",
+                 required: true,
+                 description: "The name of the template"
+               },
+               "template.language.code" => %{
+                 type: "string",
+                 required: true,
+                 description: "Language code for the template"
+               },
+               "template.components" => %{
+                 type: "list",
+                 required: true,
+                 description: "List of template components with parameters"
+               }
+             },
+             example: """
+             card Card do
+               send_message_template("template_name", "en", ["param-1", "param-2"])
+             end
+             """,
+             returns: "Map with __value__ and index when template has reply buttons"
   @impl FlowRunner.Spec.Block
   def validate_config!(%{
         "template" =>

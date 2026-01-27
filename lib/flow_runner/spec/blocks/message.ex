@@ -4,6 +4,25 @@ defmodule FlowRunner.Spec.Blocks.Message do
   """
   @behaviour FlowRunner.Spec.Block
   use OpenTelemetryDecorator
+  use FlowRunner.BlockAutodoc
+
+  @block_category "messaging"
+  @block_doc type: "MobilePrimitives.Message",
+             dsl_name: "text()",
+             description: "Sends a text message to the user.",
+             config: %{
+               "prompt" => %{
+                 type: "string",
+                 required: true,
+                 description: "The message content to send"
+               }
+             },
+             example: """
+             card Greetings do
+               text("Hello @contact.name!")
+               text("Welcome to our service.")
+             end
+             """
   alias FlowRunner.Context
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Flow

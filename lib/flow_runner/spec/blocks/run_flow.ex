@@ -10,6 +10,25 @@ defmodule FlowRunner.Spec.Blocks.RunFlow do
   """
   @behaviour FlowRunner.Spec.Block
   use OpenTelemetryDecorator
+  use FlowRunner.BlockAutodoc
+
+  @block_category "control"
+  @block_doc type: "Core.RunFlow",
+             dsl_name: "run_stack()",
+             description:
+               "Runs another journey (stack) and returns to the current flow when complete.",
+             config: %{
+               "flow_id" => %{
+                 type: "uuid",
+                 required: true,
+                 description: "UUID of the flow to run"
+               }
+             },
+             example: """
+             card Card do
+               run_stack("10dca9d0-3f0b-11ed-b878-0242ac120002")
+             end
+             """
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Flow

@@ -12,6 +12,30 @@ defmodule FlowRunner.CustomBlocks.WhatsAppRequestLocation do
 
   @behaviour FlowRunner.Spec.Block
   use OpenTelemetryDecorator
+  use FlowRunner.BlockAutodoc
+
+  @block_category "whatsapp"
+  @block_doc type: "Io.Turn.WhatsAppRequestLocation",
+             dsl_name: "request_location()",
+             description:
+               "Requests the user's location via WhatsApp's native location sharing feature.",
+             config: %{
+               "request_location.text" => %{
+                 type: "string",
+                 required: true,
+                 description: "The message text prompting the user to share their location"
+               }
+             },
+             example: """
+             card RequestLocation do
+               location = request_location("Please share your location")
+             end
+
+             card ThankYou, when: "@input.location != nil" do
+               text("Thank you for sharing your location!")
+             end
+             """,
+             returns: "The user's shared location data"
 
   @impl true
   def validate_config!(%{

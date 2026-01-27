@@ -7,6 +7,41 @@ defmodule FlowRunner.CustomBlocks.ScheduleFlow do
 
   @behaviour FlowRunner.Spec.Block
   use OpenTelemetryDecorator
+  use FlowRunner.BlockAutodoc
+
+  @block_category "control"
+  @block_doc type: "Io.Turn.ScheduleFlow",
+             dsl_name: "schedule_stack()",
+             description:
+               "Schedules a journey to run at a future time, or cancels a previously scheduled journey.",
+             config: %{
+               "flow_id" => %{
+                 type: "uuid",
+                 required: true,
+                 description: "UUID of the flow to schedule"
+               },
+               "schedule_at" => %{
+                 type: "datetime",
+                 required: false,
+                 description: "Specific datetime to run the flow"
+               },
+               "schedule_in" => %{
+                 type: "integer",
+                 required: false,
+                 description: "Number of seconds in the future to run the flow"
+               }
+             },
+             example: """
+             card Card do
+               # Schedule to run in 1 hour
+               schedule_stack("10dca9d0-3f0b-11ed-b878-0242ac120002", in: 3600)
+
+               # Or schedule at a specific time
+               schedule_stack("some-uuid", at: datetime_add(now(), 2, "D"))
+             end
+             """,
+             notes:
+               "Either schedule_at or schedule_in must be provided. To cancel, only provide flow_id."
 
   @impl true
   @spec validate_config!(map) :: %{

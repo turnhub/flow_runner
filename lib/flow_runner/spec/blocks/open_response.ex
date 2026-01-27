@@ -5,6 +5,35 @@ defmodule FlowRunner.Spec.Blocks.OpenResponse do
   """
   @behaviour FlowRunner.Spec.Block
   use OpenTelemetryDecorator
+  use FlowRunner.BlockAutodoc
+
+  @block_category "input"
+  @block_doc type: "MobilePrimitives.OpenResponse",
+             dsl_name: "ask()",
+             description:
+               "Asks the user for a free-form text response with optional character limit.",
+             config: %{
+               "prompt" => %{
+                 type: "string",
+                 required: true,
+                 description: "The question to ask the user"
+               },
+               "max_response_characters" => %{
+                 type: "number",
+                 required: false,
+                 description: "Maximum allowed response length"
+               }
+             },
+             example: """
+             card AskName, then: Greetings do
+               name = ask("What's your name?")
+             end
+
+             card Greetings do
+               text("Hello @name!")
+             end
+             """,
+             returns: "The text response entered by the user"
   alias FlowRunner.Context
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container

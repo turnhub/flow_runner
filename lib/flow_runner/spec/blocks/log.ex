@@ -4,6 +4,25 @@ defmodule FlowRunner.Spec.Blocks.Log do
   """
   @behaviour FlowRunner.Spec.Block
   use OpenTelemetryDecorator
+  use FlowRunner.BlockAutodoc
+
+  @block_category "control"
+  @block_doc type: "Core.Log",
+             dsl_name: "log()",
+             description: "Logs a message to the system log for debugging purposes.",
+             config: %{
+               "message" => %{
+                 type: "string",
+                 required: true,
+                 description: "The message to log"
+               }
+             },
+             example: """
+             card Card do
+               log("user not opted in for follow ups")
+               log("hello @today()")
+             end
+             """
   alias FlowRunner.Context
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container

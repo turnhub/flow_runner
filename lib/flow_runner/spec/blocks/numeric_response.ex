@@ -1,9 +1,13 @@
 defmodule FlowRunner.Spec.Blocks.NumericResponse do
   @moduledoc """
   A specialisation of a block that allows users to send numeric input.
+
+  This is a FLOIP spec block. In Turn's DSL, numeric input is typically handled
+  via `ask()` with validation expressions.
   """
   @behaviour FlowRunner.Spec.Block
   use OpenTelemetryDecorator
+
   alias FlowRunner.Context
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container

@@ -21,6 +21,27 @@ defmodule FlowRunner.CustomBlocks.Wait do
   """
 
   @behaviour FlowRunner.Spec.Block
+  use FlowRunner.BlockAutodoc
+
+  @block_category "control"
+  @block_doc type: "Io.Turn.Wait",
+             dsl_name: "wait()",
+             description:
+               "Introduces a delay in the journey flow to control timing between actions.",
+             config: %{
+               "seconds" => %{
+                 type: "integer | expression",
+                 required: true,
+                 description: "Number of seconds to wait (supports expressions)"
+               }
+             },
+             example: """
+             card DelayCard do
+               text("Starting delay...")
+               wait(2)
+               text("Delay completed!")
+             end
+             """
 
   @impl FlowRunner.Spec.Block
   def validate_config!(%{"seconds" => seconds}) when is_integer(seconds) or is_binary(seconds) do

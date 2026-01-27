@@ -4,6 +4,19 @@ defmodule FlowRunner.Spec.Blocks.SetContactProperty do
   """
   @behaviour FlowRunner.Spec.Block
   use OpenTelemetryDecorator
+  use FlowRunner.BlockAutodoc
+
+  @block_category "contact"
+  @block_doc type: "Core.SetContactProperty",
+             dsl_name: "update_contact()",
+             description: "Updates one or more properties on the current contact.",
+             config: %{},
+             example: """
+             card SavePreferences do
+               update_contact(name: "Boaty", surname: "McBoatFace")
+               update_contact(opted_in: true)
+             end
+             """
   alias FlowRunner.Context
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container
