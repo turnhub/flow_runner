@@ -6,6 +6,10 @@ defmodule FlowRunner.Spec.Blocks.Message do
   use OpenTelemetryDecorator
   use FlowRunner.BlockAutodoc
 
+  alias FlowRunner.Context
+  alias FlowRunner.Spec.Block
+  alias FlowRunner.Spec.Flow
+
   @block_category "messaging"
   @block_doc type: "MobilePrimitives.Message",
              dsl_name: "text()",
@@ -23,9 +27,6 @@ defmodule FlowRunner.Spec.Blocks.Message do
                text("Welcome to our service.")
              end
              """
-  alias FlowRunner.Context
-  alias FlowRunner.Spec.Block
-  alias FlowRunner.Spec.Flow
 
   @impl true
   def validate_config!(%{"prompt" => prompt}) do

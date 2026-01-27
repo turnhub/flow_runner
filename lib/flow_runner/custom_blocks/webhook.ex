@@ -21,6 +21,10 @@ defmodule FlowRunner.CustomBlocks.Webhook do
   @behaviour FlowRunner.Spec.Block
   use OpenTelemetryDecorator
   use FlowRunner.BlockAutodoc
+  use Tesla
+
+  require Logger
+  require OpenTelemetry.Tracer, as: Tracer
 
   @block_category "integration"
   @block_doc type: "Io.Turn.Webhook",
@@ -70,9 +74,6 @@ defmodule FlowRunner.CustomBlocks.Webhook do
              end
              """,
              returns: "Map with url, status, body, query, mode, and headers of the response"
-  use Tesla
-  require Logger
-  require OpenTelemetry.Tracer, as: Tracer
 
   @default_timeout :timer.seconds(5)
   @maximum_timeout :timer.seconds(20)

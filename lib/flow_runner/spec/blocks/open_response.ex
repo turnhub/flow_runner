@@ -7,6 +7,11 @@ defmodule FlowRunner.Spec.Blocks.OpenResponse do
   use OpenTelemetryDecorator
   use FlowRunner.BlockAutodoc
 
+  alias FlowRunner.Context
+  alias FlowRunner.Spec.Block
+  alias FlowRunner.Spec.Container
+  alias FlowRunner.Spec.Flow
+
   @block_category "input"
   @block_doc type: "MobilePrimitives.OpenResponse",
              dsl_name: "ask()",
@@ -34,10 +39,6 @@ defmodule FlowRunner.Spec.Blocks.OpenResponse do
              end
              """,
              returns: "The text response entered by the user"
-  alias FlowRunner.Context
-  alias FlowRunner.Spec.Block
-  alias FlowRunner.Spec.Container
-  alias FlowRunner.Spec.Flow
 
   @impl true
   def validate_config!(%{"prompt" => prompt} = config) do

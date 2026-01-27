@@ -6,6 +6,14 @@ defmodule FlowRunner.Spec.Blocks.Log do
   use OpenTelemetryDecorator
   use FlowRunner.BlockAutodoc
 
+  alias FlowRunner.Context
+  alias FlowRunner.Spec.Block
+  alias FlowRunner.Spec.Container
+  alias FlowRunner.Spec.Flow
+  alias FlowRunner.Spec.Resource
+
+  require Logger
+
   @block_category "control"
   @block_doc type: "Core.Log",
              dsl_name: "log()",
@@ -23,13 +31,6 @@ defmodule FlowRunner.Spec.Blocks.Log do
                log("hello @today()")
              end
              """
-  alias FlowRunner.Context
-  alias FlowRunner.Spec.Block
-  alias FlowRunner.Spec.Container
-  alias FlowRunner.Spec.Flow
-  alias FlowRunner.Spec.Resource
-
-  require Logger
 
   @impl true
   def validate_config!(%{"message" => message}) do

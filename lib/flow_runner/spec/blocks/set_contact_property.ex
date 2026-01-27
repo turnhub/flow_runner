@@ -6,6 +6,13 @@ defmodule FlowRunner.Spec.Blocks.SetContactProperty do
   use OpenTelemetryDecorator
   use FlowRunner.BlockAutodoc
 
+  alias FlowRunner.Context
+  alias FlowRunner.Spec.Block
+  alias FlowRunner.Spec.Container
+  alias FlowRunner.Spec.Flow
+
+  require Logger
+
   @block_category "contact"
   @block_doc type: "Core.SetContactProperty",
              dsl_name: "update_contact()",
@@ -17,12 +24,6 @@ defmodule FlowRunner.Spec.Blocks.SetContactProperty do
                update_contact(opted_in: true)
              end
              """
-  alias FlowRunner.Context
-  alias FlowRunner.Spec.Block
-  alias FlowRunner.Spec.Container
-  alias FlowRunner.Spec.Flow
-
-  require Logger
 
   @impl true
   def validate_config!(_) do

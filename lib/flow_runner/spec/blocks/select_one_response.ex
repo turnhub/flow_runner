@@ -7,6 +7,11 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
   use OpenTelemetryDecorator
   use FlowRunner.BlockAutodoc
 
+  alias FlowRunner.Context
+  alias FlowRunner.Spec.Block
+  alias FlowRunner.Spec.Container
+  alias FlowRunner.Spec.Flow
+
   @block_category "input"
   @block_doc type: "MobilePrimitives.SelectOneResponse",
              dsl_name: "buttons()",
@@ -37,10 +42,6 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
              end
              """,
              returns: "Map with __value__, name, index, and label of the selected choice"
-  alias FlowRunner.Context
-  alias FlowRunner.Spec.Block
-  alias FlowRunner.Spec.Container
-  alias FlowRunner.Spec.Flow
 
   @impl true
   def validate_config!(%{"prompt" => prompt, "choices" => choices}) when is_map(choices) do

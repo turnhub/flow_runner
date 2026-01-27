@@ -12,6 +12,10 @@ defmodule FlowRunner.Spec.Blocks.RunFlow do
   use OpenTelemetryDecorator
   use FlowRunner.BlockAutodoc
 
+  alias FlowRunner.Spec.Block
+  alias FlowRunner.Spec.Container
+  alias FlowRunner.Spec.Flow
+
   @block_category "control"
   @block_doc type: "Core.RunFlow",
              dsl_name: "run_stack()",
@@ -29,9 +33,6 @@ defmodule FlowRunner.Spec.Blocks.RunFlow do
                run_stack("10dca9d0-3f0b-11ed-b878-0242ac120002")
              end
              """
-  alias FlowRunner.Spec.Block
-  alias FlowRunner.Spec.Container
-  alias FlowRunner.Spec.Flow
 
   @impl true
   def validate_config!(%{"flow_id" => flow_id}) do
