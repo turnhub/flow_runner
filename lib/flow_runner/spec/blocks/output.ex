@@ -1,9 +1,12 @@
 defmodule FlowRunner.Spec.Blocks.Output do
   @moduledoc """
   Output to a Flow Result which is not yet implemented.
+
+  This is an internal block used for FLOIP spec compliance.
   """
   @behaviour FlowRunner.Spec.Block
   use OpenTelemetryDecorator
+
   alias FlowRunner.Context
   alias FlowRunner.Spec.Block
   alias FlowRunner.Spec.Container

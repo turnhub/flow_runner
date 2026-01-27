@@ -20,9 +20,60 @@ defmodule FlowRunner.CustomBlocks.Webhook do
   """
   @behaviour FlowRunner.Spec.Block
   use OpenTelemetryDecorator
+  use FlowRunner.BlockAutodoc
   use Tesla
+
   require Logger
   require OpenTelemetry.Tracer, as: Tracer
+
+  @block_category "integration"
+  @block_doc type: "Io.Turn.Webhook",
+             dsl_name: "get() / post() / put() / patch() / delete()",
+             description:
+               "Makes HTTP requests to external APIs. Supports GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS, and TRACE methods.",
+             config: %{
+               "url" => %{type: "string", required: true, description: "The URL to call"},
+               "method" => %{
+                 type: "string",
+                 required: true,
+                 description: "HTTP method (GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS, TRACE)"
+               },
+               "headers" => %{
+                 type: "list",
+                 required: true,
+                 description: "List of [key, value] header pairs"
+               },
+               "query" => %{
+                 type: "list",
+                 required: false,
+                 description: "List of [key, value] query parameter pairs"
+               },
+               "body" => %{
+                 type: "string | list",
+                 required: false,
+                 description: "Request body (string or key-value pairs)"
+               },
+               "timeout" => %{
+                 type: "number",
+                 required: true,
+                 description: "Request timeout in milliseconds (max 20000)"
+               },
+               "mode" => %{
+                 type: "string",
+                 required: true,
+                 description: "\"sync\" or \"async\" execution mode"
+               }
+             },
+             example: """
+             card MyCard do
+               response = get("https://api.example.org/data",
+                 timeout: 5000,
+                 query: [["id", "@contact.id"]]
+               )
+               text("Status: @response.status")
+             end
+             """,
+             returns: "Map with url, status, body, query, mode, and headers of the response"
 
   @default_timeout :timer.seconds(5)
   @maximum_timeout :timer.seconds(20)

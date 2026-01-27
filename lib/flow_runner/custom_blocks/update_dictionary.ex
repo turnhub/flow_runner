@@ -5,6 +5,31 @@ defmodule FlowRunner.CustomBlocks.UpdateDictionary do
 
   @behaviour FlowRunner.Spec.Block
   use OpenTelemetryDecorator
+  use FlowRunner.BlockAutodoc
+
+  @block_category "data"
+  @block_doc type: "Io.Turn.UpdateDictionary",
+             dsl_name: "update_dictionary()",
+             description: "Updates a key-value pair in a dictionary variable.",
+             config: %{
+               "reference" => %{
+                 type: "string",
+                 required: true,
+                 description: "The dictionary variable to update"
+               },
+               "key" => %{type: "string", required: true, description: "The key to set"},
+               "value" => %{
+                 type: "expression",
+                 required: true,
+                 description: "The value expression to evaluate and store"
+               }
+             },
+             example: """
+             card Deposit do
+               update_dictionary(account, "balance", account.balance + 1)
+               text("You've deposited $1")
+             end
+             """
 
   @impl true
   @spec validate_config!(map) :: %{

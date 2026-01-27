@@ -26,6 +26,35 @@ defmodule FlowRunner.CustomBlocks.MetaConversion do
 
   @behaviour FlowRunner.Spec.Block
   use OpenTelemetryDecorator
+  use FlowRunner.BlockAutodoc
+
+  @block_category "integration"
+  @block_doc type: "Io.Turn.MetaConversion",
+             dsl_name: "conversion()",
+             description:
+               "Sends conversion events to Meta's Conversions API for ad optimization and measurement.",
+             config: %{
+               "conversion.event_name" => %{
+                 type: "string",
+                 required: true,
+                 description: "The conversion event name (e.g., \"Purchase\", \"Lead\")"
+               },
+               "conversion.user_data" => %{
+                 type: "map",
+                 required: true,
+                 description: "User data for matching (email, phone, etc.)"
+               },
+               "conversion.optional_fields" => %{
+                 type: "map",
+                 required: false,
+                 description: "Optional fields like event_id, event_source_url"
+               }
+             },
+             example: """
+             card Card do
+               conversion("Purchase", phone: "+1234567890", email: "user@example.com")
+             end
+             """
 
   @impl true
   def validate_config!(%{

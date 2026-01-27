@@ -13,6 +13,33 @@ defmodule FlowRunner.CustomBlocks.WhatsAppCatalog do
 
   @behaviour FlowRunner.Spec.Block
   use OpenTelemetryDecorator
+  use FlowRunner.BlockAutodoc
+
+  @block_category "whatsapp"
+  @block_doc type: "Io.Turn.WhatsAppCatalog",
+             dsl_name: "catalog()",
+             description:
+               "Displays a WhatsApp product catalog allowing users to browse and order products.",
+             config: %{
+               "catalog.text" => %{
+                 type: "string",
+                 required: true,
+                 description: "The catalog body text"
+               },
+               "catalog.footer" => %{
+                 type: "string",
+                 required: false,
+                 description: "Optional footer text"
+               }
+             },
+             example: """
+             card Card do
+               catalog("Check out our products!") do
+                 footer("Visit our store")
+               end
+             end
+             """,
+             returns: "The user's order/selection from the catalog"
 
   @impl true
   def validate_config!(%{

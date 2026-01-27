@@ -14,6 +14,49 @@ defmodule FlowRunner.CustomBlocks.WhatsAppSendFlow do
 
   @behaviour FlowRunner.Spec.Block
   use OpenTelemetryDecorator
+  use FlowRunner.BlockAutodoc
+
+  @block_category "whatsapp"
+  @block_doc type: "Io.Turn.WhatsAppSendFlow",
+             dsl_name: "whatsapp_flow()",
+             description:
+               "Sends a WhatsApp Flow (interactive form) for native data collection on WhatsApp.",
+             config: %{
+               "flow.id" => %{type: "string", required: true, description: "The WhatsApp Flow ID"},
+               "flow.cta" => %{
+                 type: "string",
+                 required: true,
+                 description: "Call-to-action button text"
+               },
+               "flow.screen" => %{
+                 type: "string",
+                 required: true,
+                 description: "The screen to display"
+               },
+               "flow.text" => %{
+                 type: "string",
+                 required: true,
+                 description: "Message body text"
+               },
+               "flow.header" => %{
+                 type: "string",
+                 required: false,
+                 description: "Optional header text"
+               },
+               "flow.footer" => %{
+                 type: "string",
+                 required: false,
+                 description: "Optional footer text"
+               }
+             },
+             example: """
+             card Card do
+               whatsapp_flow("Start Survey", "flow-id", "WELCOME") do
+                 text("Please complete our survey")
+               end
+             end
+             """,
+             returns: "JSON data captured by the WhatsApp Flow"
 
   @impl true
   def validate_config!(%{

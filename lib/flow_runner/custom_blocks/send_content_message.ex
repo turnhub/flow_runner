@@ -5,6 +5,32 @@ defmodule FlowRunner.CustomBlocks.SendContentMessage do
 
   @behaviour FlowRunner.Spec.Block
   use OpenTelemetryDecorator
+  use FlowRunner.BlockAutodoc
+
+  @block_category "messaging"
+  @block_doc type: "Io.Turn.SendContentMessage",
+             dsl_name: "send_content()",
+             description:
+               "Sends a content card (pre-defined message template) from Turn's content library.",
+             config: %{
+               "content.uuid" => %{
+                 type: "uuid",
+                 required: true,
+                 description: "UUID of the content card to send"
+               },
+               "content.wait_for_input" => %{
+                 type: "boolean | expression",
+                 required: true,
+                 description: "Whether to wait for user input after sending"
+               }
+             },
+             example: """
+             card Card do
+               send_content("content-uuid-here")
+               # Or wait for response:
+               resp = send_content("content-uuid-here", true)
+             end
+             """
   @impl true
   def validate_config!(%{
         "content" =>
