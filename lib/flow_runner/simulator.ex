@@ -747,6 +747,25 @@ defmodule FlowRunner.Simulator do
     {{:message, text: [text_output]}, sim}
   end
 
+  def output_block(sim, %{type: "Io.Turn.AI.Agent", name: name}) do
+    vars = get_in(sim.context.vars, [name])
+
+    case vars do
+      %{"action" => action, "response" => response}
+      when action != "continue_conversation" and response != "" ->
+        output = %Output{
+          content_type: "TEXT",
+          mime_type: "text/plain",
+          value: response
+        }
+
+        {{:message, [text: [output]]}, sim}
+
+      _ ->
+        {nil, sim}
+    end
+  end
+
   def output_block(sim, %{type: type}) do
     Logger.info("Simulator unable to output block of type #{inspect(type)}")
     {nil, sim}
