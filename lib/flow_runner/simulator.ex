@@ -748,9 +748,7 @@ defmodule FlowRunner.Simulator do
   end
 
   def output_block(sim, %{type: "Io.Turn.AI.Agent", name: name}) do
-    vars = get_in(sim.context.vars, [name])
-
-    case vars do
+    case sim.context.vars[name] do
       %{"action" => action, "response" => response}
       when action != "continue_conversation" and response != "" ->
         output = %Output{
