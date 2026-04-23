@@ -24,6 +24,64 @@ defmodule BlockTest do
            } == context
   end
 
+  describe "evaluate_user_input/4 with preserve_vars: true" do
+    test "clears waiting_for_user_input without overwriting vars[block.name]" do
+      block = %Block{name: "structured_block"}
+
+      existing_vars = %{
+        "structured_block" => %{"status" => "done", "payload" => "foo"},
+        "other" => "untouched"
+      }
+
+      context = %Context{waiting_for_user_input: true, vars: existing_vars}
+
+      assert {:ok, updated} =
+               Block.evaluate_user_input(block, context, "hello", preserve_vars: true)
+
+      assert updated.waiting_for_user_input == false
+      # Vars are NOT overwritten by the raw user input
+      assert updated.vars == existing_vars
+    end
+
+    test "nil user_input with preserve_vars: true still returns context unchanged" do
+      block = %Block{name: "structured_block"}
+
+      context = %Context{
+        waiting_for_user_input: true,
+        vars: %{"structured_block" => %{"k" => "v"}}
+      }
+
+      # nil short-circuits the first clause before opts are considered
+      assert {:ok, ^context} = Block.evaluate_user_input(block, context, nil, preserve_vars: true)
+    end
+
+    test "preserve_vars: false falls back to the default overwrite behavior" do
+      block = %Block{name: "customers_age"}
+      context = %Context{waiting_for_user_input: true}
+
+      assert {:ok, updated} =
+               Block.evaluate_user_input(block, context, "20", preserve_vars: false)
+
+      assert %Context{
+               vars: %{
+                 "block" => %{"value" => "20"},
+                 "customers_age" => "20"
+               },
+               waiting_for_user_input: false
+             } == updated
+    end
+
+    test "empty opts list is equivalent to the 3-arity call" do
+      block = %Block{name: "customers_age"}
+      context = %Context{waiting_for_user_input: true}
+
+      {:ok, with_opts} = Block.evaluate_user_input(block, context, "20", [])
+      {:ok, without_opts} = Block.evaluate_user_input(block, context, "20")
+
+      assert with_opts == without_opts
+    end
+  end
+
   test "evaluate exits" do
     context = %Context{
       vars: %{"block" => %{"value" => 10}}
