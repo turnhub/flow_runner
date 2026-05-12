@@ -1055,15 +1055,11 @@ defmodule FlowRunner.Simulator do
   end
 
   defp has_expression_nodes?(value) do
-    case Expression.Parser.parse(value) do
-      {:ok, ast, _, _, _, _} ->
-        Enum.any?(ast, fn
-          {:expression, _} -> true
-          _ -> false
-        end)
+    {:ok, ast, _, _, _, _} = Expression.Parser.parse(value)
 
-      _ ->
-        false
-    end
+    Enum.any?(ast, fn
+      {:expression, _} -> true
+      _ -> false
+    end)
   end
 end
