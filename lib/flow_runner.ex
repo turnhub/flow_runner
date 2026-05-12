@@ -12,7 +12,6 @@ defmodule FlowRunner do
   alias FlowRunner.Spec.Flow
   alias FlowRunner.Spec.Resource
 
-
   require Logger
 
   @doc """

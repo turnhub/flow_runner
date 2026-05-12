@@ -178,7 +178,7 @@ defmodule FlowRunner.Simulator do
       do: %Output{
         mime_type: mime_type,
         raw_value: value,
-        value: Expression.evaluate_as_string!(value, sim.context.vars, sim.callbacks_module),
+        value: evaluate_as_string_recursive(value, sim.context.vars, sim.callbacks_module),
         content_type: content_type,
         event_value: event_value
       }
@@ -1031,6 +1031,39 @@ defmodule FlowRunner.Simulator do
     else
       # Not an enum pattern, return as-is
       value
+    end
+  end
+
+  # Recursively evaluates an expression string. Expression 3.0 no longer
+  # recursively resolves nested @ references (unlike the old V2.Compat module),
+  # so when a variable's value itself contains an expression (e.g. @my_var
+  # resolves to "@if(...)"), we re-evaluate until the AST contains no more
+  # expression nodes.
+  defp evaluate_as_string_recursive(value, context, callbacks_module, depth \\ 0)
+
+  defp evaluate_as_string_recursive(value, _context, _callbacks_module, depth) when depth > 10,
+    do: value
+
+  defp evaluate_as_string_recursive(value, context, callbacks_module, depth) do
+    result = Expression.evaluate_as_string!(value, context, callbacks_module)
+
+    if result != value and has_expression_nodes?(result) do
+      evaluate_as_string_recursive(result, context, callbacks_module, depth + 1)
+    else
+      result
+    end
+  end
+
+  defp has_expression_nodes?(value) do
+    case Expression.Parser.parse(value) do
+      {:ok, ast, _, _, _, _} ->
+        Enum.any?(ast, fn
+          {:expression, _} -> true
+          _ -> false
+        end)
+
+      _ ->
+        false
     end
   end
 end

@@ -6,7 +6,6 @@ defmodule FlowRunner.CustomBlocks.DynamicSelectOneResponse do
   @behaviour FlowRunner.Spec.Block
   use OpenTelemetryDecorator
 
-
   @impl true
   def validate_config!(
         %{
