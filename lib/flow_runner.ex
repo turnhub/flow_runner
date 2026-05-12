@@ -12,7 +12,6 @@ defmodule FlowRunner do
   alias FlowRunner.Spec.Flow
   alias FlowRunner.Spec.Resource
 
-  alias Expression.V2.Compat
 
   require Logger
 
@@ -93,17 +92,20 @@ defmodule FlowRunner do
 
   @impl FlowRunner.Contract
   def evaluate_expression(expression, context) do
-    Compat.evaluate!(expression, context, expression_callbacks_module())
+    Expression.evaluate!(expression, context, expression_callbacks_module())
   end
 
   @impl FlowRunner.Contract
   def evaluate_expression_as_string!(expression, context) do
-    Compat.evaluate_as_string!(expression, context, expression_callbacks_module())
+    Expression.evaluate_as_string!(expression, context, expression_callbacks_module())
   end
 
   @impl FlowRunner.Contract
   def evaluate_expression_block(expression, context) do
-    Compat.evaluate_block!(expression, context, expression_callbacks_module())
+    case Expression.evaluate_block(expression, context, expression_callbacks_module()) do
+      {:ok, val} -> val
+      {:error, reason} -> reason
+    end
   end
 
   defdelegate fetch_resource_by_uuid(container, uuid), to: FlowRunner.Spec.Container

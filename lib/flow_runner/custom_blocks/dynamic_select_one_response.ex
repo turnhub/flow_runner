@@ -6,7 +6,6 @@ defmodule FlowRunner.CustomBlocks.DynamicSelectOneResponse do
   @behaviour FlowRunner.Spec.Block
   use OpenTelemetryDecorator
 
-  alias Expression.V2.Compat
 
   @impl true
   def validate_config!(
@@ -33,11 +32,14 @@ defmodule FlowRunner.CustomBlocks.DynamicSelectOneResponse do
 
   def update_config(container, flow, block, context) do
     value =
-      Compat.evaluate_block!(
-        block.config.choice_expression,
-        context.vars,
-        FlowRunner.expression_callbacks_module()
-      )
+      case Expression.evaluate_block(
+             block.config.choice_expression,
+             context.vars,
+             FlowRunner.expression_callbacks_module()
+           ) do
+        {:ok, val} -> val
+        {:error, reason} -> reason
+      end
       |> Enum.map(fn
         # Handle the specific case of a two-element list where options are time formatted
         # i.e. list("cta", NextCard, map(times_formatted_options_list, &[&1,&1]))
