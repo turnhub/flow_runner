@@ -21,7 +21,6 @@ defmodule FlowRunner.CustomBlocks.Webhook do
   @behaviour FlowRunner.Spec.Block
   use OpenTelemetryDecorator
   use FlowRunner.BlockAutodoc
-  use Tesla
 
   require Logger
   require OpenTelemetry.Tracer, as: Tracer
@@ -199,7 +198,7 @@ defmodule FlowRunner.CustomBlocks.Webhook do
     client = create_client(block, headers)
 
     Tracer.with_span "build.blocks.webhook.request" do
-      request(client, method: httpc_method(method), url: url, body: body, query: query)
+      Tesla.request(client, method: httpc_method(method), url: url, body: body, query: query)
       |> process_response(block)
     end
   end
@@ -224,7 +223,7 @@ defmodule FlowRunner.CustomBlocks.Webhook do
     # Just fire the task and forget about it
     {:ok, _pid} =
       Task.start(fn ->
-        request(client, method: method, url: url, body: body, query: query)
+        Tesla.request(client, method: method, url: url, body: body, query: query)
       end)
 
     %{

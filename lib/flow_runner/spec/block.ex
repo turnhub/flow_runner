@@ -36,14 +36,28 @@ defmodule FlowRunner.Spec.Block do
   On leaving a block give the block an opportunity to evaluate the inputs received.
   This allows the block to fulfill tasks such as validation.
 
-  If the block returns an `{:ok, user_input}` tuple, use the validated input for
-  further processing and inclusion in the context vars for next blocks.
+  Return one of:
 
-  If the block returns and `{:invalid, reason}` tuple the flow runner will exit through
-  the default response.
+    * `{:ok, user_input}` — default. The validated input is stored in
+      `context.vars[block.name]` (and `context.vars["block"]["value"]`) and
+      `waiting_for_user_input` is cleared. Appropriate for
+      question-shaped blocks whose output _is_ the user's reply.
+
+    * `{:ok, user_input, opts}` — same as above plus a keyword list of
+      options. Supported options:
+
+        - `preserve_vars: true` — do NOT overwrite `context.vars[block.name]`
+          with the user input, but still clear `waiting_for_user_input`.
+          Use this for blocks that set their own structured vars before
+          pausing and must preserve that structure across the resume so
+          downstream exits can read it.
+
+    * `{:invalid, reason}` — the flow runner will exit through the
+      block's default response.
   """
   @callback evaluate_outgoing(Container.t(), Flow.t(), Block.t(), Context.t(), user_input :: any) ::
               {:ok, user_input :: any}
+              | {:ok, user_input :: any, opts :: Keyword.t()}
               | {:invalid, reason :: String.t()}
 
   @derive Jason.Encoder
@@ -133,23 +147,33 @@ defmodule FlowRunner.Spec.Block do
   end
 
   @spec evaluate_user_input(Block.t(), Context.t(), iodata()) ::
-          {:ok, Context.t()}
-  def evaluate_user_input(_block, context, nil) when context.waiting_for_user_input == true do
+          {:ok, Context.t()} | {:error, String.t()}
+  def evaluate_user_input(block, context, user_input),
+    do: evaluate_user_input(block, context, user_input, [])
+
+  @spec evaluate_user_input(Block.t(), Context.t(), iodata(), Keyword.t()) ::
+          {:ok, Context.t()} | {:error, String.t()}
+  def evaluate_user_input(_block, context, nil, _opts)
+      when context.waiting_for_user_input == true do
     {:ok, context}
   end
 
-  def evaluate_user_input(block, %Context{} = context, user_input)
-      when context.waiting_for_user_input == true do
-    vars =
-      Map.merge(context.vars, %{
-        "block" => %{"value" => user_input},
-        block.name => user_input
-      })
+  def evaluate_user_input(block, %Context{} = context, user_input, opts)
+      when context.waiting_for_user_input == true and is_list(opts) do
+    if Keyword.get(opts, :preserve_vars, false) do
+      {:ok, %Context{context | waiting_for_user_input: false}}
+    else
+      vars =
+        Map.merge(context.vars, %{
+          "block" => %{"value" => user_input},
+          block.name => user_input
+        })
 
-    {:ok, %Context{context | vars: vars, waiting_for_user_input: false}}
+      {:ok, %Context{context | vars: vars, waiting_for_user_input: false}}
+    end
   end
 
-  def evaluate_user_input(%{type: "Core.Case"} = block, %Context{} = context, user_input) do
+  def evaluate_user_input(%{type: "Core.Case"} = block, %Context{} = context, user_input, _opts) do
     vars =
       Map.merge(context.vars, %{
         "block" => %{"value" => user_input},
@@ -159,11 +183,11 @@ defmodule FlowRunner.Spec.Block do
     {:ok, %Context{context | vars: vars}}
   end
 
-  def evaluate_user_input(_block, context, nil) do
+  def evaluate_user_input(_block, context, nil, _opts) do
     {:ok, context}
   end
 
-  def evaluate_user_input(_block, _context, user_input) do
+  def evaluate_user_input(_block, _context, user_input, _opts) do
     {:error, "unexpectedly received user input: #{inspect(user_input)}"}
   end
 
@@ -212,10 +236,12 @@ defmodule FlowRunner.Spec.Block do
 
     block_module = get_block(FlowRunner.blocks_module(), type)
 
-    with {:ok, user_input} <-
-           block_module.evaluate_outgoing(container, flow, block, context, user_input),
+    with {:ok, user_input, opts} <-
+           normalize_outgoing(
+             block_module.evaluate_outgoing(container, flow, block, context, user_input)
+           ),
          # Process any user input we have been given.
-         {:ok, context} <- evaluate_user_input(block, context, user_input),
+         {:ok, context} <- evaluate_user_input(block, context, user_input, opts),
          {:ok, context, block} <- fetch_next_block(block, flow, context) do
       {:ok, context, block}
     else
@@ -227,6 +253,10 @@ defmodule FlowRunner.Spec.Block do
         fetch_default_block(block, flow, context)
     end
   end
+
+  defp normalize_outgoing({:ok, user_input}), do: {:ok, user_input, []}
+  defp normalize_outgoing({:ok, user_input, opts}) when is_list(opts), do: {:ok, user_input, opts}
+  defp normalize_outgoing({:invalid, _} = invalid), do: invalid
 
   @spec fetch_default_block(Block.t(), Flow.t(), Context.t()) ::
           {:error, String.t()} | {:ok, Context.t(), Block.t() | nil}

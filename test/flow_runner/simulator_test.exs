@@ -1747,4 +1747,75 @@ defmodule FlowRunner.SimulatorTest do
     assert conversion_text.value =~ ~s("category" => "Electronics")
     assert conversion_text.value =~ ~s("brand" => "TestBrand")
   end
+
+  describe "output_block/2 for Io.Turn.AI.Agent" do
+    defp agent_sim(vars) do
+      %Simulator{
+        context: %FlowRunner.Context{
+          vars: vars,
+          language: "eng",
+          waiting_for_user_input: false
+        }
+      }
+    end
+
+    defp agent_block(name) do
+      %FlowRunner.Spec.Block{
+        type: "Io.Turn.AI.Agent",
+        name: name,
+        uuid: "test-uuid",
+        exits: [],
+        config: %{}
+      }
+    end
+
+    test "returns message output when action is end_conversation with final message" do
+      sim =
+        agent_sim(%{"ref_Agent" => %{"action" => "end_conversation", "response" => "Goodbye!"}})
+
+      block = agent_block("ref_Agent")
+
+      assert {{:message, [text: [output]]}, _sim} = Simulator.output_block(sim, block)
+
+      assert %Simulator.Output{content_type: "TEXT", mime_type: "text/plain", value: "Goodbye!"} =
+               output
+    end
+
+    test "returns message output when action is a recognized intent with final message" do
+      sim =
+        agent_sim(%{
+          "ref_Agent" => %{"action" => "book_appointment", "response" => "Routing you now!"}
+        })
+
+      block = agent_block("ref_Agent")
+
+      assert {{:message, [text: [output]]}, _sim} = Simulator.output_block(sim, block)
+      assert %Simulator.Output{value: "Routing you now!"} = output
+    end
+
+    test "returns nil when action is continue_conversation" do
+      sim =
+        agent_sim(%{
+          "ref_Agent" => %{"action" => "continue_conversation", "response" => "How can I help?"}
+        })
+
+      block = agent_block("ref_Agent")
+
+      assert {nil, _sim} = Simulator.output_block(sim, block)
+    end
+
+    test "returns nil when response is empty" do
+      sim = agent_sim(%{"ref_Agent" => %{"action" => "end_conversation", "response" => ""}})
+      block = agent_block("ref_Agent")
+
+      assert {nil, _sim} = Simulator.output_block(sim, block)
+    end
+
+    test "returns nil when vars are not set for the block" do
+      sim = agent_sim(%{})
+      block = agent_block("ref_Agent")
+
+      assert {nil, _sim} = Simulator.output_block(sim, block)
+    end
+  end
 end
