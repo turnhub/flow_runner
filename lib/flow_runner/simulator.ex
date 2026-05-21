@@ -245,7 +245,7 @@ defmodule FlowRunner.Simulator do
     context_vars = if sim.context, do: sim.context.vars, else: %{}
 
     schedule_in =
-      Expression.evaluate_block!(schedule_in_block, context_vars, sim.callbacks_module)
+      evaluate_block(schedule_in_block, context_vars, sim.callbacks_module)
 
     debug_value = """
     [DEBUG]
@@ -330,7 +330,7 @@ defmodule FlowRunner.Simulator do
     context_vars = if sim.context, do: sim.context.vars, else: %{}
 
     schedule_at =
-      Expression.evaluate_block!(schedule_at_block, context_vars, sim.callbacks_module)
+      evaluate_block(schedule_at_block, context_vars, sim.callbacks_module)
 
     debug_value = """
     [DEBUG]
@@ -416,10 +416,10 @@ defmodule FlowRunner.Simulator do
     template_config = config.template
 
     template_name =
-      Expression.evaluate_block!(template_config.name, context_vars, sim.callbacks_module)
+      evaluate_block(template_config.name, context_vars, sim.callbacks_module)
 
     template_language =
-      Expression.evaluate_block!(
+      evaluate_block(
         template_config.language.code,
         context_vars,
         sim.callbacks_module
@@ -441,7 +441,7 @@ defmodule FlowRunner.Simulator do
       end)
       |> Enum.map_join(", ", fn %{text: param} ->
         param
-        |> Expression.evaluate_block!(context_vars, sim.callbacks_module)
+        |> evaluate_block(context_vars, sim.callbacks_module)
         |> to_string()
       end)
 
@@ -461,7 +461,7 @@ defmodule FlowRunner.Simulator do
       |> Enum.filter(&(&1.type == "text" && &1.language == sim.language.iso_639_3))
       |> Enum.map_join(", ", fn %{text: param} ->
         param
-        |> Expression.evaluate_block!(context_vars, sim.callbacks_module)
+        |> evaluate_block(context_vars, sim.callbacks_module)
         |> to_string()
       end)
 
@@ -482,7 +482,7 @@ defmodule FlowRunner.Simulator do
 
         header_media_param
         |> get_in([type_key, :link])
-        |> Expression.evaluate_block!()
+        |> evaluate_block()
         |> to_string()
       end
 
@@ -724,7 +724,7 @@ defmodule FlowRunner.Simulator do
   def output_block(sim, %{type: "Io.Turn.Wait", config: %{seconds: seconds}}) do
     evaluated_seconds =
       if is_binary(seconds) do
-        Expression.evaluate_block!(seconds, sim.context.vars, sim.callbacks_module)
+        evaluate_block(seconds, sim.context.vars, sim.callbacks_module)
       else
         seconds
       end
@@ -1078,5 +1078,22 @@ defmodule FlowRunner.Simulator do
       {:expression, _} -> true
       _ -> false
     end)
+  end
+
+  # The @ prefix is a block template marker (e.g. @var is shorthand for @(var)).
+  # Expression 3.0's evaluate_block! only accepts bare expression syntax,
+  # so we strip the marker before passing to the block evaluator.
+  defp evaluate_block(
+         expression,
+         context \\ %{},
+         callbacks_module \\ Expression.Callbacks.Standard
+       )
+
+  defp evaluate_block("@" <> rest, context, callbacks_module) do
+    Expression.evaluate_block!(rest, context, callbacks_module)
+  end
+
+  defp evaluate_block(expression, context, callbacks_module) do
+    Expression.evaluate_block!(expression, context, callbacks_module)
   end
 end

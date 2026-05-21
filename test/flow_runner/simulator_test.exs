@@ -818,6 +818,25 @@ defmodule FlowRunner.SimulatorTest do
            |> has_value("Header parameters: [João]")
   end
 
+  test "whatsapp template message with variable language code evaluates @-prefixed expression" do
+    sim =
+      Simulator.new(read_floip!("whatsapp_template_message_with_variable_language_code"))
+
+    {:end, _sim, outputs} =
+      Simulator.start(sim, %{"template_lang" => "eng"})
+
+    assert outputs
+           |> get_in([:message, :text])
+           |> with_content_type("TEXT")
+           |> has_value("Template mytemplate sent with language eng.")
+
+    refute outputs
+           |> get_in([:message, :text])
+           |> with_content_type("TEXT")
+           |> hd()
+           |> Map.get(:value) =~ "@template_lang"
+  end
+
   test "whatsapp template message with buttons not matching user input" do
     sim = Simulator.new(read_floip!("whatsapp_template_message"))
 

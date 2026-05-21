@@ -101,11 +101,19 @@ defmodule FlowRunner do
 
   @impl FlowRunner.Contract
   def evaluate_expression_block(expression, context) do
+    expression = strip_block_template_marker(expression)
+
     case Expression.evaluate_block(expression, context, expression_callbacks_module()) do
       {:ok, val} -> val
       {:error, reason} -> reason
     end
   end
+
+  # The @ prefix is a block template marker (e.g. @var is shorthand for @(var)).
+  # Expression 3.0's evaluate_block only accepts bare expression syntax,
+  # so we strip the marker before passing to the block evaluator.
+  defp strip_block_template_marker("@" <> rest), do: rest
+  defp strip_block_template_marker(expression), do: expression
 
   defdelegate fetch_resource_by_uuid(container, uuid), to: FlowRunner.Spec.Container
 
