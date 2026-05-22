@@ -1051,11 +1051,18 @@ defmodule FlowRunner.Simulator do
     end
   end
 
-  # Recursively evaluates an expression string. Expression 3.0 no longer
-  # recursively resolves nested @ references (unlike the old V2.Compat module),
-  # so when a variable's value itself contains an expression (e.g. @my_var
-  # resolves to "@if(...)"), we re-evaluate until the AST contains no more
-  # expression nodes.
+  # Recursively evaluates a template string for display. This is only needed
+  # in the simulator because it renders resource values into displayable text
+  # (replacing the consuming application). The flow runner core doesn't need
+  # this — it evaluates expressions for routing/conditions and stores results
+  # in context, but never renders template strings for output.
+  #
+  # The issue: when a variable's value itself contains an expression
+  # (e.g. a Case block exit name like "@if(...)" gets stored in my_var),
+  # evaluating "@my_var" returns the literal string "@if(...)" rather than
+  # resolving it. We re-evaluate until the AST contains no more expression
+  # nodes, walking the parsed AST to avoid false positives from @@ escapes
+  # or email addresses.
   defp evaluate_as_string_recursive(value, context, callbacks_module, depth \\ 0)
 
   defp evaluate_as_string_recursive(value, _context, _callbacks_module, depth) when depth > 10,
