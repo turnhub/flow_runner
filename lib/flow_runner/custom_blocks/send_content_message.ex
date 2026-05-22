@@ -62,7 +62,10 @@ defmodule FlowRunner.CustomBlocks.SendContentMessage do
 
     # evaluate the expression to a boolean, using !! so nils evaluate to false
     waiting_for_user_input =
-      !!FlowRunner.evaluate_expression_block(resource_value.value, context.vars)
+      case FlowRunner.evaluate_expression_block(resource_value.value, context.vars) do
+        {:error, _} -> false
+        result -> !!result
+      end
 
     {:ok, container, flow, block,
      %{

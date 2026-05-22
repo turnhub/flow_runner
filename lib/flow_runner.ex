@@ -99,13 +99,17 @@ defmodule FlowRunner do
     Expression.evaluate_as_string!(expression, context, expression_callbacks_module())
   end
 
+  # TODO: This function has an inconsistent return type — it returns a bare value
+  # on success but {:error, _} on failure. A future cleanup should change the
+  # contract to consistently return {:ok, val} | {:error, reason} and update
+  # all callers accordingly.
   @impl FlowRunner.Contract
   def evaluate_expression_block(expression, context) do
     expression = strip_block_template_marker(expression)
 
     case Expression.evaluate_block(expression, context, expression_callbacks_module()) do
       {:ok, val} -> val
-      {:error, reason} -> reason
+      {:error, _} = error -> error
     end
   end
 

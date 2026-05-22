@@ -127,10 +127,13 @@ defmodule FlowRunner.CustomBlocks.DynamicSelectOneResponse do
     matched_option =
       Enum.find(block.config.choices, fn
         %{name: _name, test: test, prompt: _prompt} ->
-          FlowRunner.evaluate_expression_block(test, %{
-            "flow" => flow,
-            "block" => %{"response" => user_input}
-          })
+          case FlowRunner.evaluate_expression_block(test, %{
+                 "flow" => flow,
+                 "block" => %{"response" => user_input}
+               }) do
+            {:error, _} -> false
+            result -> result
+          end
       end)
 
     if matched_option do

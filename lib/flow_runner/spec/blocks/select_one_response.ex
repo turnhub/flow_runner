@@ -144,10 +144,13 @@ defmodule FlowRunner.Spec.Blocks.SelectOneResponse do
       block.config.choices
       |> Enum.with_index()
       |> Enum.find(fn {%{name: _name, test: test, prompt: _prompt}, _index} ->
-        FlowRunner.evaluate_expression_block(test, %{
-          "flow" => flow,
-          "block" => %{"response" => user_input}
-        })
+        case FlowRunner.evaluate_expression_block(test, %{
+               "flow" => flow,
+               "block" => %{"response" => user_input}
+             }) do
+          {:error, _} -> false
+          result -> result
+        end
       end)
 
     case result do
