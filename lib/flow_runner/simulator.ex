@@ -633,6 +633,44 @@ defmodule FlowRunner.Simulator do
     {{:interactive, outputs}, sim}
   end
 
+  def output_block(sim, %{type: "Io.Turn.WhatsAppCallPermissionRequest", config: config}) do
+    call_permission_config = config.call_permission_request
+
+    # Resolve the call permission request text resource and evaluate it
+    text_resource = fetch_resource_by_uuid!(sim, call_permission_config.text)
+    [text_resource_value] = fetch_resource_values(sim, text_resource, "TEXT")
+    request_text = resource_value_output(sim, text_resource_value).value
+
+    # Create message output
+    # NOTE: This is a warning since the call permission message type isn't fully supported in the simulator
+    text_output =
+      "[WARNING]\nThis message type isn't fully supported by the simulator, try previewing this on your phone.\n\n#{request_text}"
+
+    # Create the main text output
+    text_output = %Output{
+      mime_type: "text/plain",
+      raw_value: text_output,
+      value: text_output,
+      content_type: "TEXT"
+    }
+
+    # Create the "Choose preference" button
+    button_output = %Output{
+      mime_type: "text/plain",
+      raw_value: "Choose preference",
+      value: "Choose preference",
+      event_value: "call_permission_request",
+      content_type: "TEXT"
+    }
+
+    outputs = [
+      text: [text_output],
+      button: [button_output]
+    ]
+
+    {{:interactive, outputs}, sim}
+  end
+
   def output_block(sim, %{type: "Core.Log", config: %{message: text_resource_uuid}}) do
     log_resource = fetch_resource_by_uuid!(sim, text_resource_uuid)
 

@@ -1,0 +1,97 @@
+{
+  "name": "WhatsApp Call Permission Request Basic Test",
+  "description": "Basic WhatsApp call permission request message test",
+  "resources": [
+    {
+      "values": [
+        {
+          "value": "End of flow",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "279d802b-479a-4a15-9a68-cd29c39b8a94"
+        }
+      ],
+      "uuid": "af8bdbce-3b5a-473d-9566-0fbba71256d0"
+    },
+    {
+      "values": [
+        {
+          "value": "Can we call you to assist?",
+          "modes": [
+            "RICH_MESSAGING"
+          ],
+          "content_type": "TEXT",
+          "mime_type": "text/plain",
+          "language_id": "279d802b-479a-4a15-9a68-cd29c39b8a94"
+        }
+      ],
+      "uuid": "abcdef01-1234-5678-9012-123456789abc"
+    }
+  ],
+  "uuid": "e5c4921f-11e4-4a3f-83ce-86c1781e6fb8",
+  "flows": [
+    {
+      "label": null,
+      "name": "stack",
+      "blocks": [
+        {
+          "label": null,
+          "name": "whatsapp_call_permission_request_block",
+          "type": "Io.Turn.WhatsAppCallPermissionRequest",
+          "config": {
+            "call_permission_request": {
+              "text": "abcdef01-1234-5678-9012-123456789abc"
+            }
+          },
+          "tags": [],
+          "uuid": "db761083-a029-622f-9877-5eecb2ec7717",
+          "semantic_label": null,
+          "ui_metadata": {
+            "canvas_location": {
+              "x": 120,
+              "y": 120
+            }
+          },
+          "vendor_metadata": {}
+        },
+        {
+          "label": null,
+          "name": "end",
+          "type": "MobilePrimitives.Message",
+          "config": {
+            "prompt": "af8bdbce-3b5a-473d-9566-0fbba71256d0"
+          },
+          "tags": [],
+          "uuid": "4eca4020-3fd6-4b9e-add8-34bd0b27b7a0",
+          "semantic_label": null,
+          "ui_metadata": {
+            "canvas_location": {
+              "x": 120,
+              "y": 240
+            }
+          },
+          "vendor_metadata": {}
+        }
+      ],
+      "first_block_id": "db761083-a029-622f-9877-5eecb2ec7717",
+      "uuid": "c12c66c8-7bde-5fb5-b849-e4063f4f1cdd",
+      "languages": [
+        {
+          "iso_639_3": "eng",
+          "id": "279d802b-479a-4a15-9a68-cd29c39b8a94",
+          "label": "English"
+        }
+      ],
+      "last_modified": "2023-10-01T00:00:00Z",
+      "interaction_timeout": 60,
+      "name": "WhatsApp Call Permission Request Flow",
+      "supported_modes": [
+        "RICH_MESSAGING"
+      ]
+    }
+  ],
+  "specification_version": "1.0.0-rc2"
+}
