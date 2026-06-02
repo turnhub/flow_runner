@@ -28,6 +28,8 @@ defmodule FlowRunner.Blocks do
       "Io.Turn.SetChatProperty" => FlowRunner.CustomBlocks.SetChatProperty,
       "Io.Turn.SetMessageProperty" => FlowRunner.CustomBlocks.SetMessageProperty,
       "Io.Turn.UpdateDictionary" => FlowRunner.CustomBlocks.UpdateDictionary,
+      "Io.Turn.WhatsAppCallPermissionRequest" =>
+        FlowRunner.CustomBlocks.WhatsAppCallPermissionRequest,
       "Io.Turn.WhatsAppCatalog" => FlowRunner.CustomBlocks.WhatsAppCatalog,
       "Io.Turn.WhatsAppRequestLocation" => FlowRunner.CustomBlocks.WhatsAppRequestLocation,
       "Io.Turn.WhatsAppSendFlow" => FlowRunner.CustomBlocks.WhatsAppSendFlow,
