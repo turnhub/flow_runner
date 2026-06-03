@@ -290,13 +290,10 @@ defmodule BlockTest do
                })
     end
 
-    test "accepts an empty array" do
-      assert %{set_contact_property: []} =
-               Block.load_config_for_set_contact_property!(%{"set_contact_property" => []})
-    end
-
-    test "returns an empty config when set_contact_property is absent" do
-      assert %{} == Block.load_config_for_set_contact_property!(%{})
+    test "raises on an empty array" do
+      assert_raise RuntimeError, ~r/'property_key' and 'property_value' fields/, fn ->
+        Block.load_config_for_set_contact_property!(%{"set_contact_property" => []})
+      end
     end
 
     test "raises when an array entry is missing property_key" do
