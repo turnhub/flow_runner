@@ -258,4 +258,61 @@ defmodule BlockTest do
     # Should fall through to default exit because valid.__value__ is false
     assert {:ok, %Exit{uuid: "failure-exit"}} = Block.evaluate_exits(block, context_false)
   end
+
+  describe "load_config_for_set_contact_property!/1" do
+    test "accepts the singular shape" do
+      assert %{
+               set_contact_property: %{
+                 property_key: "name",
+                 property_value: "Boaty"
+               }
+             } =
+               Block.load_config_for_set_contact_property!(%{
+                 "set_contact_property" => %{
+                   "property_key" => "name",
+                   "property_value" => "Boaty"
+                 }
+               })
+    end
+
+    test "accepts the array shape (FLOIP spec 1.0.0-rc4)" do
+      assert %{
+               set_contact_property: [
+                 %{property_key: "name", property_value: "Boaty"},
+                 %{property_key: "surname", property_value: "McBoatFace"}
+               ]
+             } =
+               Block.load_config_for_set_contact_property!(%{
+                 "set_contact_property" => [
+                   %{"property_key" => "name", "property_value" => "Boaty"},
+                   %{"property_key" => "surname", "property_value" => "McBoatFace"}
+                 ]
+               })
+    end
+
+    test "accepts an empty array" do
+      assert %{set_contact_property: []} =
+               Block.load_config_for_set_contact_property!(%{"set_contact_property" => []})
+    end
+
+    test "returns an empty config when set_contact_property is absent" do
+      assert %{} == Block.load_config_for_set_contact_property!(%{})
+    end
+
+    test "raises when an array entry is missing property_key" do
+      assert_raise RuntimeError,
+                   ~r/list entry requires 'property_key' and 'property_value'/,
+                   fn ->
+                     Block.load_config_for_set_contact_property!(%{
+                       "set_contact_property" => [%{"property_value" => "Boaty"}]
+                     })
+                   end
+    end
+
+    test "raises when the shape is neither singular map nor array" do
+      assert_raise RuntimeError, ~r/'property_key' and 'property_value' fields/, fn ->
+        Block.load_config_for_set_contact_property!(%{"set_contact_property" => "not-a-shape"})
+      end
+    end
+  end
 end

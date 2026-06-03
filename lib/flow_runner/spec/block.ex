@@ -125,12 +125,30 @@ defmodule FlowRunner.Spec.Block do
     %{set_contact_property: %{property_key: property_key, property_value: property_value}}
   end
 
+  def load_config_for_set_contact_property!(%{"set_contact_property" => properties})
+      when is_list(properties) do
+    %{set_contact_property: Enum.map(properties, &cast_set_contact_property_entry!/1)}
+  end
+
   def load_config_for_set_contact_property!(%{"set_contact_property" => _}) do
-    raise "set_contact_property! requires 'property_key' and 'property_value' fields."
+    raise "set_contact_property! requires 'property_key' and 'property_value' fields, " <>
+            "or a list of such objects."
   end
 
   def load_config_for_set_contact_property!(%{}) do
     %{}
+  end
+
+  defp cast_set_contact_property_entry!(%{
+         "property_key" => property_key,
+         "property_value" => property_value
+       }) do
+    %{property_key: property_key, property_value: property_value}
+  end
+
+  defp cast_set_contact_property_entry!(other) do
+    raise "set_contact_property! list entry requires 'property_key' and " <>
+            "'property_value' fields, got: #{inspect(other)}"
   end
 
   def load_config_for_type!(blocks_module, type, config) do
