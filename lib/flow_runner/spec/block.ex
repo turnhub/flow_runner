@@ -125,12 +125,25 @@ defmodule FlowRunner.Spec.Block do
     %{set_contact_property: %{property_key: property_key, property_value: property_value}}
   end
 
-  def load_config_for_set_contact_property!(%{"set_contact_property" => _}) do
-    raise "set_contact_property! requires 'property_key' and 'property_value' fields."
+  def load_config_for_set_contact_property!(%{"set_contact_property" => [_ | _] = properties}) do
+    %{set_contact_property: Enum.map(properties, &cast_set_contact_property_entry!/1)}
   end
 
-  def load_config_for_set_contact_property!(%{}) do
-    %{}
+  def load_config_for_set_contact_property!(_other) do
+    raise "set_contact_property! requires 'property_key' and 'property_value' fields, " <>
+            "or a list of such objects."
+  end
+
+  defp cast_set_contact_property_entry!(%{
+         "property_key" => property_key,
+         "property_value" => property_value
+       }) do
+    %{property_key: property_key, property_value: property_value}
+  end
+
+  defp cast_set_contact_property_entry!(other) do
+    raise "set_contact_property! list entry requires 'property_key' and " <>
+            "'property_value' fields, got: #{inspect(other)}"
   end
 
   def load_config_for_type!(blocks_module, type, config) do
@@ -141,9 +154,15 @@ defmodule FlowRunner.Spec.Block do
         raise "unknown block type '#{type}'"
       end
 
-    # All blocks can optionally have a set_contact_property config. Let's
-    # validate that now and merge it in.
-    Map.merge(validated_config, load_config_for_set_contact_property!(config))
+    # Blocks may optionally carry a `set_contact_property` config (used by
+    # SetContactProperty as the primary payload and as an optional capability
+    # on other blocks). Only validate it when the key is actually present so
+    # blocks without it don't go through the strict shape check.
+    if Map.has_key?(config, "set_contact_property") do
+      Map.merge(validated_config, load_config_for_set_contact_property!(config))
+    else
+      validated_config
+    end
   end
 
   @spec evaluate_user_input(Block.t(), Context.t(), iodata()) ::
