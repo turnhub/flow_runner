@@ -9,7 +9,7 @@ defmodule FlowRunner.FlowBuilderTest do
     five_minutes = :timer.minutes(5)
 
     assert %{
-             "specification_version" => "1.0.0-rc3",
+             "specification_version" => "1.0.0-rc4",
              "name" => "My flow",
              "description" => "The description",
              "uuid" => _container_uuid,

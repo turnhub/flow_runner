@@ -1,6 +1,6 @@
 defmodule FlowRunner.Blocks do
   @moduledoc """
-  The default blocks as per the FLOIP spec 1.0.0-rc3
+  The default blocks as per the FLOIP spec 1.0.0-rc4
   """
 
   @callback blocks() :: %{(type :: String.t()) => implementation :: module}
