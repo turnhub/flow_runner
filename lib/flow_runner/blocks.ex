@@ -32,6 +32,7 @@ defmodule FlowRunner.Blocks do
         FlowRunner.CustomBlocks.WhatsAppCallPermissionRequest,
       "Io.Turn.WhatsAppCatalog" => FlowRunner.CustomBlocks.WhatsAppCatalog,
       "Io.Turn.WhatsAppRequestLocation" => FlowRunner.CustomBlocks.WhatsAppRequestLocation,
+      "Io.Turn.WhatsAppVoiceCall" => FlowRunner.CustomBlocks.WhatsAppVoiceCall,
       "Io.Turn.WhatsAppSendFlow" => FlowRunner.CustomBlocks.WhatsAppSendFlow,
       "Io.Turn.WhatsAppTemplateMessage" => FlowRunner.CustomBlocks.WhatsAppTemplateMessage,
       "Io.Turn.Webhook" => FlowRunner.CustomBlocks.Webhook,

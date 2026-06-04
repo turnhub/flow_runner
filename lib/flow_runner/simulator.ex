@@ -671,6 +671,46 @@ defmodule FlowRunner.Simulator do
     {{:interactive, outputs}, sim}
   end
 
+  def output_block(sim, %{type: "Io.Turn.WhatsAppVoiceCall", config: config}) do
+    voice_call_config = config.voice_call
+
+    # Resolve the voice call text resource and evaluate it
+    text_resource = fetch_resource_by_uuid!(sim, voice_call_config.text)
+    [text_resource_value] = fetch_resource_values(sim, text_resource, "TEXT")
+    request_text = resource_value_output(sim, text_resource_value).value
+
+    # Create message output
+    # NOTE: This is a warning since the voice call message type isn't fully supported in the simulator
+    text_output =
+      "[WARNING]\nThis message type isn't fully supported by the simulator, try previewing this on your phone.\n\n#{request_text}"
+
+    # Create the main text output
+    text_output = %Output{
+      mime_type: "text/plain",
+      raw_value: text_output,
+      value: text_output,
+      content_type: "TEXT"
+    }
+
+    # Create the call button using the configured display_text (falls back to "Call Now")
+    display_text = Map.get(voice_call_config, :display_text) || "Call Now"
+
+    button_output = %Output{
+      mime_type: "text/plain",
+      raw_value: display_text,
+      value: display_text,
+      event_value: "voice_call",
+      content_type: "TEXT"
+    }
+
+    outputs = [
+      text: [text_output],
+      button: [button_output]
+    ]
+
+    {{:interactive, outputs}, sim}
+  end
+
   def output_block(sim, %{type: "Core.Log", config: %{message: text_resource_uuid}}) do
     log_resource = fetch_resource_by_uuid!(sim, text_resource_uuid)
 
