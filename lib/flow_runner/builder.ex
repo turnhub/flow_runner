@@ -221,7 +221,7 @@ defmodule FlowRunner.FlowBuilder do
           )
 
         %{
-          "specification_version" => "1.0.0-rc3",
+          "specification_version" => "1.0.0-rc4",
           "uuid" => UUID.uuid4(),
           "description" => @description,
           "name" => @name,
