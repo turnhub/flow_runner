@@ -1,51 +1,51 @@
-defmodule FlowRunner.CustomBlocks.WhatsAppVoiceCallTest do
+defmodule FlowRunner.CustomBlocks.WhatsAppVoiceCallRequestTest do
   use ExUnit.Case, async: true
 
-  alias FlowRunner.CustomBlocks.WhatsAppVoiceCall
+  alias FlowRunner.CustomBlocks.WhatsAppVoiceCallRequest
 
   describe "validate_config!/1" do
-    test "returns voice_call config with required text and optional display_text" do
+    test "returns voice_call_request config with required text and optional display_text" do
       config = %{
-        "voice_call" => %{
+        "voice_call_request" => %{
           "text" => "Tap below to call us",
           "display_text" => "Call support"
         }
       }
 
-      result = WhatsAppVoiceCall.validate_config!(config)
+      result = WhatsAppVoiceCallRequest.validate_config!(config)
 
-      assert result.voice_call.text == "Tap below to call us"
-      assert result.voice_call.display_text == "Call support"
+      assert result.voice_call_request.text == "Tap below to call us"
+      assert result.voice_call_request.display_text == "Call support"
     end
 
     test "returns nil display_text when omitted" do
       config = %{
-        "voice_call" => %{
+        "voice_call_request" => %{
           "text" => "Tap below to call us"
         }
       }
 
-      result = WhatsAppVoiceCall.validate_config!(config)
+      result = WhatsAppVoiceCallRequest.validate_config!(config)
 
-      assert result.voice_call.text == "Tap below to call us"
-      assert result.voice_call.display_text == nil
+      assert result.voice_call_request.text == "Tap below to call us"
+      assert result.voice_call_request.display_text == nil
     end
 
-    test "raises error when voice_call key is missing" do
+    test "raises error when voice_call_request key is missing" do
       config = %{}
 
       assert_raise FunctionClauseError, fn ->
-        WhatsAppVoiceCall.validate_config!(config)
+        WhatsAppVoiceCallRequest.validate_config!(config)
       end
     end
 
     test "raises error when text parameter is missing" do
       config = %{
-        "voice_call" => %{}
+        "voice_call_request" => %{}
       }
 
       assert_raise FunctionClauseError, fn ->
-        WhatsAppVoiceCall.validate_config!(config)
+        WhatsAppVoiceCallRequest.validate_config!(config)
       end
     end
   end
@@ -62,7 +62,7 @@ defmodule FlowRunner.CustomBlocks.WhatsAppVoiceCallTest do
       }
 
       {:ok, returned_container, returned_flow, returned_block, returned_context} =
-        WhatsAppVoiceCall.evaluate_incoming(container, flow, block, context)
+        WhatsAppVoiceCallRequest.evaluate_incoming(container, flow, block, context)
 
       assert returned_container == container
       assert returned_flow == flow
@@ -81,7 +81,7 @@ defmodule FlowRunner.CustomBlocks.WhatsAppVoiceCallTest do
       user_input = %{type: "interactive"}
 
       {:ok, returned_input} =
-        WhatsAppVoiceCall.evaluate_outgoing(container, flow, block, context, user_input)
+        WhatsAppVoiceCallRequest.evaluate_outgoing(container, flow, block, context, user_input)
 
       assert returned_input == user_input
     end
