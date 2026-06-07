@@ -124,6 +124,24 @@ defmodule FlowRunner.SimulatorTest do
            |> has_value("Send location")
   end
 
+  test "simulator with whatsapp call to action" do
+    sim = Simulator.new(read_floip!("whatsapp_call_to_action_basic"))
+    {:end, _sim, outputs} = Simulator.start(sim)
+
+    text_output =
+      outputs
+      |> get_in([:message, :text])
+      |> with_content_type("TEXT")
+      |> List.first()
+
+    # Body text resource is rendered
+    assert text_output.value =~ "Tap the button below to browse our products"
+
+    # The call to action button text and URL are rendered
+    assert text_output.value =~ ~s(A call-to-action button "Visit our store" is sent to the phone)
+    assert text_output.value =~ ~s(opening the URL "https://example.com/products")
+  end
+
   test "simulator with whatsapp call permission request" do
     sim = Simulator.new(read_floip!("whatsapp_call_permission_request_basic"))
     {:waiting, _sim, outputs} = Simulator.start(sim)
