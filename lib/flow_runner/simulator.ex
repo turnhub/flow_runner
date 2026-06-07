@@ -324,6 +324,51 @@ defmodule FlowRunner.Simulator do
   end
 
   def output_block(sim, %{
+        type: "Io.Turn.WhatsAppCallToAction",
+        config: %{
+          cta_url: %{
+            url: url,
+            cta: cta_resource_uuid,
+            text: text_resource_uuid
+          }
+        }
+      }) do
+    url = Expression.evaluate_as_string!(url, sim.context.vars, sim.callbacks_module)
+    text_resource = fetch_resource_by_uuid!(sim, text_resource_uuid)
+
+    [text] =
+      sim
+      |> fetch_resource_values(text_resource, "TEXT")
+      |> Enum.map(&resource_value_output(sim, &1))
+
+    cta_resource = fetch_resource_by_uuid!(sim, cta_resource_uuid)
+
+    [cta] =
+      sim
+      |> fetch_resource_values(cta_resource, "TEXT")
+      |> Enum.map(&resource_value_output(sim, &1))
+
+    debug_value = """
+    [DEBUG]
+    #{text.value}
+
+    A call-to-action button #{inspect(cta.value)} is sent to the phone, opening the URL #{inspect(url)}.
+
+    Note: it won't actually open in this simulator.
+    """
+
+    {{:message,
+      text: [
+        %Output{
+          mime_type: "text/plain",
+          raw_value: debug_value,
+          value: debug_value,
+          content_type: "TEXT"
+        }
+      ]}, sim}
+  end
+
+  def output_block(sim, %{
         type: "Io.Turn.ScheduleFlow",
         config: %{flow_id: flow_id, schedule_at: schedule_at_block}
       }) do

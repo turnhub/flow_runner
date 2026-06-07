@@ -30,6 +30,7 @@ defmodule FlowRunner.Blocks do
       "Io.Turn.UpdateDictionary" => FlowRunner.CustomBlocks.UpdateDictionary,
       "Io.Turn.WhatsAppCallPermissionRequest" =>
         FlowRunner.CustomBlocks.WhatsAppCallPermissionRequest,
+      "Io.Turn.WhatsAppCallToAction" => FlowRunner.CustomBlocks.WhatsAppCallToAction,
       "Io.Turn.WhatsAppCatalog" => FlowRunner.CustomBlocks.WhatsAppCatalog,
       "Io.Turn.WhatsAppRequestLocation" => FlowRunner.CustomBlocks.WhatsAppRequestLocation,
       "Io.Turn.WhatsAppSendFlow" => FlowRunner.CustomBlocks.WhatsAppSendFlow,
