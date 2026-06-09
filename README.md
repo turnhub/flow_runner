@@ -1,6 +1,6 @@
 # FlowRunner
 
-Flow Runner implements the Flow Content Interop spec v1.0.0-rc2 as documented at
+Flow Runner implements the Flow Content Interop spec v1.0.0-rc4 as documented at
 https://floip.gitbook.io/flow-specification/. It provides the means to Run a flow defined in the specification and interact with some user.
 
 This Flow Runnner only supports the TEXT, RICH_MESSAGING modes.
@@ -46,7 +46,7 @@ by adding `flow_runner` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:flow_runner, "~> 6.11.0"}
+    {:flow_runner, "~> 6.12.0"}
   ]
 end
 ```
