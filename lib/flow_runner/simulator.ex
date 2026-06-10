@@ -326,11 +326,7 @@ defmodule FlowRunner.Simulator do
   def output_block(sim, %{
         type: "Io.Turn.WhatsAppCallToAction",
         config: %{
-          cta_url: %{
-            url: url,
-            cta: cta_resource_uuid,
-            text: text_resource_uuid
-          }
+          cta_url: %{url: url, cta: cta_resource_uuid, text: text_resource_uuid} = cta_url
         }
       }) do
     url = Expression.evaluate_as_string!(url, sim.context.vars, sim.callbacks_module)
@@ -348,8 +344,10 @@ defmodule FlowRunner.Simulator do
       |> fetch_resource_values(cta_resource, "TEXT")
       |> Enum.map(&resource_value_output(sim, &1))
 
+    header_output = cta_url_header_output(sim, Map.get(cta_url, :header))
+
     debug_value = """
-    [DEBUG]
+    [DEBUG]#{header_output}
     #{text.value}
 
     A call-to-action button #{inspect(cta.value)} is sent to the phone, opening the URL #{inspect(url)}.
@@ -1180,6 +1178,33 @@ defmodule FlowRunner.Simulator do
 
       {item_type, [resource_value_output(sim, resource)]}
     end)
+  end
+
+  # Renders the optional CTA URL header (text, image, video or document) as a
+  # debug line. The header `value` is a resource uuid; the resource content
+  # type depends on the header `type`. Documents come through FLOIP as TEXT
+  # with an "application/pdf" mime type (see map_buttons_resource_outputs/3).
+  defp cta_url_header_output(_sim, nil), do: ""
+
+  defp cta_url_header_output(sim, %{type: "text", value: resource_uuid}) do
+    resource = fetch_resource_by_uuid!(sim, resource_uuid)
+
+    [header] =
+      sim |> fetch_resource_values(resource, "TEXT") |> Enum.map(&resource_value_output(sim, &1))
+
+    "\n#{header.value}\n"
+  end
+
+  defp cta_url_header_output(sim, %{type: type, value: resource_uuid}) do
+    resource = fetch_resource_by_uuid!(sim, resource_uuid)
+    content_type = if type == "document", do: "TEXT", else: String.upcase(type)
+
+    [header] =
+      sim
+      |> fetch_resource_values(resource, content_type)
+      |> Enum.map(&resource_value_output(sim, &1))
+
+    "\nHeader (#{type}): #{header.value}\n"
   end
 
   defp get_interactive_metadata_resource_outputs(sim, metadata) do
