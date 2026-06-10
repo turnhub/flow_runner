@@ -11,7 +11,10 @@ defmodule FlowRunner.CustomBlocks.WhatsAppCallToAction do
   The `whatsapp_cta` block compiles to this FLOIP block.
   The `url`, `cta`, and `text` config parameters are required.
 
-  The `header` and `footer` are optional.
+  The `header` and `footer` are optional. A `header` can be text, image,
+  video or document and is represented as an object with a `type`
+  (`"text"`, `"image"`, `"video"` or `"document"`) and a `value` holding
+  the value for that media/text.
   """
 
   @behaviour FlowRunner.Spec.Block
@@ -40,9 +43,10 @@ defmodule FlowRunner.CustomBlocks.WhatsAppCallToAction do
                  description: "Message body text"
                },
                "cta_url.header" => %{
-                 type: "string",
+                 type: "object",
                  required: false,
-                 description: "Optional header text"
+                 description:
+                   "Optional header object with a `type` (\"text\", \"image\", \"video\" or \"document\") and a `value`"
                },
                "cta_url.footer" => %{
                  type: "string",
@@ -59,6 +63,8 @@ defmodule FlowRunner.CustomBlocks.WhatsAppCallToAction do
              """,
              returns: "Nothing; CTA URL messages do not wait for user input"
 
+  @valid_header_types ~w(text image video document)
+
   @impl true
   def validate_config!(%{
         "cta_url" =>
@@ -68,7 +74,12 @@ defmodule FlowRunner.CustomBlocks.WhatsAppCallToAction do
             "text" => text
           } = params
       }) do
-    optional_params = read_optional_params(params, [:header, :footer])
+    optional_params = read_header(params)
+
+    optional_params =
+      if params["footer"],
+        do: Map.put(optional_params, :footer, params["footer"]),
+        else: optional_params
 
     cta_url_config =
       Map.merge(
@@ -83,23 +94,21 @@ defmodule FlowRunner.CustomBlocks.WhatsAppCallToAction do
     %{cta_url: cta_url_config}
   end
 
-  @doc """
-  For the parameter map given, read the optional keys and return a map
-  for those values.
-
-  The keys of the map are the keys supplied to this function but converted
-  to strings.
-
-  The key only exists on the returned map if a value for the key exists.
-  """
-  @spec read_optional_params(map, [:header | :footer]) :: %{optional(String.t()) => term}
-  def read_optional_params(params, keys) do
-    Enum.reduce(keys, %{}, fn key, acc ->
-      param_key = to_string(key)
-
-      if value = params[param_key], do: Map.put(acc, key, value), else: acc
-    end)
+  # A header is optional. When present it must be an object with a `type`
+  # of "text", "image", "video" or "document" and a `value` holding the
+  # value for that media/text.
+  defp read_header(%{"header" => %{"type" => type, "value" => value}})
+       when type in @valid_header_types do
+    %{header: %{type: type, value: value}}
   end
+
+  defp read_header(%{"header" => header}) do
+    raise ArgumentError,
+          "invalid cta_url header #{inspect(header)}: expected an object with a " <>
+            "\"type\" of #{Enum.join(@valid_header_types, ", ")} and a \"value\""
+  end
+
+  defp read_header(_params), do: %{}
 
   @impl true
   @decorate with_span("DSL.Blocks.WhatsAppCallToAction.evaluate_incoming")

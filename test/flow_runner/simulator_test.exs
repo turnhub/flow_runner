@@ -142,6 +142,24 @@ defmodule FlowRunner.SimulatorTest do
     assert text_output.value =~ ~s(opening the URL "https://example.com/products")
   end
 
+  test "simulator with whatsapp call to action with image header" do
+    sim = Simulator.new(read_floip!("whatsapp_call_to_action_with_image_header"))
+    {:end, _sim, outputs} = Simulator.start(sim)
+
+    text_output =
+      outputs
+      |> get_in([:message, :text])
+      |> with_content_type("TEXT")
+      |> List.first()
+
+    # The image header resource link is rendered
+    assert text_output.value =~ "Header (image): https://example.com/banner.jpg"
+
+    # Body and call to action are still rendered
+    assert text_output.value =~ "Tap the button below to browse our products"
+    assert text_output.value =~ ~s(A call-to-action button "Visit our store" is sent to the phone)
+  end
+
   test "simulator with whatsapp call permission request" do
     sim = Simulator.new(read_floip!("whatsapp_call_permission_request_basic"))
     {:waiting, _sim, outputs} = Simulator.start(sim)

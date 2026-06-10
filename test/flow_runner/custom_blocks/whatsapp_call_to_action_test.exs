@@ -22,21 +22,68 @@ defmodule FlowRunner.CustomBlocks.WhatsAppCallToActionTest do
       refute Map.has_key?(result.cta_url, :footer)
     end
 
-    test "returns cta_url config with optional header and footer parameters" do
+    test "returns cta_url config with a text header and footer" do
       config = %{
         "cta_url" => %{
           "url" => "https://example.com",
           "cta" => "Visit our site",
           "text" => "Tap the button below to learn more",
-          "header" => "Header text",
+          "header" => %{"type" => "text", "value" => "header-resource-uuid"},
           "footer" => "Footer text"
         }
       }
 
       result = WhatsAppCallToAction.validate_config!(config)
 
-      assert result.cta_url.header == "Header text"
+      assert result.cta_url.header == %{type: "text", value: "header-resource-uuid"}
       assert result.cta_url.footer == "Footer text"
+    end
+
+    test "accepts image, video and document headers" do
+      for type <- ~w(image video document) do
+        config = %{
+          "cta_url" => %{
+            "url" => "https://example.com",
+            "cta" => "Visit our site",
+            "text" => "Tap the button below to learn more",
+            "header" => %{"type" => type, "value" => "media-resource-uuid"}
+          }
+        }
+
+        result = WhatsAppCallToAction.validate_config!(config)
+
+        assert result.cta_url.header == %{type: type, value: "media-resource-uuid"}
+      end
+    end
+
+    test "raises when header has an invalid type" do
+      config = %{
+        "cta_url" => %{
+          "url" => "https://example.com",
+          "cta" => "Visit our site",
+          "text" => "Tap the button below to learn more",
+          "header" => %{"type" => "audio", "value" => "media-resource-uuid"}
+        }
+      }
+
+      assert_raise ArgumentError, fn ->
+        WhatsAppCallToAction.validate_config!(config)
+      end
+    end
+
+    test "raises when header is not a typed object" do
+      config = %{
+        "cta_url" => %{
+          "url" => "https://example.com",
+          "cta" => "Visit our site",
+          "text" => "Tap the button below to learn more",
+          "header" => "Header text"
+        }
+      }
+
+      assert_raise ArgumentError, fn ->
+        WhatsAppCallToAction.validate_config!(config)
+      end
     end
 
     test "raises error when cta_url key is missing" do
@@ -84,43 +131,6 @@ defmodule FlowRunner.CustomBlocks.WhatsAppCallToActionTest do
       assert_raise FunctionClauseError, fn ->
         WhatsAppCallToAction.validate_config!(config)
       end
-    end
-  end
-
-  describe "read_optional_params/2" do
-    test "returns empty map when no optional parameters are present" do
-      params = %{"url" => "https://example.com"}
-      keys = [:header, :footer]
-
-      result = WhatsAppCallToAction.read_optional_params(params, keys)
-
-      assert result == %{}
-    end
-
-    test "returns map with only present optional parameters" do
-      params = %{
-        "url" => "https://example.com",
-        "footer" => "footer text"
-      }
-
-      keys = [:header, :footer]
-
-      result = WhatsAppCallToAction.read_optional_params(params, keys)
-
-      assert result == %{footer: "footer text"}
-    end
-
-    test "returns map with all optional parameters when present" do
-      params = %{
-        "header" => "header text",
-        "footer" => "footer text"
-      }
-
-      keys = [:header, :footer]
-
-      result = WhatsAppCallToAction.read_optional_params(params, keys)
-
-      assert result == %{header: "header text", footer: "footer text"}
     end
   end
 
