@@ -87,7 +87,7 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
     do: %{
       type: "text",
       text: text,
-      language: component["language"] || Expression.evaluate_block!(default_language)
+      language: component["language"] || evaluate_block(default_language)
     }
 
   defp parse_parameter(
@@ -104,7 +104,7 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
     %{
       type: "document",
       document: document,
-      language: document["language"] || Expression.evaluate_block!(default_language)
+      language: document["language"] || evaluate_block(default_language)
     }
   end
 
@@ -115,7 +115,7 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
        do: %{
          type: "video",
          video: %{link: link},
-         language: video["language"] || Expression.evaluate_block!(default_language)
+         language: video["language"] || evaluate_block(default_language)
        }
 
   defp parse_parameter(
@@ -125,7 +125,7 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
        do: %{
          type: "image",
          image: %{link: link},
-         language: image["language"] || Expression.evaluate_block!(default_language)
+         language: image["language"] || evaluate_block(default_language)
        }
 
   defp parse_parameter(
@@ -135,7 +135,7 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
        do: %{
          type: "payload",
          payload: payload_resource_uuid,
-         language: payload["language"] || Expression.evaluate_block!(default_language)
+         language: payload["language"] || evaluate_block(default_language)
        }
 
   @impl FlowRunner.Spec.Block
@@ -178,4 +178,10 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
 
   defp has_reply_button?(components),
     do: Enum.any?(components, &(&1[:type] == "button" and &1[:sub_type] != "url"))
+
+  # The @ prefix is a block template marker (e.g. @var is shorthand for @(var)).
+  # Expression 3.0's evaluate_block! only accepts bare expression syntax,
+  # so we strip the marker before passing to the block evaluator.
+  defp evaluate_block("@" <> rest), do: Expression.evaluate_block!(rest)
+  defp evaluate_block(expression), do: Expression.evaluate_block!(expression)
 end

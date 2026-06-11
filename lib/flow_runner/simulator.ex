@@ -178,7 +178,7 @@ defmodule FlowRunner.Simulator do
       do: %Output{
         mime_type: mime_type,
         raw_value: value,
-        value: Expression.evaluate_as_string!(value, sim.context.vars, sim.callbacks_module),
+        value: evaluate_as_string_recursive(value, sim.context.vars, sim.callbacks_module),
         content_type: content_type,
         event_value: event_value
       }
@@ -245,7 +245,7 @@ defmodule FlowRunner.Simulator do
     context_vars = if sim.context, do: sim.context.vars, else: %{}
 
     schedule_in =
-      Expression.evaluate_block!(schedule_in_block, context_vars, sim.callbacks_module)
+      evaluate_block(schedule_in_block, context_vars, sim.callbacks_module)
 
     debug_value = """
     [DEBUG]
@@ -373,7 +373,7 @@ defmodule FlowRunner.Simulator do
     context_vars = if sim.context, do: sim.context.vars, else: %{}
 
     schedule_at =
-      Expression.evaluate_block!(schedule_at_block, context_vars, sim.callbacks_module)
+      evaluate_block(schedule_at_block, context_vars, sim.callbacks_module)
 
     debug_value = """
     [DEBUG]
@@ -459,10 +459,10 @@ defmodule FlowRunner.Simulator do
     template_config = config.template
 
     template_name =
-      Expression.evaluate_block!(template_config.name, context_vars, sim.callbacks_module)
+      evaluate_block(template_config.name, context_vars, sim.callbacks_module)
 
     template_language =
-      Expression.evaluate_block!(
+      evaluate_block(
         template_config.language.code,
         context_vars,
         sim.callbacks_module
@@ -484,7 +484,7 @@ defmodule FlowRunner.Simulator do
       end)
       |> Enum.map_join(", ", fn %{text: param} ->
         param
-        |> Expression.evaluate_block!(context_vars, sim.callbacks_module)
+        |> evaluate_block(context_vars, sim.callbacks_module)
         |> to_string()
       end)
 
@@ -504,7 +504,7 @@ defmodule FlowRunner.Simulator do
       |> Enum.filter(&(&1.type == "text" && &1.language == sim.language.iso_639_3))
       |> Enum.map_join(", ", fn %{text: param} ->
         param
-        |> Expression.evaluate_block!(context_vars, sim.callbacks_module)
+        |> evaluate_block(context_vars, sim.callbacks_module)
         |> to_string()
       end)
 
@@ -525,7 +525,7 @@ defmodule FlowRunner.Simulator do
 
         header_media_param
         |> get_in([type_key, :link])
-        |> Expression.evaluate_block!()
+        |> evaluate_block()
         |> to_string()
       end
 
@@ -895,7 +895,7 @@ defmodule FlowRunner.Simulator do
   def output_block(sim, %{type: "Io.Turn.Wait", config: %{seconds: seconds}}) do
     evaluated_seconds =
       if is_binary(seconds) do
-        Expression.evaluate_block!(seconds, sim.context.vars, sim.callbacks_module)
+        evaluate_block(seconds, sim.context.vars, sim.callbacks_module)
       else
         seconds
       end
@@ -1247,5 +1247,58 @@ defmodule FlowRunner.Simulator do
       # Not an enum pattern, return as-is
       value
     end
+  end
+
+  # Recursively evaluates a template string for display. This is only needed
+  # in the simulator because it renders resource values into displayable text
+  # (replacing the consuming application). The flow runner core doesn't need
+  # this — it evaluates expressions for routing/conditions and stores results
+  # in context, but never renders template strings for output.
+  #
+  # The issue: when a variable's value itself contains an expression
+  # (e.g. a Case block exit name like "@if(...)" gets stored in my_var),
+  # evaluating "@my_var" returns the literal string "@if(...)" rather than
+  # resolving it. We re-evaluate until the AST contains no more expression
+  # nodes, walking the parsed AST to avoid false positives from @@ escapes
+  # or email addresses.
+  defp evaluate_as_string_recursive(value, context, callbacks_module, depth \\ 0)
+
+  defp evaluate_as_string_recursive(value, _context, _callbacks_module, depth) when depth > 10,
+    do: value
+
+  defp evaluate_as_string_recursive(value, context, callbacks_module, depth) do
+    result = Expression.evaluate_as_string!(value, context, callbacks_module)
+
+    if result != value and has_expression_nodes?(result) do
+      evaluate_as_string_recursive(result, context, callbacks_module, depth + 1)
+    else
+      result
+    end
+  end
+
+  defp has_expression_nodes?(value) do
+    {:ok, ast, _, _, _, _} = Expression.Parser.parse(value)
+
+    Enum.any?(ast, fn
+      {:expression, _} -> true
+      _ -> false
+    end)
+  end
+
+  # The @ prefix is a block template marker (e.g. @var is shorthand for @(var)).
+  # Expression 3.0's evaluate_block! only accepts bare expression syntax,
+  # so we strip the marker before passing to the block evaluator.
+  defp evaluate_block(
+         expression,
+         context \\ %{},
+         callbacks_module \\ Expression.Callbacks.Standard
+       )
+
+  defp evaluate_block("@" <> rest, context, callbacks_module) do
+    Expression.evaluate_block!(rest, context, callbacks_module)
+  end
+
+  defp evaluate_block(expression, context, callbacks_module) do
+    Expression.evaluate_block!(expression, context, callbacks_module)
   end
 end

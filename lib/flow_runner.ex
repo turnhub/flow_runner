@@ -99,13 +99,25 @@ defmodule FlowRunner do
     Expression.evaluate_as_string!(expression, context, expression_callbacks_module())
   end
 
+  # NOTE(api-cleanup): This function has an inconsistent return type — it returns
+  # a bare value on success but {:error, _} on failure. A future cleanup should
+  # change the contract to consistently return {:ok, val} | {:error, reason} and
+  # update all callers accordingly.
   @impl FlowRunner.Contract
   def evaluate_expression_block(expression, context) do
-    Expression.evaluate_block!(expression, context, expression_callbacks_module())
-  rescue
-    e in Expression.Error ->
-      {:error, e.type, e.message}
+    expression = strip_block_template_marker(expression)
+
+    case Expression.evaluate_block(expression, context, expression_callbacks_module()) do
+      {:ok, val} -> val
+      {:error, _} = error -> error
+    end
   end
+
+  # The @ prefix is a block template marker (e.g. @var is shorthand for @(var)).
+  # Expression 3.0's evaluate_block only accepts bare expression syntax,
+  # so we strip the marker before passing to the block evaluator.
+  defp strip_block_template_marker("@" <> rest), do: rest
+  defp strip_block_template_marker(expression), do: expression
 
   defdelegate fetch_resource_by_uuid(container, uuid), to: FlowRunner.Spec.Container
 

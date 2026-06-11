@@ -31,11 +31,14 @@ defmodule FlowRunner.CustomBlocks.DynamicSelectOneResponse do
 
   def update_config(container, flow, block, context) do
     value =
-      Expression.evaluate_block!(
-        block.config.choice_expression,
-        context.vars,
-        FlowRunner.expression_callbacks_module()
-      )
+      case Expression.evaluate_block(
+             block.config.choice_expression,
+             context.vars,
+             FlowRunner.expression_callbacks_module()
+           ) do
+        {:ok, val} -> val
+        {:error, reason} -> reason
+      end
       |> Enum.map(fn
         # Handle the specific case of a two-element list where options are time formatted
         # i.e. list("cta", NextCard, map(times_formatted_options_list, &[&1,&1]))
@@ -124,10 +127,13 @@ defmodule FlowRunner.CustomBlocks.DynamicSelectOneResponse do
     matched_option =
       Enum.find(block.config.choices, fn
         %{name: _name, test: test, prompt: _prompt} ->
-          FlowRunner.evaluate_expression_block(test, %{
-            "flow" => flow,
-            "block" => %{"response" => user_input}
-          })
+          case FlowRunner.evaluate_expression_block(test, %{
+                 "flow" => flow,
+                 "block" => %{"response" => user_input}
+               }) do
+            {:error, _} -> false
+            result -> result
+          end
       end)
 
     if matched_option do
