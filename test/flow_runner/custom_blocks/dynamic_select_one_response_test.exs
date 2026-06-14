@@ -3,7 +3,12 @@ defmodule FlowRunner.CustomBlocks.DynamicSelectOneResponseTest do
 
   alias FlowRunner.Context
   alias FlowRunner.CustomBlocks.DynamicSelectOneResponse
-  alias FlowRunner.Spec.{Block, Container, Flow, Language, Resource, ResourceValue}
+  alias FlowRunner.Spec.Block
+  alias FlowRunner.Spec.Container
+  alias FlowRunner.Spec.Flow
+  alias FlowRunner.Spec.Language
+  alias FlowRunner.Spec.Resource
+  alias FlowRunner.Spec.ResourceValue
 
   @language_id "11111111-1111-1111-1111-111111111111"
 
