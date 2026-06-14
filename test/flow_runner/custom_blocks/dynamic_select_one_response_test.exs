@@ -32,7 +32,10 @@ defmodule FlowRunner.CustomBlocks.DynamicSelectOneResponseTest do
     flow = %Flow{languages: [%Language{id: @language_id, iso_639_3: "eng"}]}
 
     container = %Container{
-      resources: [resource("prompt-alpha", "Alpha label"), resource("prompt-bravo", "Bravo label")]
+      resources: [
+        resource("prompt-alpha", "Alpha label"),
+        resource("prompt-bravo", "Bravo label")
+      ]
     }
 
     {container, flow, block, %Context{language: "eng", mode: "TEXT"}}
@@ -45,10 +48,22 @@ defmodule FlowRunner.CustomBlocks.DynamicSelectOneResponseTest do
       {container, flow, block, context} = setup_block()
 
       assert {:ok, %{"name" => "Bravo", "index" => 1, "label" => "Bravo label"}} =
-               DynamicSelectOneResponse.evaluate_outgoing(container, flow, block, context, "Bravo")
+               DynamicSelectOneResponse.evaluate_outgoing(
+                 container,
+                 flow,
+                 block,
+                 context,
+                 "Bravo"
+               )
 
       assert {:ok, %{"name" => "Alpha", "index" => 0, "label" => "Alpha label"}} =
-               DynamicSelectOneResponse.evaluate_outgoing(container, flow, block, context, "Alpha")
+               DynamicSelectOneResponse.evaluate_outgoing(
+                 container,
+                 flow,
+                 block,
+                 context,
+                 "Alpha"
+               )
     end
 
     test "is invalid when no choice test matches the response" do
