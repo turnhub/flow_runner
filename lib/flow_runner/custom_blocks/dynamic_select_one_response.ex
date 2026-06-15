@@ -121,29 +121,33 @@ defmodule FlowRunner.CustomBlocks.DynamicSelectOneResponse do
   @impl true
   @decorate with_span("DSL.Blocks.DynamicSelectOneResponse.evaluate_outgoing")
   def evaluate_outgoing(container, flow, block, context, user_input) do
-    matched_option =
-      Enum.find(block.config.choices, fn
-        %{name: _name, test: test, prompt: _prompt} ->
-          FlowRunner.evaluate_expression_block(test, %{
-            "flow" => flow,
-            "block" => %{"response" => user_input}
-          })
+    matched =
+      block.config.choices
+      |> Enum.with_index()
+      |> Enum.find(fn {%{name: _name, test: test, prompt: _prompt}, _index} ->
+        FlowRunner.evaluate_expression_block(test, %{
+          "flow" => flow,
+          "block" => %{"response" => user_input}
+        })
       end)
 
-    if matched_option do
-      {:ok, resource} = FlowRunner.fetch_resource_by_uuid(container, matched_option.prompt)
+    case matched do
+      {matched_option, index} ->
+        {:ok, resource} = FlowRunner.fetch_resource_by_uuid(container, matched_option.prompt)
 
-      {:ok, resource_value} =
-        FlowRunner.fetch_resource_value(resource, context.language, context.mode, flow)
+        {:ok, resource_value} =
+          FlowRunner.fetch_resource_value(resource, context.language, context.mode, flow)
 
-      {:ok,
-       %{
-         "__value__" => matched_option.name,
-         "name" => matched_option.name,
-         "label" => resource_value.value
-       }}
-    else
-      {:invalid, "No choice tests evaluated to true."}
+        {:ok,
+         %{
+           "__value__" => matched_option.name,
+           "name" => matched_option.name,
+           "index" => index,
+           "label" => resource_value.value
+         }}
+
+      nil ->
+        {:invalid, "No choice tests evaluated to true."}
     end
   end
 end
