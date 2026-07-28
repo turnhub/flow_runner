@@ -34,7 +34,8 @@ defmodule FlowRunner.CustomBlocks.DynamicSelectOneResponse do
       Expression.evaluate_block!(
         block.config.choice_expression,
         context.vars,
-        FlowRunner.expression_callbacks_module()
+        FlowRunner.expression_callbacks_module(),
+        FlowRunner.expression_opts(context)
       )
       |> Enum.map(fn
         # Handle the specific case of a two-element list where options are time formatted
@@ -125,10 +126,15 @@ defmodule FlowRunner.CustomBlocks.DynamicSelectOneResponse do
       block.config.choices
       |> Enum.with_index()
       |> Enum.find(fn {%{name: _name, test: test, prompt: _prompt}, _index} ->
-        FlowRunner.evaluate_expression_block(test, %{
-          "flow" => flow,
-          "block" => %{"response" => user_input}
-        })
+        Expression.evaluate_block!(
+          test,
+          %{
+            "flow" => flow,
+            "block" => %{"response" => user_input}
+          },
+          FlowRunner.expression_callbacks_module(),
+          FlowRunner.expression_opts(context)
+        )
       end)
 
     case matched do

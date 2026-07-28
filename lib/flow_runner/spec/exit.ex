@@ -34,7 +34,7 @@ defmodule FlowRunner.Spec.Exit do
   def evaluate(exit, context) do
     test = exit.test || ""
 
-    case FlowRunner.evaluate_expression_block(test, context.vars) |> extract_value() do
+    case FlowRunner.evaluate_expression_block(test, context) |> extract_value() do
       other when not is_boolean(other) ->
         Logger.info(
           "Expression '#{exit.test}' returned #{inspect(other)} when expecting a boolean last_block_uuid=#{context.last_block_uuid}"
