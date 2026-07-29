@@ -252,7 +252,8 @@ defmodule FlowRunner.CustomBlocks.Webhook do
       &Expression.evaluate_as_string!(
         to_string(&1),
         privileged_context,
-        callbacks_module
+        callbacks_module,
+        FlowRunner.expression_opts(context)
       )
 
     evaluate_key_pairs = fn pairs ->

@@ -81,27 +81,56 @@ defmodule FlowRunner do
   def blocks_module,
     do: Application.get_env(:flow_runner, :blocks_module) || FlowRunner.Blocks
 
-  def expression_callbacks_module,
-    do:
-      Application.get_env(
-        :flow_runner,
-        :expression_callbacks_module,
-        Expression.Callbacks.Standard
-      )
+  def expression_callbacks_module do
+    Application.get_env(:flow_runner, :expression_callbacks_module, Expression.Callbacks.Standard)
+  end
+
+  @doc """
+  Expression evaluation options for a context.
+
+  The expression-language mode is stamped into `context.private` by the
+  consumer (engage stamps it per journey); a missing stamp degrades safely
+  to `:v2`, and a bare vars map (accepted for backwards compatibility)
+  likewise evaluates under `:v2`.
+  """
+  @spec expression_opts(Context.t() | map) :: Keyword.t()
+  def expression_opts(%Context{private: private}) do
+    case private[:expression_mode] do
+      :v3 -> []
+      _v2_or_nil -> [mode: :v2]
+    end
+  end
+
+  def expression_opts(vars) when is_map(vars), do: [mode: :v2]
 
   @impl FlowRunner.Contract
-  def evaluate_expression(expression, context) do
-    Expression.evaluate!(expression, context, expression_callbacks_module())
+  def evaluate_expression(expression, %Context{} = context) do
+    Expression.evaluate!(
+      expression,
+      context.vars,
+      expression_callbacks_module(),
+      expression_opts(context)
+    )
   end
 
   @impl FlowRunner.Contract
-  def evaluate_expression_as_string!(expression, context) do
-    Expression.evaluate_as_string!(expression, context, expression_callbacks_module())
+  def evaluate_expression_as_string!(expression, %Context{} = context) do
+    Expression.evaluate_as_string!(
+      expression,
+      context.vars,
+      expression_callbacks_module(),
+      expression_opts(context)
+    )
   end
 
   @impl FlowRunner.Contract
-  def evaluate_expression_block(expression, context) do
-    Expression.evaluate_block!(expression, context, expression_callbacks_module())
+  def evaluate_expression_block(expression, %Context{} = context) do
+    Expression.evaluate_block!(
+      expression,
+      context.vars,
+      expression_callbacks_module(),
+      expression_opts(context)
+    )
   rescue
     e in Expression.Error ->
       {:error, e.type, e.message}

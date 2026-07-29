@@ -178,7 +178,13 @@ defmodule FlowRunner.Simulator do
       do: %Output{
         mime_type: mime_type,
         raw_value: value,
-        value: Expression.evaluate_as_string!(value, sim.context.vars, sim.callbacks_module),
+        value:
+          Expression.evaluate_as_string!(
+            value,
+            sim.context.vars,
+            sim.callbacks_module,
+            FlowRunner.expression_opts(sim.context)
+          ),
         content_type: content_type,
         event_value: event_value
       }
@@ -245,7 +251,12 @@ defmodule FlowRunner.Simulator do
     context_vars = if sim.context, do: sim.context.vars, else: %{}
 
     schedule_in =
-      Expression.evaluate_block!(schedule_in_block, context_vars, sim.callbacks_module)
+      Expression.evaluate_block!(
+        schedule_in_block,
+        context_vars,
+        sim.callbacks_module,
+        FlowRunner.expression_opts(sim.context)
+      )
 
     debug_value = """
     [DEBUG]
@@ -275,13 +286,20 @@ defmodule FlowRunner.Simulator do
         },
         vendor_metadata: vendor_metadata
       }) do
-    flow_id = Expression.evaluate_as_string!(flow_id, sim.context.vars, sim.callbacks_module)
+    flow_id =
+      Expression.evaluate_as_string!(
+        flow_id,
+        sim.context.vars,
+        sim.callbacks_module,
+        FlowRunner.expression_opts(sim.context)
+      )
 
     screen =
       Expression.evaluate_as_string!(
         screen || "FIRST_ENTRY_SCREEN",
         sim.context.vars,
-        sim.callbacks_module
+        sim.callbacks_module,
+        FlowRunner.expression_opts(sim.context)
       )
 
     cta_resource = fetch_resource_by_uuid!(sim, cta_resource_uuid)
@@ -297,7 +315,12 @@ defmodule FlowRunner.Simulator do
     payload_output =
       if payload && payload != %{} && payload != "" do
         evaluated_payload =
-          evaluate_conversion_fields(payload, sim.context.vars, sim.callbacks_module)
+          evaluate_conversion_fields(
+            payload,
+            sim.context.vars,
+            sim.callbacks_module,
+            FlowRunner.expression_opts(sim.context)
+          )
 
         "\n    Payload: #{inspect(evaluated_payload)}"
       else
@@ -329,7 +352,14 @@ defmodule FlowRunner.Simulator do
           cta_url: %{url: url, cta: cta_resource_uuid, text: text_resource_uuid} = cta_url
         }
       }) do
-    url = Expression.evaluate_as_string!(url, sim.context.vars, sim.callbacks_module)
+    url =
+      Expression.evaluate_as_string!(
+        url,
+        sim.context.vars,
+        sim.callbacks_module,
+        FlowRunner.expression_opts(sim.context)
+      )
+
     text_resource = fetch_resource_by_uuid!(sim, text_resource_uuid)
 
     [text] =
@@ -373,7 +403,12 @@ defmodule FlowRunner.Simulator do
     context_vars = if sim.context, do: sim.context.vars, else: %{}
 
     schedule_at =
-      Expression.evaluate_block!(schedule_at_block, context_vars, sim.callbacks_module)
+      Expression.evaluate_block!(
+        schedule_at_block,
+        context_vars,
+        sim.callbacks_module,
+        FlowRunner.expression_opts(sim.context)
+      )
 
     debug_value = """
     [DEBUG]
@@ -420,7 +455,8 @@ defmodule FlowRunner.Simulator do
       Expression.evaluate_as_string!(
         config.set_contact_property.property_value,
         context_vars,
-        sim.callbacks_module
+        sim.callbacks_module,
+        FlowRunner.expression_opts(sim.context)
       )
 
     contact = Map.get(context_vars, "contact", %{})
@@ -442,7 +478,12 @@ defmodule FlowRunner.Simulator do
       |> Enum.concat([config.key])
 
     value =
-      Expression.evaluate_as_string!("@(#{config.value})", context_vars, sim.callbacks_module)
+      Expression.evaluate_as_string!(
+        "@(#{config.value})",
+        context_vars,
+        sim.callbacks_module,
+        FlowRunner.expression_opts(sim.context)
+      )
 
     updated_vars =
       if get_in(context_vars, dictionary_keys) do
@@ -459,13 +500,19 @@ defmodule FlowRunner.Simulator do
     template_config = config.template
 
     template_name =
-      Expression.evaluate_block!(template_config.name, context_vars, sim.callbacks_module)
+      Expression.evaluate_block!(
+        template_config.name,
+        context_vars,
+        sim.callbacks_module,
+        FlowRunner.expression_opts(sim.context)
+      )
 
     template_language =
       Expression.evaluate_block!(
         template_config.language.code,
         context_vars,
-        sim.callbacks_module
+        sim.callbacks_module,
+        FlowRunner.expression_opts(sim.context)
       )
 
     # We don't have access to the list of templates in the simulator
@@ -484,7 +531,11 @@ defmodule FlowRunner.Simulator do
       end)
       |> Enum.map_join(", ", fn %{text: param} ->
         param
-        |> Expression.evaluate_block!(context_vars, sim.callbacks_module)
+        |> Expression.evaluate_block!(
+          context_vars,
+          sim.callbacks_module,
+          FlowRunner.expression_opts(sim.context)
+        )
         |> to_string()
       end)
 
@@ -504,7 +555,11 @@ defmodule FlowRunner.Simulator do
       |> Enum.filter(&(&1.type == "text" && &1.language == sim.language.iso_639_3))
       |> Enum.map_join(", ", fn %{text: param} ->
         param
-        |> Expression.evaluate_block!(context_vars, sim.callbacks_module)
+        |> Expression.evaluate_block!(
+          context_vars,
+          sim.callbacks_module,
+          FlowRunner.expression_opts(sim.context)
+        )
         |> to_string()
       end)
 
@@ -853,12 +908,18 @@ defmodule FlowRunner.Simulator do
       Expression.evaluate_as_string!(
         conversion_config.event_name,
         context_vars,
-        sim.callbacks_module
+        sim.callbacks_module,
+        FlowRunner.expression_opts(sim.context)
       )
 
     # Evaluate user_data values while keeping the original structure (map or keyword list)
     user_data =
-      evaluate_conversion_fields(conversion_config.user_data, context_vars, sim.callbacks_module)
+      evaluate_conversion_fields(
+        conversion_config.user_data,
+        context_vars,
+        sim.callbacks_module,
+        FlowRunner.expression_opts(sim.context)
+      )
 
     # Evaluate optional_fields values while keeping the original structure
     optional_fields? = conversion_config.optional_fields not in [nil, %{}, ""]
@@ -869,7 +930,8 @@ defmodule FlowRunner.Simulator do
           evaluate_conversion_fields(
             conversion_config.optional_fields,
             context_vars,
-            sim.callbacks_module
+            sim.callbacks_module,
+            FlowRunner.expression_opts(sim.context)
           )
 
         "\n  optional_fields: #{inspect(optional_fields)}"
@@ -895,7 +957,12 @@ defmodule FlowRunner.Simulator do
   def output_block(sim, %{type: "Io.Turn.Wait", config: %{seconds: seconds}}) do
     evaluated_seconds =
       if is_binary(seconds) do
-        Expression.evaluate_block!(seconds, sim.context.vars, sim.callbacks_module)
+        Expression.evaluate_block!(
+          seconds,
+          sim.context.vars,
+          sim.callbacks_module,
+          FlowRunner.expression_opts(sim.context)
+        )
       else
         seconds
       end
@@ -941,10 +1008,10 @@ defmodule FlowRunner.Simulator do
   end
 
   # Helper function to evaluate conversion field values and return as a map
-  defp evaluate_conversion_fields(fields, context_vars, callbacks_module) do
+  defp evaluate_conversion_fields(fields, context_vars, callbacks_module, expression_opts) do
     fields
     |> normalize_to_map()
-    |> evaluate_map_values(context_vars, callbacks_module)
+    |> evaluate_map_values(context_vars, callbacks_module, expression_opts)
   end
 
   # Convert various data types to a map
@@ -961,28 +1028,36 @@ defmodule FlowRunner.Simulator do
   defp normalize_to_map(_), do: %{}
 
   # Evaluate all values in a map as expressions
-  defp evaluate_map_values(map, context_vars, callbacks_module) do
+  defp evaluate_map_values(map, context_vars, callbacks_module, expression_opts) do
     Map.new(map, fn {key, value_expr} ->
-      evaluated_value = evaluate_field_value(value_expr, context_vars, callbacks_module)
+      evaluated_value =
+        evaluate_field_value(value_expr, context_vars, callbacks_module, expression_opts)
 
       {key, evaluated_value}
     end)
   end
 
   # Evaluate a single field value - handles nested structures
-  defp evaluate_field_value(value, context_vars, callbacks_module) when is_map(value) do
-    evaluate_map_values(value, context_vars, callbacks_module)
+  defp evaluate_field_value(value, context_vars, callbacks_module, expression_opts)
+       when is_map(value) do
+    evaluate_map_values(value, context_vars, callbacks_module, expression_opts)
   end
 
-  defp evaluate_field_value(value, context_vars, callbacks_module) when is_list(value) do
+  defp evaluate_field_value(value, context_vars, callbacks_module, expression_opts)
+       when is_list(value) do
     # Convert keyword list to map and evaluate
     value
     |> Enum.into(%{})
-    |> evaluate_map_values(context_vars, callbacks_module)
+    |> evaluate_map_values(context_vars, callbacks_module, expression_opts)
   end
 
-  defp evaluate_field_value(value, context_vars, callbacks_module) do
-    Expression.evaluate_as_string!(to_string(value), context_vars, callbacks_module)
+  defp evaluate_field_value(value, context_vars, callbacks_module, expression_opts) do
+    Expression.evaluate_as_string!(
+      to_string(value),
+      context_vars,
+      callbacks_module,
+      expression_opts
+    )
   end
 
   defp extract_buttons(template_components, sim) do
@@ -993,8 +1068,12 @@ defmodule FlowRunner.Simulator do
       |> Enum.filter(&(&1.type == "button"))
       |> Enum.map(fn button -> Map.get(button, :parameters, []) end)
       |> Enum.filter(fn [%{language: language} | _] ->
-        Expression.evaluate_as_string!(language, sim.context.vars, sim.callbacks_module) ==
-          sim.language.iso_639_3
+        Expression.evaluate_as_string!(
+          language,
+          sim.context.vars,
+          sim.callbacks_module,
+          FlowRunner.expression_opts(sim.context)
+        ) == sim.language.iso_639_3
       end)
       |> Enum.reverse()
       |> List.flatten()
