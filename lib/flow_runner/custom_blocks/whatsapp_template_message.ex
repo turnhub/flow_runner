@@ -70,6 +70,7 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
               required(:type) => String.t(),
               optional(:text) => String.t(),
               optional(:payload) => String.t(),
+              optional(:flow_action_data) => term(),
               optional(:language) => String.t()
             })
         }
@@ -139,6 +140,16 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
          payload: payload_resource_uuid,
          language: payload["language"] || Expression.evaluate_block!(default_language)
        }
+
+  # The parameter of a flow button. `flow_action_data` is the data payload for the
+  # flow's first screen and is carried through untouched: it may be a decoded JSON
+  # object, or a string holding an expression to evaluate when the template is sent.
+  defp parse_parameter(%{"type" => "action"} = action, default_language),
+    do: %{
+      type: "action",
+      flow_action_data: action["flow_action_data"],
+      language: action["language"] || Expression.evaluate_block!(default_language)
+    }
 
   @impl FlowRunner.Spec.Block
   @decorate with_span("DSL.Blocks.WhatsAppTemplateMessage.evaluate_incoming")

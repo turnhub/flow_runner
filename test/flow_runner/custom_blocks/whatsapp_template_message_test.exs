@@ -163,6 +163,77 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessageTest do
     end
   end
 
+  describe "validate_config!/1 for a flow button" do
+    test "carries the flow_action_data payload through untouched" do
+      config = %{
+        "template" => %{
+          "name" => "foo",
+          "language" => %{"code" => "en"},
+          "components" => [
+            %{
+              "type" => "button",
+              "sub_type" => "flow",
+              "index" => "0",
+              "parameters" => [
+                %{"type" => "action", "flow_action_data" => %{"patient_id" => "42"}}
+              ]
+            }
+          ]
+        }
+      }
+
+      result = WhatsAppTemplateMessage.validate_config!(config)
+
+      assert [%{type: "button", sub_type: "flow", index: "0", parameters: [param]}] =
+               result.template.components
+
+      assert param.type == "action"
+      assert param.flow_action_data == %{"patient_id" => "42"}
+    end
+
+    test "keeps an unevaluated expression payload as a string" do
+      config = %{
+        "template" => %{
+          "name" => "foo",
+          "language" => %{"code" => "en"},
+          "components" => [
+            %{
+              "type" => "button",
+              "sub_type" => "flow",
+              "index" => "0",
+              "parameters" => [%{"type" => "action", "flow_action_data" => "@some_var"}]
+            }
+          ]
+        }
+      }
+
+      result = WhatsAppTemplateMessage.validate_config!(config)
+      [%{parameters: [param]}] = result.template.components
+      assert param.flow_action_data == "@some_var"
+    end
+
+    test "tolerates a flow button with no payload" do
+      config = %{
+        "template" => %{
+          "name" => "foo",
+          "language" => %{"code" => "en"},
+          "components" => [
+            %{
+              "type" => "button",
+              "sub_type" => "flow",
+              "index" => "0",
+              "parameters" => [%{"type" => "action"}]
+            }
+          ]
+        }
+      }
+
+      result = WhatsAppTemplateMessage.validate_config!(config)
+      [%{parameters: [param]}] = result.template.components
+      assert param.flow_action_data == nil
+    end
+  end
+
   describe "evaluate_incoming/4" do
     test "waits for user input when the template has a flow button" do
       block = block_with_components([%{type: "body"}, button_component("flow")])
