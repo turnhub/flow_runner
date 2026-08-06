@@ -33,7 +33,9 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
                send_message_template("template_name", "en", ["param-1", "param-2"])
              end
              """,
-             returns: "Map with __value__ and index when template has reply buttons"
+             returns:
+               "The submitted JSON when the template has a flow button, otherwise a map " <>
+                 "with __value__ and index when the template has reply buttons"
   @impl FlowRunner.Spec.Block
   def validate_config!(%{
         "template" =>
@@ -153,6 +155,14 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
 
   @impl FlowRunner.Spec.Block
   def evaluate_outgoing(_container, _flow, _block, _context, nil), do: {:ok, nil}
+
+  # A WhatsApp Flow submission arrives as a decoded JSON reply, which always
+  # carries the `flow_token` echoed from the outbound message. Return it unwrapped so
+  # the submitted fields land directly on the block's var (`@ref_Template_1.email`),
+  # matching how `Io.Turn.WhatsAppSendFlow` exposes its result.
+  def evaluate_outgoing(_container, _flow, _block, _context, %{"flow_token" => _} = flow_response) do
+    {:ok, flow_response}
+  end
 
   @template_button_indices Enum.map(0..9, &to_string/1)
   def evaluate_outgoing(_container, _flow, block, _context, "template-btn-idx-" <> index)
