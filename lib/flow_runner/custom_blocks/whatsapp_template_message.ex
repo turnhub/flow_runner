@@ -70,7 +70,7 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
               required(:type) => String.t(),
               optional(:text) => String.t(),
               optional(:payload) => String.t(),
-              optional(:flow_action_data) => term(),
+              optional(:flow_action_data) => String.t(),
               optional(:language) => String.t()
             })
         }
@@ -83,20 +83,18 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
          index: component["index"],
          # required only for buttons
          sub_type: component["sub_type"],
-         parameters: Enum.map(parameters, &parse_parameter(&1, default_language))
+         parameters:
+           Enum.map(parameters, fn component ->
+             language = component["language"] || Expression.evaluate_block!(default_language)
+
+             Map.put(parse_parameter(component), :language, language)
+           end)
        }
 
-  defp parse_parameter(%{"type" => "text", "text" => text} = component, default_language),
-    do: %{
-      type: "text",
-      text: text,
-      language: component["language"] || Expression.evaluate_block!(default_language)
-    }
+  defp parse_parameter(%{"type" => "text", "text" => text}),
+    do: %{type: "text", text: text}
 
-  defp parse_parameter(
-         %{"type" => "document", "document" => %{"link" => link} = document},
-         default_language
-       ) do
+  defp parse_parameter(%{"type" => "document", "document" => %{"link" => link} = document}) do
     document =
       if filename = document["filename"] do
         %{link: link, filename: filename}
@@ -104,52 +102,20 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
         %{link: link}
       end
 
-    %{
-      type: "document",
-      document: document,
-      language: document["language"] || Expression.evaluate_block!(default_language)
-    }
+    %{type: "document", document: document}
   end
 
-  defp parse_parameter(
-         %{"type" => "video", "video" => %{"link" => link}} = video,
-         default_language
-       ),
-       do: %{
-         type: "video",
-         video: %{link: link},
-         language: video["language"] || Expression.evaluate_block!(default_language)
-       }
+  defp parse_parameter(%{"type" => "video", "video" => %{"link" => link}} = video),
+    do: %{type: "video", video: %{link: link}}
 
-  defp parse_parameter(
-         %{"type" => "image", "image" => %{"link" => link}} = image,
-         default_language
-       ),
-       do: %{
-         type: "image",
-         image: %{link: link},
-         language: image["language"] || Expression.evaluate_block!(default_language)
-       }
+  defp parse_parameter(%{"type" => "image", "image" => %{"link" => link}}),
+    do: %{type: "image", image: %{link: link}}
 
-  defp parse_parameter(
-         %{"type" => "payload", "payload" => payload_resource_uuid} = payload,
-         default_language
-       ),
-       do: %{
-         type: "payload",
-         payload: payload_resource_uuid,
-         language: payload["language"] || Expression.evaluate_block!(default_language)
-       }
+  defp parse_parameter(%{"type" => "payload", "payload" => payload_resource_uuid}),
+    do: %{type: "payload", payload: payload_resource_uuid}
 
-  # The parameter of a flow button. `flow_action_data` is the data payload for the
-  # flow's first screen and is carried through untouched: it may be a decoded JSON
-  # object, or a string holding an expression to evaluate when the template is sent.
-  defp parse_parameter(%{"type" => "action"} = action, default_language),
-    do: %{
-      type: "action",
-      flow_action_data: action["flow_action_data"],
-      language: action["language"] || Expression.evaluate_block!(default_language)
-    }
+  defp parse_parameter(%{"type" => "action", "flow_action_data" => flow_action_data}),
+    do: %{type: "action", flow_action_data: flow_action_data}
 
   @impl FlowRunner.Spec.Block
   @decorate with_span("DSL.Blocks.WhatsAppTemplateMessage.evaluate_incoming")
