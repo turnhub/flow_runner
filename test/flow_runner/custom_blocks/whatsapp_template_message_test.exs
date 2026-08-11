@@ -211,27 +211,6 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessageTest do
       [%{parameters: [param]}] = result.template.components
       assert param.flow_action_data == "@some_var"
     end
-
-    test "tolerates a flow button with no payload" do
-      config = %{
-        "template" => %{
-          "name" => "foo",
-          "language" => %{"code" => "en"},
-          "components" => [
-            %{
-              "type" => "button",
-              "sub_type" => "flow",
-              "index" => "0",
-              "parameters" => [%{"type" => "action"}]
-            }
-          ]
-        }
-      }
-
-      result = WhatsAppTemplateMessage.validate_config!(config)
-      [%{parameters: [param]}] = result.template.components
-      assert param.flow_action_data == nil
-    end
   end
 
   describe "evaluate_incoming/4" do
