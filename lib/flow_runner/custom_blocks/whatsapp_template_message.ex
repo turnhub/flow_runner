@@ -105,7 +105,7 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
     %{type: "document", document: document}
   end
 
-  defp parse_parameter(%{"type" => "video", "video" => %{"link" => link}} = video),
+  defp parse_parameter(%{"type" => "video", "video" => %{"link" => link}}),
     do: %{type: "video", video: %{link: link}}
 
   defp parse_parameter(%{"type" => "image", "image" => %{"link" => link}}),
