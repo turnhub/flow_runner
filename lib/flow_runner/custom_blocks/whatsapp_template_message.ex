@@ -33,7 +33,9 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
                send_message_template("template_name", "en", ["param-1", "param-2"])
              end
              """,
-             returns: "Map with __value__ and index when template has reply buttons"
+             returns:
+               "The submitted JSON when the template has a flow button, otherwise a map " <>
+                 "with __value__ and index when the template has reply buttons"
   @impl FlowRunner.Spec.Block
   def validate_config!(%{
         "template" =>
@@ -68,6 +70,7 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
               required(:type) => String.t(),
               optional(:text) => String.t(),
               optional(:payload) => String.t(),
+              optional(:flow_action_data) => String.t(),
               optional(:language) => String.t()
             })
         }
@@ -80,20 +83,18 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
          index: component["index"],
          # required only for buttons
          sub_type: component["sub_type"],
-         parameters: Enum.map(parameters, &parse_parameter(&1, default_language))
+         parameters:
+           Enum.map(parameters, fn component ->
+             language = component["language"] || Expression.evaluate_block!(default_language)
+
+             Map.put(parse_parameter(component), :language, language)
+           end)
        }
 
-  defp parse_parameter(%{"type" => "text", "text" => text} = component, default_language),
-    do: %{
-      type: "text",
-      text: text,
-      language: component["language"] || Expression.evaluate_block!(default_language)
-    }
+  defp parse_parameter(%{"type" => "text", "text" => text}),
+    do: %{type: "text", text: text}
 
-  defp parse_parameter(
-         %{"type" => "document", "document" => %{"link" => link} = document},
-         default_language
-       ) do
+  defp parse_parameter(%{"type" => "document", "document" => %{"link" => link} = document}) do
     document =
       if filename = document["filename"] do
         %{link: link, filename: filename}
@@ -101,42 +102,20 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
         %{link: link}
       end
 
-    %{
-      type: "document",
-      document: document,
-      language: document["language"] || Expression.evaluate_block!(default_language)
-    }
+    %{type: "document", document: document}
   end
 
-  defp parse_parameter(
-         %{"type" => "video", "video" => %{"link" => link}} = video,
-         default_language
-       ),
-       do: %{
-         type: "video",
-         video: %{link: link},
-         language: video["language"] || Expression.evaluate_block!(default_language)
-       }
+  defp parse_parameter(%{"type" => "video", "video" => %{"link" => link}}),
+    do: %{type: "video", video: %{link: link}}
 
-  defp parse_parameter(
-         %{"type" => "image", "image" => %{"link" => link}} = image,
-         default_language
-       ),
-       do: %{
-         type: "image",
-         image: %{link: link},
-         language: image["language"] || Expression.evaluate_block!(default_language)
-       }
+  defp parse_parameter(%{"type" => "image", "image" => %{"link" => link}}),
+    do: %{type: "image", image: %{link: link}}
 
-  defp parse_parameter(
-         %{"type" => "payload", "payload" => payload_resource_uuid} = payload,
-         default_language
-       ),
-       do: %{
-         type: "payload",
-         payload: payload_resource_uuid,
-         language: payload["language"] || Expression.evaluate_block!(default_language)
-       }
+  defp parse_parameter(%{"type" => "payload", "payload" => payload_resource_uuid}),
+    do: %{type: "payload", payload: payload_resource_uuid}
+
+  defp parse_parameter(%{"type" => "action", "flow_action_data" => flow_action_data}),
+    do: %{type: "action", flow_action_data: flow_action_data}
 
   @impl FlowRunner.Spec.Block
   @decorate with_span("DSL.Blocks.WhatsAppTemplateMessage.evaluate_incoming")
@@ -153,6 +132,14 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
 
   @impl FlowRunner.Spec.Block
   def evaluate_outgoing(_container, _flow, _block, _context, nil), do: {:ok, nil}
+
+  # A WhatsApp Flow submission arrives as a decoded JSON reply, which always
+  # carries the `flow_token` echoed from the outbound message. Return it unwrapped so
+  # the submitted fields land directly on the block's var (`@ref_Template_1.email`),
+  # matching how `Io.Turn.WhatsAppSendFlow` exposes its result.
+  def evaluate_outgoing(_container, _flow, _block, _context, %{"flow_token" => _} = flow_response) do
+    {:ok, flow_response}
+  end
 
   @template_button_indices Enum.map(0..9, &to_string/1)
   def evaluate_outgoing(_container, _flow, block, _context, "template-btn-idx-" <> index)
