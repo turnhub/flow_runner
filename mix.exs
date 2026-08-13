@@ -52,20 +52,19 @@ defmodule FlowRunner.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:bypass, "~> 2.1"},
+      {:bypass, "~> 2.1", only: :test},
       {:credo, "~> 1.7", only: [:dev], runtime: false},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:elixir_uuid, "~> 1.2"},
       {:excoveralls, "~> 0.10", only: :test},
       {:expression, "~> 3.0.0-rc.1"},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
-      {:finch, "~> 0.17"},
       {:iptools, "~> 0.0.5"},
       {:jason, "~> 1.2"},
       {:junit_formatter, "~> 3.1", only: [:test]},
       {:mix_test_watch, "~> 1.3", only: [:dev, :test], runtime: false},
       {:open_telemetry_decorator, "<=1.4.13 or >1.5.6"},
-      {:tesla, "~> 1.11"},
+      {:tesla, "~> 1.21"},
       {:version_tasks, "~> 0.12.0",
        only: [:dev], runtime: false, github: "turnhub/version_tasks"},
       {:vex, "~> 0.9.0"}
