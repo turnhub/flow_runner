@@ -1,7 +1,7 @@
 defmodule FlowRunner.MixProject do
   use Mix.Project
 
-  @version "6.15.0"
+  @version "6.15.1"
 
   def project do
     [
@@ -37,7 +37,6 @@ defmodule FlowRunner.MixProject do
   def package() do
     [
       name: "flow_runner",
-      organization: "turnio",
       licenses: ["AGPL-3.0"],
       links: %{
         "Github" => "https://github.com/turnhub/flowrunner"
