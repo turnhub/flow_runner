@@ -4,6 +4,7 @@ defmodule BlockTest do
 
   alias FlowRunner.Context
   alias FlowRunner.Spec.Block
+  alias FlowRunner.Spec.Container
   alias FlowRunner.Spec.Exit
   alias FlowRunner.Spec.Flow
 
@@ -257,6 +258,35 @@ defmodule BlockTest do
 
     # Should fall through to default exit because valid.__value__ is false
     assert {:ok, %Exit{uuid: "failure-exit"}} = Block.evaluate_exits(block, context_false)
+  end
+
+  describe "evaluate_outgoing/5 on a Core.Case block" do
+    test "returns an error instead of raising when no exit matches and there is no default exit" do
+      routing_block = %Block{
+        uuid: "5a0a4c1e-1d0e-4a4e-9a8e-3c1d7b2f6e01",
+        name: "Routing for check",
+        type: "Core.Case",
+        exits: [
+          %Exit{
+            uuid: "b586afa7-0097-4805-9951-f6d3156c08db",
+            name: "Exit for CheckYes",
+            test: "block.value = 5",
+            destination_block: "8e2f8c2d-4b0b-4a3f-8a6c-1f2e3d4c5b6a"
+          }
+        ]
+      }
+
+      context = %Context{vars: %{"block" => %{"value" => 10}}}
+
+      assert {:error, "No default exit available"} =
+               Block.evaluate_outgoing(
+                 %Container{},
+                 %Flow{blocks: [routing_block]},
+                 routing_block,
+                 context,
+                 nil
+               )
+    end
   end
 
   describe "load_config_for_set_contact_property!/1" do
