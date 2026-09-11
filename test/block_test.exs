@@ -287,6 +287,37 @@ defmodule BlockTest do
                  nil
                )
     end
+
+    test "stores the exit name when the name evaluates to nil" do
+      destination_uuid = "8e2f8c2d-4b0b-4a3f-8a6c-1f2e3d4c5b6a"
+
+      routing_block = %Block{
+        uuid: "5a0a4c1e-1d0e-4a4e-9a8e-3c1d7b2f6e02",
+        name: "Routing for check",
+        type: "Core.Case",
+        exits: [
+          %Exit{
+            uuid: "c2f1e9a0-6d3b-4f8e-9c1a-2b3d4e5f6a70",
+            name: "answer",
+            test: "true",
+            destination_block: destination_uuid
+          }
+        ]
+      }
+
+      destination_block = %Block{uuid: destination_uuid, name: "destination", type: "Core.Log"}
+      context = %Context{vars: %{"answer" => nil}}
+
+      assert {:ok, %Context{vars: %{"Routing for check" => "answer"}},
+              %Block{uuid: ^destination_uuid}} =
+               Block.evaluate_outgoing(
+                 %Container{},
+                 %Flow{blocks: [routing_block, destination_block]},
+                 routing_block,
+                 context,
+                 nil
+               )
+    end
   end
 
   describe "load_config_for_set_contact_property!/1" do
