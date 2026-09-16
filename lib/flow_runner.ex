@@ -123,6 +123,17 @@ defmodule FlowRunner do
     )
   end
 
+  @doc """
+  Evaluates a block or condition expression.
+
+  Runtime arithmetic in an expression can fail even when the operands are valid
+  numbers, division by zero being the canonical case, and
+  `Expression.evaluate_block!/4` surfaces that as an `ArithmeticError`. Rather than
+  let it crash the calling process, we treat it like any other unusable condition
+  value: the caller (`FlowRunner.Spec.Exit.evaluate/2`,
+  `FlowRunner.Spec.Blocks.Case.evaluate_outgoing/5`) falls through to the block's
+  default exit.
+  """
   @impl FlowRunner.Contract
   def evaluate_expression_block(expression, %Context{} = context) do
     Expression.evaluate_block!(
@@ -134,6 +145,9 @@ defmodule FlowRunner do
   rescue
     e in Expression.Error ->
       {:error, e.type, e.message}
+
+    e in ArithmeticError ->
+      {:error, :arithmetic, Exception.message(e)}
   end
 
   defdelegate fetch_resource_by_uuid(container, uuid), to: FlowRunner.Spec.Container

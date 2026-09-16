@@ -152,6 +152,28 @@ defmodule BlockTest do
              Block.evaluate_exits(block, context)
   end
 
+  test "an exit whose test raises a runtime arithmetic error falls through to the default exit" do
+    context = %Context{
+      vars: %{"score" => 10, "total" => 0}
+    }
+
+    block = %Block{
+      exits: [
+        %Exit{
+          uuid: "b586afa7-0097-4805-9951-f6d3156c08db",
+          test: "score / total > 1"
+        },
+        %Exit{
+          uuid: "cbf4382f-0ce0-426b-9a3c-40cbe84dd081",
+          default: true
+        }
+      ]
+    }
+
+    assert {:ok, %Exit{uuid: "cbf4382f-0ce0-426b-9a3c-40cbe84dd081"}} =
+             Block.evaluate_exits(block, context)
+  end
+
   test "fetch default block" do
     # 1. With NO default exit
     context = %Context{

@@ -48,6 +48,14 @@ defmodule FlowRunner.ExpressionModeTest do
       assert FlowRunner.evaluate_expression_block("age", context(%{"age" => "30"}, :v3)) ==
                "30"
     end
+
+    test "a runtime arithmetic failure returns an :arithmetic error instead of raising" do
+      assert {:error, :arithmetic, _message} =
+               FlowRunner.evaluate_expression_block(
+                 "score / total",
+                 context(%{"score" => 10, "total" => 0}, :v2)
+               )
+    end
   end
 
   describe "evaluate_expression_as_string!/2" do
