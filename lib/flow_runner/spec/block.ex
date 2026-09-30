@@ -54,11 +54,16 @@ defmodule FlowRunner.Spec.Block do
 
     * `{:invalid, reason}` — the flow runner will exit through the
       block's default response.
+
+    * `{:error, reason}` — the block could not pick an exit at all (for
+      example a `Core.Case` whose tests all evaluated to false and which
+      has no default exit); the error is returned to the caller.
   """
   @callback evaluate_outgoing(Container.t(), Flow.t(), Block.t(), Context.t(), user_input :: any) ::
               {:ok, user_input :: any}
               | {:ok, user_input :: any, opts :: Keyword.t()}
               | {:invalid, reason :: String.t()}
+              | {:error, reason :: String.t()}
 
   @derive Jason.Encoder
   defstruct uuid: nil,
@@ -228,7 +233,9 @@ defmodule FlowRunner.Spec.Block do
 
   @decorate with_span("FlowRunner.Spec.Block.evaluate_outgoing")
   @spec evaluate_outgoing(Container.t(), Flow.t(), Block.t(), Context.t(), user_input :: any) ::
-          {:ok, Context.t(), Block.t()} | {:invalid, reason :: String.t()}
+          {:ok, Context.t(), Block.t() | nil}
+          | {:invalid, reason :: String.t()}
+          | {:error, reason :: String.t()}
   def evaluate_outgoing(
         container,
         flow,
@@ -270,12 +277,16 @@ defmodule FlowRunner.Spec.Block do
         {:ok, context} = evaluate_user_input(block, context, user_input)
 
         fetch_default_block(block, flow, context)
+
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 
   defp normalize_outgoing({:ok, user_input}), do: {:ok, user_input, []}
   defp normalize_outgoing({:ok, user_input, opts}) when is_list(opts), do: {:ok, user_input, opts}
   defp normalize_outgoing({:invalid, _} = invalid), do: invalid
+  defp normalize_outgoing({:error, _} = error), do: error
 
   @spec fetch_default_block(Block.t(), Flow.t(), Context.t()) ::
           {:error, String.t()} | {:ok, Context.t(), Block.t() | nil}
