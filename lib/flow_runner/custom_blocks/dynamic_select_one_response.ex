@@ -30,14 +30,34 @@ defmodule FlowRunner.CustomBlocks.DynamicSelectOneResponse do
   end
 
   def update_config(container, flow, block, context) do
-    value =
+    options =
       Expression.evaluate_block!(
         block.config.choice_expression,
         context.vars,
         FlowRunner.expression_callbacks_module(),
         FlowRunner.expression_opts(context)
       )
-      |> Enum.map(fn
+
+    if value_label_pairs?(options) do
+      put_choices(container, flow, block, context, options)
+    else
+      {:error,
+       "expected a list of [value, label] pairs from #{inspect(block.config.choice_expression)}, got: #{inspect(options)}"}
+    end
+  end
+
+  @spec put_choices(
+          FlowRunner.Spec.Container.t(),
+          FlowRunner.Spec.Flow.t(),
+          FlowRunner.Spec.Block.t(),
+          FlowRunner.Context.t(),
+          options :: [[term]]
+        ) ::
+          {:ok, FlowRunner.Spec.Container.t(), FlowRunner.Spec.Flow.t(),
+           FlowRunner.Spec.Block.t(), FlowRunner.Context.t()}
+  defp put_choices(container, flow, block, context, options) do
+    value =
+      Enum.map(options, fn
         # Handle the specific case of a two-element list where options are time formatted
         # i.e. list("cta", NextCard, map(times_formatted_options_list, &[&1,&1]))
         [option_a, _option_b] when is_struct(option_a, Time) ->
@@ -113,10 +133,14 @@ defmodule FlowRunner.CustomBlocks.DynamicSelectOneResponse do
   @impl true
   @decorate with_span("DSL.Blocks.DynamicSelectOneResponse.evaluate_incoming")
   def evaluate_incoming(container, flow, block, context) do
-    {:ok, container, flow, block, context} = update_config(container, flow, block, context)
+    case update_config(container, flow, block, context) do
+      {:ok, container, flow, block, context} ->
+        {:ok, container, flow, block,
+         %{context | waiting_for_user_input: true, last_block_uuid: block.uuid}}
 
-    {:ok, container, flow, block,
-     %{context | waiting_for_user_input: true, last_block_uuid: block.uuid}}
+      {:error, reason} ->
+        {:error, reason}
+    end
   end
 
   @impl true
@@ -156,4 +180,8 @@ defmodule FlowRunner.CustomBlocks.DynamicSelectOneResponse do
         {:invalid, "No choice tests evaluated to true."}
     end
   end
+
+  @spec value_label_pairs?(term) :: boolean
+  defp value_label_pairs?(options),
+    do: is_list(options) and Enum.all?(options, &match?([_value, _label], &1))
 end
