@@ -318,6 +318,79 @@ defmodule BlockTest do
                  nil
                )
     end
+
+    @unwritten_field_expression "contact.program_quit_at > now()"
+
+    test "stores the source text when the expression fails to evaluate under v2 semantics" do
+      {flow, routing_block} = assignment_flow(@unwritten_field_expression)
+      context = %Context{vars: %{"contact" => %{"name" => "Ada"}}}
+
+      assert {:ok, %Context{vars: %{"Routing for check" => @unwritten_field_expression}}, _block} =
+               Block.evaluate_outgoing(%Container{}, flow, routing_block, context, nil)
+    end
+
+    test "raises when the expression fails to evaluate under v3 semantics" do
+      {flow, routing_block} = assignment_flow(@unwritten_field_expression)
+
+      context =
+        Context.put_private(
+          %Context{vars: %{"contact" => %{"name" => "Ada"}}},
+          :expression_mode,
+          :v3
+        )
+
+      assert_raise Expression.Error,
+                   "attribute is not found: `program_quit_at`",
+                   fn ->
+                     Block.evaluate_outgoing(%Container{}, flow, routing_block, context, nil)
+                   end
+    end
+
+    test "evaluates the expression when the field holds nil under v3 semantics" do
+      {flow, routing_block} = assignment_flow(@unwritten_field_expression)
+
+      context =
+        Context.put_private(
+          %Context{vars: %{"contact" => %{"name" => "Ada", "program_quit_at" => nil}}},
+          :expression_mode,
+          :v3
+        )
+
+      assert {:ok, %Context{vars: %{"Routing for check" => false}}, _block} =
+               Block.evaluate_outgoing(%Container{}, flow, routing_block, context, nil)
+    end
+
+    test "stores a routing label that isn't an expression under v3 semantics" do
+      {flow, routing_block} = assignment_flow("Exit for CheckYes")
+      context = Context.put_private(%Context{vars: %{}}, :expression_mode, :v3)
+
+      assert {:ok, %Context{vars: %{"Routing for check" => "Exit for CheckYes"}}, _block} =
+               Block.evaluate_outgoing(%Container{}, flow, routing_block, context, nil)
+    end
+  end
+
+  # A Core.Case block whose single exit is named after `exit_name`, the shape
+  # a `variable = expression` assignment compiles to.
+  defp assignment_flow(exit_name) do
+    destination_uuid = "8e2f8c2d-4b0b-4a3f-8a6c-1f2e3d4c5b6a"
+
+    routing_block = %Block{
+      uuid: "5a0a4c1e-1d0e-4a4e-9a8e-3c1d7b2f6e03",
+      name: "Routing for check",
+      type: "Core.Case",
+      exits: [
+        %Exit{
+          uuid: "d3e2f1a0-7c4b-4a9d-8e2f-3c4d5e6f7a81",
+          name: exit_name,
+          test: "true",
+          destination_block: destination_uuid
+        }
+      ]
+    }
+
+    destination_block = %Block{uuid: destination_uuid, name: "destination", type: "Core.Log"}
+
+    {%Flow{blocks: [routing_block, destination_block]}, routing_block}
   end
 
   describe "load_config_for_set_contact_property!/1" do
