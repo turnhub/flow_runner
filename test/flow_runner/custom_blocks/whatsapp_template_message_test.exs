@@ -20,6 +20,17 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessageTest do
   defp button_component(sub_type),
     do: %{type: "button", sub_type: sub_type, index: "0", parameters: []}
 
+  defp reply_button_component(index, payload),
+    do: %{
+      type: "button",
+      sub_type: "quick_reply",
+      index: index,
+      parameters: [%{type: "payload", payload: payload, language: "eng"}]
+    }
+
+  defp context_with_template_var(value),
+    do: %FlowRunner.Context{vars: %{"ref_Template_1" => value}}
+
   describe "validate_config!/1 for document parameter" do
     test "returns document with filename when present" do
       config = %{
@@ -295,6 +306,24 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessageTest do
                  "no thanks"
                )
     end
+
+    test "returns the submission untouched even when the block var holds a display" do
+      block = block_with_components([%{type: "body"}, button_component("flow")])
+      flow_response = %{"flow_token" => "a-flow-token", "email" => "jane@example.com"}
+
+      assert {:ok, ^flow_response} =
+               WhatsAppTemplateMessage.evaluate_outgoing(
+                 %Container{},
+                 %Flow{},
+                 block,
+                 context_with_template_var(%{
+                   "display" => "Hello Jane!",
+                   "__value__" => nil,
+                   "index" => nil
+                 }),
+                 flow_response
+               )
+    end
   end
 
   describe "evaluate_outgoing/5 for button and text input" do
@@ -342,6 +371,175 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessageTest do
                  block,
                  %FlowRunner.Context{},
                  nil
+               )
+    end
+
+    test "returns only the reply keys when the block var holds nothing" do
+      block =
+        block_with_components(
+          [%{type: "body"}, button_component("quick_reply")],
+          [%Exit{uuid: "exit-uuid", test: "block.value == \"template-btn-idx-0\""}]
+        )
+
+      assert {:ok, result} =
+               WhatsAppTemplateMessage.evaluate_outgoing(
+                 %Container{},
+                 %Flow{},
+                 block,
+                 %FlowRunner.Context{},
+                 "template-btn-idx-0"
+               )
+
+      assert result == %{"__value__" => "template-btn-idx-0", "index" => "0", "label" => nil}
+    end
+
+    test "returns only the text keys when the block var holds nothing" do
+      block = block_with_components([%{type: "body"}, button_component("quick_reply")])
+
+      assert {:ok, result} =
+               WhatsAppTemplateMessage.evaluate_outgoing(
+                 %Container{},
+                 %Flow{},
+                 block,
+                 %FlowRunner.Context{},
+                 "no thanks"
+               )
+
+      assert result == %{"__value__" => "no thanks", "index" => nil}
+    end
+  end
+
+  describe "evaluate_outgoing/5 brings the display set at send time" do
+    test "keeps the display alongside the tapped button" do
+      block =
+        block_with_components(
+          [%{type: "body"}, reply_button_component("0", "Yes please")],
+          [%Exit{uuid: "exit-uuid", test: "block.value == \"template-btn-idx-0\""}]
+        )
+
+      assert {:ok, result} =
+               WhatsAppTemplateMessage.evaluate_outgoing(
+                 %Container{},
+                 %Flow{},
+                 block,
+                 context_with_template_var(%{
+                   "display" => "Hello Jane!",
+                   "__value__" => nil,
+                   "index" => nil
+                 }),
+                 "template-btn-idx-0"
+               )
+
+      assert result == %{
+               "display" => "Hello Jane!",
+               "__value__" => "template-btn-idx-0",
+               "index" => "0",
+               "label" => "Yes please"
+             }
+    end
+
+    test "keeps the display alongside a free text reply" do
+      block = block_with_components([%{type: "body"}, reply_button_component("0", "Yes please")])
+
+      assert {:ok, result} =
+               WhatsAppTemplateMessage.evaluate_outgoing(
+                 %Container{},
+                 %Flow{},
+                 block,
+                 context_with_template_var(%{
+                   "display" => "Hello Jane!",
+                   "__value__" => nil,
+                   "index" => nil
+                 }),
+                 "maybe later"
+               )
+
+      assert result == %{
+               "display" => "Hello Jane!",
+               "__value__" => "maybe later",
+               "index" => nil
+             }
+    end
+
+    test "takes nothing but the display from the previous var" do
+      block =
+        block_with_components(
+          [%{type: "body"}, reply_button_component("0", "Yes please")],
+          [%Exit{uuid: "exit-uuid", test: "block.value == \"template-btn-idx-0\""}]
+        )
+
+      assert {:ok, result} =
+               WhatsAppTemplateMessage.evaluate_outgoing(
+                 %Container{},
+                 %Flow{},
+                 block,
+                 context_with_template_var(%{
+                   "display" => "Hello Jane!",
+                   "__value__" => "template-btn-idx-1",
+                   "index" => "1",
+                   "label" => "No thanks"
+                 }),
+                 "template-btn-idx-0"
+               )
+
+      assert result == %{
+               "display" => "Hello Jane!",
+               "__value__" => "template-btn-idx-0",
+               "index" => "0",
+               "label" => "Yes please"
+             }
+    end
+
+    test "leaves the reply untouched when the block var is not a map" do
+      block = block_with_components([%{type: "body"}, button_component("quick_reply")])
+
+      assert {:ok, result} =
+               WhatsAppTemplateMessage.evaluate_outgoing(
+                 %Container{},
+                 %Flow{},
+                 block,
+                 context_with_template_var("Hello Jane!"),
+                 "maybe later"
+               )
+
+      assert result == %{"__value__" => "maybe later", "index" => nil}
+    end
+  end
+
+  describe "evaluate_outgoing/5 button label" do
+    test "resolves the payload of the tapped button" do
+      block =
+        block_with_components([
+          %{type: "body"},
+          reply_button_component("0", "Yes please"),
+          reply_button_component("1", "No thanks")
+        ])
+
+      assert {:ok, %{"index" => "1", "label" => "No thanks"}} =
+               WhatsAppTemplateMessage.evaluate_outgoing(
+                 %Container{},
+                 %Flow{},
+                 block,
+                 %FlowRunner.Context{},
+                 "template-btn-idx-1"
+               )
+    end
+
+    test "is nil when no button sits at the tapped index" do
+      block =
+        block_with_components([
+          %{type: "body"},
+          reply_button_component("0", "Yes please"),
+          reply_button_component("1", "No thanks")
+        ])
+
+      assert {:ok, %{"index" => "2", "label" => nil}} =
+               WhatsAppTemplateMessage.evaluate_outgoing(
+                 %Container{},
+                 %Flow{},
+                 block,
+                 %FlowRunner.Context{},
+                 "template-btn-idx-2"
                )
     end
   end
