@@ -34,8 +34,10 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
              end
              """,
              returns:
-               "The submitted JSON when the template has a flow button, otherwise a map " <>
-                 "with __value__ and index when the template has reply buttons"
+               "The submitted JSON when the template has a flow button, otherwise a map with " <>
+                 "`__value__` (the button value), `index` (the button position as a string), " <>
+                 "`label` (the tapped button's text) and `display` (the message as the contact " <>
+                 "received it, variables filled in - set by the host platform at send time)"
   @impl FlowRunner.Spec.Block
   def validate_config!(%{
         "template" =>
@@ -142,7 +144,7 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
   end
 
   @template_button_indices Enum.map(0..9, &to_string/1)
-  def evaluate_outgoing(_container, _flow, block, _context, "template-btn-idx-" <> index)
+  def evaluate_outgoing(_container, _flow, block, context, "template-btn-idx-" <> index)
       when index in @template_button_indices do
     value =
       if has_reply_button?(block.config.template.components) do
@@ -156,12 +158,46 @@ defmodule FlowRunner.CustomBlocks.WhatsAppTemplateMessage do
         index
       end
 
-    {:ok, %{"__value__" => value, "index" => index}}
+    result = %{
+      "__value__" => value,
+      "index" => index,
+      "label" => button_label(block.config.template.components, index)
+    }
+
+    {:ok, carry_display(result, block, context)}
   end
 
-  def evaluate_outgoing(_container, _flow, _block, _context, user_input) do
-    {:ok, %{"__value__" => user_input, "index" => nil}}
+  def evaluate_outgoing(_container, _flow, block, context, user_input) do
+    {:ok, carry_display(%{"__value__" => user_input, "index" => nil}, block, context)}
   end
+
+  # The host platform writes `display`, the message as the contact received it, onto this
+  # block's var at send time. `FlowRunner.Spec.Block.evaluate_user_input/4` replaces that var
+  # with the result below, so `display` has to ride along with it.
+  @spec carry_display(map, FlowRunner.Spec.Block.t(), FlowRunner.Context.t()) :: map
+  defp carry_display(result, %{name: name}, %{vars: vars}) when is_binary(name) do
+    case vars[name] do
+      existing when is_map(existing) -> Map.merge(Map.take(existing, ["display"]), result)
+      _other -> result
+    end
+  end
+
+  defp carry_display(result, _block, _context), do: result
+
+  @spec button_label(list(map), String.t()) :: String.t() | nil
+  defp button_label(components, index) do
+    components
+    |> Enum.find(&reply_button_at?(&1, index))
+    |> button_payload()
+  end
+
+  defp button_payload(%{parameters: [%{payload: payload} | _rest]}), do: payload
+  defp button_payload(_component), do: nil
+
+  defp reply_button_at?(component, index),
+    do:
+      component[:type] == "button" and component[:sub_type] != "url" and
+        to_string(component[:index]) == index
 
   defp has_reply_button?(components),
     do: Enum.any?(components, &(&1[:type] == "button" and &1[:sub_type] != "url"))
